@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Checker Clean Working v2</title>
+<meta name="theme-color" content="#2563eb">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{
+  --bg:#f5f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --accent:#2563eb; --soft:#dbeafe; --ok:#16a34a; --okbg:#dcfce7;
+  --warn:#d97706; --warnbg:#fef3c7; --bad:#dc2626; --badbg:#fee2e2;
+  --pink:#db2777; --cyan:#0891b2; --purple:#7c3aed;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+.app{max-width:1120px;margin:0 auto;padding:12px}
+.header{position:sticky;top:0;background:rgba(245,247,251,.96);backdrop-filter:blur(8px);z-index:50;padding:10px 0 12px}
+h1{font-size:1.35rem;margin:0 0 4px}
+.sub,.tiny{color:var(--muted)} .sub{font-size:.92rem}.tiny{font-size:.84rem}
+.toolbar,.detail-tabs,.row,.row-center,.row-between{display:flex;gap:8px;flex-wrap:wrap}
+.row-center{align-items:center}.row-between{justify-content:space-between;align-items:center}.row{align-items:flex-start}
+button,.btn,input,textarea,select{font:inherit;border:1px solid var(--line);border-radius:12px;background:#fff}
+button,.btn{padding:10px 12px;cursor:pointer}.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.search{width:100%;padding:12px;margin-top:10px}.status{font-size:.84rem;color:#0f766e;margin-top:8px}.hidden{display:none!important}
+.card,.chart-card,.summary-box,.kpi{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin:10px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.kpi .value{font-size:1.45rem;font-weight:700;margin-top:4px}
+.kpi.good{background:linear-gradient(180deg,#fff,#f0fdf4)}.kpi.warn{background:linear-gradient(180deg,#fff,#fffbeb)}.kpi.bad{background:linear-gradient(180deg,#fff,#fef2f2)}
+.kpi-grid,.chart-grid,.grid-2,.grid-3,.grid-4{display:grid;grid-template-columns:1fr;gap:10px}
+.chart-title{font-weight:700;margin-bottom:10px}.badge,.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.8rem}
+.badge{background:var(--soft);color:#1d4ed8}.pill{background:#ecfeff;color:#155e75}
+.date-btn{display:block;width:100%;text-align:left;background:#fff}.grow{flex:1}.check{width:20px;height:20px}
+textarea{width:100%;min-height:140px;padding:12px;resize:vertical} input[type=text],input[type=number]{width:100%;padding:10px}
+.tab{padding:9px 12px;border-radius:999px}.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+svg{width:100%;height:auto;display:block}
+.insight{padding:12px;border-radius:16px;border:1px solid var(--line);margin-top:10px}.insight.good{background:var(--okbg)}.insight.warn{background:var(--warnbg)}.insight.bad{background:var(--badbg)}
+.habit-item{border:1px solid var(--line);border-radius:16px;padding:10px;margin:8px 0}
+.empty{text-align:center;color:var(--muted);padding:20px}.month-select{min-width:180px;padding:10px}
+.segment{display:flex;gap:6px;flex-wrap:wrap}
+.segment button{padding:7px 10px;border-radius:999px}
+.segment button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+select{padding:10px}
+.report-layout-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.matrix-stack{display:grid;gap:18px}
+.sheet-wrap{background:linear-gradient(180deg,#f7f1f2,#fdfcfd);border:1px solid #d8cdd0;border-radius:22px;padding:18px;box-shadow:0 18px 40px rgba(88,64,74,.08)}
+.habit-sheet{background:#fffdf8;border:3px solid #1e1b1c;border-radius:6px;overflow:hidden}
+.sheet-table,.mini-sheet-table{border-collapse:collapse;width:100%;table-layout:fixed}
+.sheet-table th,.sheet-table td,.mini-sheet-table th,.mini-sheet-table td{border:1.5px solid #1f1b1d;padding:0;text-align:center;vertical-align:middle;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet-side-title{width:196px;background:#dce9f7;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.sheet-month-title{font-size:1.05rem;padding:10px 12px;background:#dce9f7;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.sheet-week-title{font-size:.66rem;padding:7px 0;font-weight:700;text-transform:uppercase}
+.sheet-day-header{height:28px;font-size:.6rem;font-weight:700;background:#fffdf7}
+.sheet-habit-name{padding:6px 8px;text-align:left;font-size:.72rem;background:#fff8fa}
+.sheet-habit-label{padding:8px 10px;text-align:left;font-size:.72rem;background:#fff8fa;font-weight:700}
+.sheet-day-cell{height:24px;background:#fff}
+.sheet-box{width:14px;height:14px;border:2px solid currentColor;border-radius:2px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;line-height:1;margin:auto}
+.sheet-box.is-done{background:currentColor;color:#fff}
+.sheet-box.is-minimum{background:color-mix(in srgb, currentColor 22%, white);color:currentColor}
+.sheet-upcoming{background:#f3f4f6;color:#94a3b8}
+.sheet-empty{background:#fff}
+.sheet-summary-label{padding:6px 8px;text-align:left;font-size:.7rem;font-weight:700}
+.sheet-summary-value{height:26px;font-size:.6rem;font-weight:700;background:#fff}
+.sheet-footer-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:14px}
+.mini-sheet-table th{padding:8px 6px;font-size:.68rem;text-transform:uppercase}
+.mini-sheet-table td{height:28px;font-size:.68rem;background:#fffdf7}
+.mini-side{width:180px;text-align:left;padding:6px 8px!important;background:#fffdf7}
+.mini-head-weekly{background:#fff0bf}
+.mini-head-monthly{background:#e1f0d6}
+.sheet-note{font-size:.78rem;color:var(--muted);margin-top:10px}
+.sheet-week-0{background:#f6cbe0;color:#5c2945}
+.sheet-week-1{background:#dfcdf1;color:#4c3367}
+.sheet-week-2{background:#d7e9fb;color:#294c73}
+.sheet-week-3{background:#e1f0d6;color:#355d2c}
+.sheet-week-4{background:#ffe9c9;color:#6c5122}
+.sheet-box.sheet-week-0,.sheet-box.sheet-week-1,.sheet-box.sheet-week-2,.sheet-box.sheet-week-3,.sheet-box.sheet-week-4{background:transparent}
+.sheet-summary-complete{background:#ddd0f0}
+.sheet-summary-incomplete{background:#f7c9de}
+.sheet-summary-percent{background:#fff0bf}
+.report-headline{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+.report-tag{display:inline-block;padding:5px 10px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:.78rem;font-weight:700}
+.legend{display:flex;gap:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-swatch{width:14px;height:14px;border-radius:4px;border:1px solid rgba(15,23,42,.15)}
+@media (min-width:760px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.chart-grid{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-4{grid-template-columns:repeat(4,1fr)}}
+@media print{@page{size:landscape;margin:8mm}body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.header,#detailView,#habitView{display:none!important}#dashboardView,#dailyView,#weeklyView,#monthlyView{display:none!important}#monthlyReportView{display:block!important}.app{max-width:none;padding:0}.card,.chart-card,.summary-box,.kpi,.sheet-wrap{box-shadow:none;break-inside:avoid}#monthlyReportView .report-controls{display:none!important}body.print-chart #reportBody > :not(.print-chart-only){display:none!important}body.print-chart .print-chart-only{display:block!important}.sheet-wrap{padding:8px;border:none;background:#fff}.sheet-table th,.sheet-table td,.mini-sheet-table th,.mini-sheet-table td{border-width:1px}.sheet-day-cell{height:20px}.sheet-box{width:11px;height:11px;font-size:9px}.sheet-habit-name,.sheet-habit-label,.sheet-summary-label{font-size:.58rem}.sheet-day-header,.sheet-summary-value{font-size:.52rem}.sheet-footer-grid{gap:8px;margin-top:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div id="homeView">
+    <div class="header">
+      <h1>1-Year Daily Checker</h1>
+      <div class="sub">Light scientific version • minimum state • miss reason only when missed • cue/time in habit setup • recovery score • short weekly review</div>
+      <div class="toolbar">
+        <button onclick="setView('dashboard')">Dashboard</button>
+        <button onclick="setView('report')">Printable report</button>
+        <button onclick="setView('report');setReportLayout('chart')">PDF chart</button>
+        <button onclick="setView('habits')">Habits</button>
+        <button onclick="setView('daily')">Daily</button>
+        <button onclick="setView('weekly')">Weekly</button>
+        <button onclick="setView('monthly')">Monthly</button>
+        <button onclick="exportBackup()">Export backup</button>
+        <label class="btn">Import backup<input id="importFile" type="file" accept=".json" style="display:none" onchange="importBackup(event)"></label>
+      </div>
+      <input id="searchInput" class="search" placeholder="Search date, month, note..." oninput="renderHome()">
+      <div class="status" id="saveStatus">Loading saved data...</div>
+    </div>
+    <div id="dashboardView"></div>
+    <div id="monthlyReportView" class="hidden"></div>
+    <div id="habitsHomeView" class="hidden"></div>
+    <div id="dailyView" class="hidden"></div>
+    <div id="weeklyView" class="hidden"></div>
+    <div id="monthlyView" class="hidden"></div>
+  </div>
+
+  <div id="detailView" class="hidden">
+    <div class="header">
+      <div class="row-between"><button onclick="goHome()">← Back</button><div class="status" id="detailSaveStatus">Saved</div></div>
+      <div id="detailTitle" style="font-size:1.1rem;font-weight:700"></div>
+      <div class="sub" id="detailSub"></div>
+      <div class="toolbar"><button onclick="openPrevDay()">Previous</button><button onclick="openNextDay()">Next</button></div>
+      <div class="detail-tabs">
+        <button id="tabJournal" class="tab active" onclick="setDetailTab('journal')">Journal</button>
+        <button id="tabHabit" class="tab" onclick="setDetailTab('habit')">Habit tracker</button>
+      </div>
+    </div>
+    <div id="journalTab">
+      <div class="card"><label class="row-center"><input id="detailDone" class="check" type="checkbox" onchange="toggleDoneFromDetail()"><span>Mark this day completed</span></label></div>
+      <div class="card">
+        <div class="chart-title">Mood and energy scoring</div>
+        <div class="grid-2">
+          <div><div class="tiny">Mood (1-10)</div><input id="detailMood" type="number" min="1" max="10" placeholder="1 to 10"></div>
+          <div><div class="tiny">Energy (1-10)</div><input id="detailEnergy" type="number" min="1" max="10" placeholder="1 to 10"></div>
+        </div>
+      </div>
+      <div class="card"><div class="chart-title">Daily journal note</div><textarea id="detailNote" placeholder="Write full daily journal here..."></textarea></div>
+    </div>
+    <div id="habitTab" class="hidden">
+      <div class="card">
+        <div class="chart-title">Add a habit</div>
+        <div class="row">
+          <input id="newHabitName" type="text" placeholder="Habit name" class="grow">
+        </div>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <div class="tiny">Cue / trigger</div>
+            <input id="newHabitCue" type="text" placeholder="Example: after waking">
+          </div>
+          <div>
+            <div class="tiny">Preferred time</div>
+            <select id="newHabitTime">
+              <option value="">Choose</option>
+              <option>Morning</option>
+              <option>Afternoon</option>
+              <option>Evening</option>
+              <option>Night</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:8px"><button class="primary" onclick="addHabit()">Add</button></div>
+      </div>
+      <div class="card"><div class="chart-title">Habits for this day</div><div id="habitList"></div></div>
+    </div>
+  </div>
+
+  <div id="habitView" class="hidden">
+    <div class="header">
+      <div class="row-between"><button onclick="goHome()">← Back</button><div class="status">Habit detail</div></div>
+      <div id="habitTitle" style="font-size:1.1rem;font-weight:700"></div>
+      <div class="sub" id="habitSub"></div>
+    </div>
+    <div id="habitBody"></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY="daily_checker_clean_working_v2",DB_NAME="DailyCheckerCleanWorkingDB2",STORE_NAME="app",DB_KEY="state";
+const startDate=new Date("2026-04-17T00:00:00"),totalDays=365;
+const englishMonths=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const npMonths=["Baishakh","Jestha","Ashadh","Shrawan","Bhadra","Ashwin","Kartik","Mangsir","Poush","Magh","Falgun","Chaitra"];
+const weekdays=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MISS_REASONS=["Forgot","Tired","Busy","Low mood","Travel","Distraction","No trigger"];
+const DEFAULT_HABITS=[
+  "Meditation",
+  "Daily journaling",
+  "Evening reflection",
+  "Gratitude practice",
+  "Running",
+  "Walking",
+  "Exercise/workout",
+  "Sports/activity for 1 hour",
+  "Skipping rope",
+  "Surya Namaskar",
+  "Sleep duration",
+  "Sleep quality",
+  "Natural diet",
+  "No junk food",
+  "No sugary products",
+  "No refined food",
+  "Reading books",
+  "TOEFL speaking practice",
+  "TOEFL shadowing practice",
+  "English speaking practice",
+  "Communication skill practice",
+  "Time management tracking",
+  "To-do list completion",
+  "Activity tracking",
+  "Deep work/focused study",
+  "LLB study",
+  "Vocabulary/GRE word study",
+  "Guitar practice",
+  "Song practice/creation",
+  "Music listening",
+  "Worship/spiritual practice",
+  "Hygiene",
+  "Grooming",
+  "Dressing/personal presentation",
+  "Self-reflection",
+  "Purpose/ikigai reflection",
+  "Weekly review",
+  "Mood tracking",
+  "Energy tracking",
+  "Recovery/rest tracking"
+];
+const npBoundaries=[
+{ad:"2026-04-14",y:2083,m:0,d:1},{ad:"2026-05-15",y:2083,m:1,d:1},{ad:"2026-06-15",y:2083,m:2,d:1},{ad:"2026-07-17",y:2083,m:3,d:1},{ad:"2026-08-17",y:2083,m:4,d:1},{ad:"2026-09-17",y:2083,m:5,d:1},{ad:"2026-10-18",y:2083,m:6,d:1},{ad:"2026-11-17",y:2083,m:7,d:1},{ad:"2026-12-16",y:2083,m:8,d:1},{ad:"2027-01-15",y:2083,m:9,d:1},{ad:"2027-02-13",y:2083,m:10,d:1},{ad:"2027-03-15",y:2083,m:11,d:1},{ad:"2027-04-14",y:2084,m:0,d:1}
+].map(x=>({...x,date:new Date(x.ad+"T00:00:00")}));
+
+let state={days:{},habits:{}},db=null,saveTimer=null,currentHomeView="dashboard",currentDetailTab="journal",currentDayId=null,currentReportLayout="summary";
+
+function esc(t){return String(t).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
+function shorten(s,n){return s.length>n?s.slice(0,n-1)+"…":s}
+function pad2(n){return String(n).padStart(2,"0")}
+function avg(arr){const nums=arr.filter(v=>typeof v==="number"&&!Number.isNaN(v));return nums.length?nums.reduce((a,b)=>a+b,0)/nums.length:null}
+function sum(arr){return arr.reduce((a,b)=>a+b,0)}
+function pct(a,b){return b?(a/b)*100:0}
+function correlation(x,y){const pairs=[];for(let i=0;i<x.length;i++){if(typeof x[i]==="number"&&typeof y[i]==="number")pairs.push([x[i],y[i]])}if(pairs.length<3)return null;const xs=pairs.map(p=>p[0]),ys=pairs.map(p=>p[1]),mx=avg(xs),my=avg(ys);let num=0,dx=0,dy=0;for(let i=0;i<pairs.length;i++){const a=xs[i]-mx,b=ys[i]-my;num+=a*b;dx+=a*a;dy+=b*b}if(!dx||!dy)return null;return num/Math.sqrt(dx*dy)}
+function classifyCorr(r){if(r===null)return "Not enough data";const a=Math.abs(r);if(a>=0.6)return "Strong";if(a>=0.3)return "Moderate";return "Weak"}
+function clamp(n,min,max){return Math.min(max,Math.max(min,n))}
+function getTodayId(){const d=new Date();d.setHours(0,0,0,0);return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`}
+function isFutureDayId(dayId){return dayId>getTodayId()}
+
+function setStatus(msg){const t=new Date().toLocaleTimeString();const text=msg+" • "+t;document.getElementById("saveStatus").textContent=text;const d=document.getElementById("detailSaveStatus");if(d)d.textContent=text}
+function openDb(){return new Promise(resolve=>{if(!window.indexedDB){resolve(null);return;}const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_NAME))d.createObjectStore(STORE_NAME)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>resolve(null)})}
+function readDbState(){return new Promise(resolve=>{if(!db){resolve(null);return;}const tx=db.transaction(STORE_NAME,"readonly");const req=tx.objectStore(STORE_NAME).get(DB_KEY);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>resolve(null)})}
+function writeDbState(data){return new Promise(resolve=>{if(!db){resolve(false);return;}const tx=db.transaction(STORE_NAME,"readwrite");const req=tx.objectStore(STORE_NAME).put(data,DB_KEY);req.onsuccess=()=>resolve(true);req.onerror=()=>resolve(false)})}
+function loadLocalFallback(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)return JSON.parse(raw)}catch(e){}return null}
+function saveLocalFallback(data){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));return true}catch(e){return false}}
+async function loadState(){db=await openDb();const a=await readDbState();if(a&&a.days)return a;const b=loadLocalFallback();if(b&&b.days)return b;return {days:{},habits:{}}}
+async function persistState(msg="Saved"){const ok1=await writeDbState(state),ok2=saveLocalFallback(state);setStatus(ok1||ok2?msg:"Save failed")}
+function queueSave(msg="Saved"){clearTimeout(saveTimer);saveTimer=setTimeout(()=>persistState(msg),120)}
+
+function getDates(){const arr=[];for(let i=0;i<totalDays;i++){const d=new Date(startDate);d.setDate(startDate.getDate()+i);arr.push(d)}return arr}
+function getDayId(date){return date.toISOString().slice(0,10)}
+function ensureDay(dayId){if(!state.days[dayId])state.days[dayId]={done:false,note:"",mood:null,energy:null};return state.days[dayId]}
+function ensureHabit(name){
+  if(!state.habits[name]) state.habits[name]={cue:"",time:"",entries:{}};
+  if(state.habits[name].cue===undefined) state.habits[name].cue="";
+  if(state.habits[name].time===undefined) state.habits[name].time="";
+  if(!state.habits[name].entries) state.habits[name].entries={};
+  return state.habits[name];
+}
+function seedDefaultHabits(){
+  let added=0;
+  DEFAULT_HABITS.forEach(name=>{
+    if(!state.habits[name]){
+      ensureHabit(name);
+      added++;
+    }
+  });
+  return added;
+}
+function ensureHabitEntry(name,dayId){
+  const habit=ensureHabit(name);
+  if(!habit.entries[dayId]) habit.entries[dayId]={state:"missed", note:"", missReason:""};
+  if(!habit.entries[dayId].state) habit.entries[dayId].state="missed";
+  if(habit.entries[dayId].missReason===undefined) habit.entries[dayId].missReason="";
+  return habit.entries[dayId];
+}
+function formatEnglish(date){return `${date.getDate()} ${englishMonths[date.getMonth()]} ${date.getFullYear()}`}
+function nepaliFor(date){let chosen=npBoundaries[0];for(const b of npBoundaries){if(date>=b.date)chosen=b;else break}const diff=Math.floor((date-chosen.date)/86400000);return {year:chosen.y,month:chosen.m,day:chosen.d+diff}}
+function formatNepali(date){const np=nepaliFor(date);return `${np.day} ${npMonths[np.month]} ${np.year}`}
+function matchesSearch(d){const q=document.getElementById("searchInput").value.trim().toLowerCase();if(!q)return true;const id=getDayId(d),day=ensureDay(id);return [formatEnglish(d),formatNepali(d),id,day.note||""].join(" ").toLowerCase().includes(q)}
+
+function lineChart(data,w,h,color="#2563eb"){const nums=data.map(v=>typeof v==="number"?v:null),present=nums.filter(v=>v!==null);if(!present.length)return `<div class="empty">No data yet.</div>`;const m={l:26,r:10,t:10,b:18},cw=w-m.l-m.r,ch=h-m.t-m.b,min=Math.min(0,...present),max=Math.max(10,...present);const pts=nums.map((v,i)=>{const x=m.l+(nums.length===1?cw/2:i*(cw/(nums.length-1)));const val=v===null?min:v;const y=m.t+ch-((val-min)/(max-min||1))*ch;return [x,y,v]});let d="";pts.forEach((p,i)=>d+=(i===0?"M":"L")+p[0]+" "+p[1]+" ");return `<svg viewBox="0 0 ${w} ${h}">${[0,.5,1].map(t=>`<line x1="${m.l}" y1="${m.t+ch-t*ch}" x2="${w-5}" y2="${m.t+ch-t*ch}" stroke="#e5e7eb"/>`).join("")}<path d="${d}" fill="none" stroke="${color}" stroke-width="3"></path>${pts.map(([x,y,v])=>v===null?"":`<circle cx="${x}" cy="${y}" r="2.6" fill="${color}"></circle>`).join("")}</svg>`}
+function dualLine(a,b,w,h,colorA="#db2777",colorB="#0891b2"){const nums=[...a.filter(v=>typeof v==="number"),...b.filter(v=>typeof v==="number")];if(!nums.length)return `<div class="empty">No data yet.</div>`;const m={l:26,r:10,t:10,b:18},cw=w-m.l-m.r,ch=h-m.t-m.b,min=0,max=Math.max(10,...nums);function pts(arr){return arr.map((v,i)=>{const x=m.l+(arr.length===1?cw/2:i*(cw/(arr.length-1)));const val=typeof v==="number"?v:min;const y=m.t+ch-((val-min)/(max-min||1))*ch;return [x,y,typeof v==="number"]})}const pa=pts(a),pb=pts(b),da=pa.map((p,i)=>(i===0?"M":"L")+p[0]+" "+p[1]).join(" "),db=pb.map((p,i)=>(i===0?"M":"L")+p[0]+" "+p[1]).join(" ");return `<svg viewBox="0 0 ${w} ${h}">${[0,.5,1].map(t=>`<line x1="${m.l}" y1="${m.t+ch-t*ch}" x2="${w-5}" y2="${m.t+ch-t*ch}" stroke="#e5e7eb"/>`).join("")}<path d="${da}" fill="none" stroke="${colorA}" stroke-width="3"></path><path d="${db}" fill="none" stroke="${colorB}" stroke-width="3"></path>${pa.map(([x,y,v])=>v?`<circle cx="${x}" cy="${y}" r="2.4" fill="${colorA}"></circle>`:"").join("")}${pb.map(([x,y,v])=>v?`<circle cx="${x}" cy="${y}" r="2.4" fill="${colorB}"></circle>`:"").join("")}</svg>`}
+function groupedBars(data,w,h){if(!data.length)return `<div class="empty">No data yet.</div>`;const m={l:20,r:10,t:10,b:36},cw=w-m.l-m.r,ch=h-m.t-m.b,slot=cw/data.length;return `<svg viewBox="0 0 ${w} ${h}">${[0,50,100].map(t=>`<line x1="${m.l}" y1="${m.t+ch-(t/100)*ch}" x2="${w-5}" y2="${m.t+ch-(t/100)*ch}" stroke="#e5e7eb"/>`).join("")}${data.map((d,i)=>{const x=m.l+i*slot+6,bw=Math.max(6,slot/3-4),h1=(d.completion||0)/100*ch,h2=(d.journaling||0)/100*ch;return `<rect x="${x}" y="${m.t+ch-h1}" width="${bw}" height="${h1}" rx="3" fill="#2563eb"></rect><rect x="${x+bw+4}" y="${m.t+ch-h2}" width="${bw}" height="${h2}" rx="3" fill="#0f766e"></rect><text x="${x+bw}" y="${h-8}" font-size="10" text-anchor="middle" fill="#6b7280">${d.label.split(" ")[0]}</text>`}).join("")}</svg>`}
+function weekdayBars(items,w,h){const m={l:46,r:10,t:10,b:22},cw=w-m.l-m.r,ch=h-m.t-m.b,slot=cw/items.length;return `<svg viewBox="0 0 ${w} ${h}">${[0,50,100].map(t=>`<line x1="${m.l}" y1="${m.t+ch-(t/100)*ch}" x2="${w-5}" y2="${m.t+ch-(t/100)*ch}" stroke="#e5e7eb"/>`).join("")}${items.map((d,i)=>{const x=m.l+i*slot+8,bw=Math.max(12,slot-14),bh=(d.rate/100)*ch;return `<rect x="${x}" y="${m.t+ch-bh}" width="${bw}" height="${bh}" rx="4" fill="#0891b2"></rect><text x="${x+bw/2}" y="${h-8}" font-size="9" text-anchor="middle" fill="#6b7280">${d.name.slice(0,3)}</text>`}).join("")}</svg>`}
+function heatmap(flags,size=10){if(!flags.length)return `<div class="empty">No data yet.</div>`;const weeks=Math.ceil(flags.length/7),w=weeks*(size+3)+16,h=7*(size+3)+16;let rects="";for(let i=0;i<flags.length;i++){const x=8+Math.floor(i/7)*(size+3),y=8+(i%7)*(size+3);rects+=`<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="2" fill="${flags[i]?"#2563eb":"#dbeafe"}"></rect>`}return `<svg viewBox="0 0 ${w} ${h}">${rects}</svg>`}
+function hBars(items,w,h,type){const m={l:90,r:20,t:10,b:10},rowH=24,hh=Math.max(h,items.length*rowH+20);return `<svg viewBox="0 0 ${w} ${hh}">${items.map((it,i)=>{const y=10+i*rowH;const raw=type==="corr"?((it.completionCorr??0)+1)/2*100:(it.score||0),bw=(w-m.l-m.r)*(raw/100),label=type==="corr"?(it.completionCorr!==null?it.completionCorr.toFixed(2):"-"):it.score.toFixed(0)+"%",fill=type==="corr"?"#db2777":"#7c3aed";return `<text x="6" y="${y+14}" font-size="11" fill="#374151">${esc(shorten(it.name,14))}</text><rect x="${m.l}" y="${y}" width="${w-m.l-m.r}" height="14" rx="7" fill="#eef2ff"></rect><rect x="${m.l}" y="${y}" width="${bw}" height="14" rx="7" fill="${fill}"></rect><text x="${m.l+bw+6}" y="${y+12}" font-size="11" fill="#374151">${label}</text>`}).join("")}</svg>`}
+function compareBars(items,w,h){const m={l:100,r:20,t:10,b:10},rowH=28,hh=Math.max(h,items.length*rowH+20);return `<svg viewBox="0 0 ${w} ${hh}">${items.map((it,i)=>{const y=10+i*rowH,full=w-m.l-m.r,a=(it.completeWhenDone||0)/100*full,b=(it.completeWhenNot||0)/100*full;return `<text x="6" y="${y+14}" font-size="11" fill="#374151">${esc(shorten(it.name,14))}</text><rect x="${m.l}" y="${y}" width="${a}" height="8" rx="4" fill="#16a34a"></rect><rect x="${m.l}" y="${y+10}" width="${b}" height="8" rx="4" fill="#94a3b8"></rect><text x="${m.l+a+6}" y="${y+8}" font-size="10">${it.completeWhenDone?it.completeWhenDone.toFixed(0):0}%</text><text x="${m.l+b+6}" y="${y+18}" font-size="10">${it.completeWhenNot?it.completeWhenNot.toFixed(0):0}%</text>`}).join("")}</svg><div class="tiny">Green: completion when done/full/minimum • Gray: completion when missed</div>`}
+function compareMetricBars(items,w,h){const nums=items.map(x=>x.value).filter(v=>typeof v==="number"); if(!nums.length)return `<div class="empty">No metric data yet.</div>`;const max=Math.max(10,...nums),m={l:100,r:20,t:10,b:10},rowH=28,hh=Math.max(h,items.length*rowH+20);return `<svg viewBox="0 0 ${w} ${hh}">${items.map((it,i)=>{const y=10+i*rowH,bw=typeof it.value==="number"?(w-m.l-m.r)*(it.value/max):0;return `<text x="6" y="${y+14}" font-size="11" fill="#374151">${esc(shorten(it.label,14))}</text><rect x="${m.l}" y="${y}" width="${w-m.l-m.r}" height="14" rx="7" fill="#eef2ff"></rect><rect x="${m.l}" y="${y}" width="${bw}" height="14" rx="7" fill="#0891b2"></rect><text x="${m.l+bw+6}" y="${y+12}" font-size="11" fill="#374151">${typeof it.value==="number"?it.value.toFixed(1):"-"}</text>`}).join("")}</svg>`}
+function shortDateLabel(date){return `${date.getDate()}-${englishMonths[date.getMonth()].slice(0,3)}`}
+function shortMonthLabel(date){return `${englishMonths[date.getMonth()].slice(0,3)} ${date.getFullYear()}`}
+function fullDateRangeLabel(dates){
+  if(!dates.length) return "No dates";
+  return `${formatEnglish(dates[0])} to ${formatEnglish(dates[dates.length-1])}`;
+}
+function getRangeBucketMode(selection){
+  if(!selection) return "day";
+  if(selection.type==="yearly") return "month";
+  if(selection.type==="duration"&&selection.dates.length>31) return "week";
+  return "day";
+}
+function getReportBuckets(selection){
+  if(!selection||!selection.dates.length) return [];
+  const mode=getRangeBucketMode(selection);
+  if(mode==="day"){
+    return selection.dates.map(date=>({label:shortDateLabel(date),secondary:weekdays[date.getDay()].slice(0,3),dates:[date]}));
+  }
+  if(mode==="month"){
+    const groups={};
+    selection.dates.forEach(date=>{const key=`${date.getFullYear()}-${date.getMonth()}`;(groups[key] ||= []).push(date);});
+    return Object.values(groups).map(arr=>({label:shortMonthLabel(arr[0]),secondary:`${arr.length} days`,dates:arr}));
+  }
+  const buckets=[];
+  for(let i=0;i<selection.dates.length;i+=7){
+    const arr=selection.dates.slice(i,i+7);
+    buckets.push({label:`W${Math.floor(i/7)+1}`,secondary:`${shortDateLabel(arr[0])} to ${shortDateLabel(arr[arr.length-1])}`,dates:arr});
+  }
+  return buckets;
+}
+function formatMatrixCell(name,dayId){
+  if(isFutureDayId(dayId)) return {cls:"matrix-cell-upcoming",text:"Upcoming"};
+  const entry=ensureHabitEntry(name,dayId);
+  if(entry.state==="done") return {cls:"matrix-cell-done",text:"Done"};
+  if(entry.state==="minimum") return {cls:"matrix-cell-minimum",text:"Partial"};
+  if(entry.state==="missed") return {cls:"matrix-cell-missed",text:"Miss"};
+  return {cls:"matrix-cell-empty",text:"-"};
+}
+function getCellTone(entry){
+  if(entry.state==="done") return "done";
+  if(entry.state==="minimum") return "minimum";
+  if(entry.state==="missed") return "missed";
+  return "empty";
+}
+function getWeekToneClass(index){return `sheet-week-${Math.min(index,4)}`}
+function getSelectionSheets(selection){
+  if(!selection||!selection.dates.length) return [];
+  const groups={};
+  selection.dates.forEach(date=>{const key=`${date.getFullYear()}-${date.getMonth()}`;(groups[key] ||= []).push(date)});
+  return Object.values(groups);
+}
+function renderSheetBox(dayId,entry,toneClass){
+  if(isFutureDayId(dayId)) return `<div class="sheet-box ${toneClass}"> </div>`;
+  if(entry.state==="done") return `<div class="sheet-box is-done ${toneClass}">&#10003;</div>`;
+  if(entry.state==="minimum") return `<div class="sheet-box is-minimum ${toneClass}">&#8211;</div>`;
+  if(entry.state==="missed") return `<div class="sheet-box ${toneClass}"> </div>`;
+  return `<div class="sheet-box ${toneClass}"> </div>`;
+}
+function buildMiniSummaryTable(titleClass,title,rows,headers){
+  return `
+    <table class="mini-sheet-table">
+      <thead>
+        <tr>
+          <th class="${titleClass} mini-side">${esc(title)}</th>
+          ${headers.map(h=>`<th class="${titleClass}">${esc(h)}</th>`).join("")}
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(row=>`<tr><td class="mini-side">${esc(row.label)}</td>${row.values.map(v=>`<td>${v}</td>`).join("")}</tr>`).join("")}
+      </tbody>
+    </table>`;
+}
+function buildHabitSheet(dates){
+  if(!dates.length) return "";
+  const names=Object.keys(state.habits).sort((a,b)=>a.localeCompare(b));
+  const monthName=`${englishMonths[dates[0].getMonth()]} ${dates[0].getFullYear()}`;
+  const dayIds=dates.map(getDayId);
+  const weekStarts=[];
+  for(let i=0;i<dates.length;i+=7) weekStarts.push(dates.slice(i,i+7));
+  const weeklyHeaders=weekStarts.map((_,i)=>`Week ${i+1}`);
+  const dailyTrackedIds=dayIds.filter(id=>!isFutureDayId(id));
+  const dailySummary=dates.map((date,idx)=>{
+    const id=dayIds[idx];
+    const doneLike=names.filter(name=>{const e=ensureHabitEntry(name,id);return !isFutureDayId(id)&&(e.state==="done"||e.state==="minimum")}).length;
+    const incomplete=names.filter(name=>{const e=ensureHabitEntry(name,id);return !isFutureDayId(id)&&e.state==="missed"}).length;
+    const percent=names.length&&!isFutureDayId(id)?pct(doneLike,names.length):null;
+    return {doneLike,incomplete,percent};
+  });
+  const weeklyRows=names.slice(0,6).map(name=>{
+    const values=weekStarts.map(weekDates=>{
+      const tracked=weekDates.map(getDayId).filter(id=>!isFutureDayId(id));
+      if(!tracked.length) return `<span class="tiny">Upcoming</span>`;
+      const active=tracked.filter(id=>{const e=ensureHabitEntry(name,id);return e.state==="done"||e.state==="minimum"}).length;
+      return `${active}/${tracked.length}`;
+    });
+    return {label:name,values};
+  });
+  const monthlyRows=names.slice(0,6).map(name=>{
+    const tracked=dailyTrackedIds;
+    if(!tracked.length) return {label:name,values:[`<span class="tiny">Upcoming</span>`]};
+    const active=tracked.filter(id=>{const e=ensureHabitEntry(name,id);return e.state==="done"||e.state==="minimum"}).length;
+    return {label:name,values:[`${active}/${tracked.length}`]};
+  });
+  return `
+    <div class="sheet-wrap">
+      <div class="habit-sheet">
+        <table class="sheet-table">
+          <thead>
+            <tr>
+              <th class="sheet-month-title" colspan="1">${esc(monthName)}</th>
+              ${weekStarts.map((weekDates,i)=>`<th class="sheet-week-title ${getWeekToneClass(i)}" colspan="${weekDates.length}">Week ${i+1}</th>`).join("")}
+            </tr>
+            <tr>
+              <th class="sheet-side-title">Daily Habits</th>
+              ${dates.map((date,idx)=>`<th class="sheet-day-header ${getWeekToneClass(Math.floor(idx/7))}">${date.getDate()}<div class="tiny">${weekdays[date.getDay()].slice(0,3)}</div></th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+            ${names.map(name=>`
+              <tr>
+                <td class="sheet-habit-name">${esc(name)}</td>
+                ${dates.map((date,idx)=>{const id=dayIds[idx],entry=ensureHabitEntry(name,id),toneClass=getWeekToneClass(Math.floor(idx/7));return `<td class="sheet-day-cell ${isFutureDayId(id)?"sheet-upcoming":"sheet-empty"}">${renderSheetBox(id,entry,toneClass)}</td>`}).join("")}
+              </tr>
+            `).join("")}
+            <tr>
+              <td class="sheet-summary-label sheet-summary-complete">Complete</td>
+              ${dailySummary.map(item=>`<td class="sheet-summary-value sheet-summary-complete">${item.percent===null?"-":item.doneLike}</td>`).join("")}
+            </tr>
+            <tr>
+              <td class="sheet-summary-label sheet-summary-incomplete">Incomplete</td>
+              ${dailySummary.map(item=>`<td class="sheet-summary-value sheet-summary-incomplete">${item.percent===null?"-":item.incomplete}</td>`).join("")}
+            </tr>
+            <tr>
+              <td class="sheet-summary-label sheet-summary-percent">% Complete</td>
+              ${dailySummary.map(item=>`<td class="sheet-summary-value sheet-summary-percent">${item.percent===null?"-":item.percent.toFixed(0)}%</td>`).join("")}
+            </tr>
+          </tbody>
+        </table>
+        <div class="sheet-footer-grid">
+          ${buildMiniSummaryTable("mini-head-weekly","Weekly habits",weeklyRows,weeklyHeaders)}
+          ${buildMiniSummaryTable("mini-head-monthly","Monthly habits",monthlyRows,[monthName])}
+        </div>
+      </div>
+    </div>`;
+}
+function buildHabitMatrix(selection){
+  if(!selection||!selection.dates.length)return `<div class="card empty">No chart data available.</div>`;
+  const names=Object.keys(state.habits).sort((a,b)=>a.localeCompare(b));
+  if(!names.length)return `<div class="card empty">Add habits to generate the chart.</div>`;
+  const sheets=getSelectionSheets(selection);
+  return `
+    <div class="card print-chart-only">
+      <div class="report-headline">
+        <div>
+          <div class="chart-title">Habit tracker sheet</div>
+          <div class="tiny">${esc(selection.label)} • ${selection.dates.length} selected day${selection.dates.length===1?"":"s"}</div>
+          <div class="tiny">${esc(fullDateRangeLabel(selection.dates))} • Spreadsheet-style month sheet layout</div>
+        </div>
+        <span class="report-tag">Reference-style chart</span>
+        <button onclick="printChartPdf()">Print chart PDF</button>
+      </div>
+      <div class="legend tiny" style="margin:10px 0 12px">
+        <div class="legend-item"><span class="legend-swatch sheet-week-0"></span><span>Week 1</span></div>
+        <div class="legend-item"><span class="legend-swatch sheet-week-1"></span><span>Week 2</span></div>
+        <div class="legend-item"><span class="legend-swatch sheet-week-2"></span><span>Week 3</span></div>
+        <div class="legend-item"><span class="legend-swatch sheet-week-3"></span><span>Week 4</span></div>
+        <div class="legend-item"><span class="legend-swatch sheet-week-4"></span><span>Week 5 / extra</span></div>
+      </div>
+      <div class="matrix-stack">${sheets.map(buildHabitSheet).join("")}</div>
+      <div class="sheet-note">Future dates stay blank and are not counted as incomplete. Monthly and yearly reports render as one sheet per month so the design stays readable.</div>
+    </div>`;
+}
+
+function getAnalytics(){
+  const dates=getDates(),ids=dates.map(getDayId),doneFlags=ids.map(id=>ensureDay(id).done?1:0),completed=sum(doneFlags),total=ids.length,completionRate=pct(completed,total);
+  let longest=0,current=0;for(const f of doneFlags){if(f){current++;longest=Math.max(longest,current)}else current=0}
+  let currentStreak=0;for(let i=doneFlags.length-1;i>=0;i--){if(doneFlags[i])currentStreak++;else break}
+  const notesDays=ids.filter(id=>(ensureDay(id).note||"").trim().length>0).length,journalingRate=pct(notesDays,total);
+  const weeklyRates=[];for(let i=0;i<doneFlags.length;i+=7){const s=doneFlags.slice(i,i+7);weeklyRates.push(pct(sum(s),s.length))}
+  const monthly={};dates.forEach(d=>{const k=`${englishMonths[d.getMonth()].slice(0,3)} ${d.getFullYear()}`;if(!monthly[k])monthly[k]={total:0,done:0,notes:0,moods:[],energies:[]};const id=getDayId(d),day=ensureDay(id);monthly[k].total++;if(day.done)monthly[k].done++;if((day.note||"").trim())monthly[k].notes++;if(typeof day.mood==="number")monthly[k].moods.push(day.mood);if(typeof day.energy==="number")monthly[k].energies.push(day.energy)})
+  const monthStats=Object.entries(monthly).map(([k,v])=>({label:k,completion:pct(v.done,v.total),journaling:pct(v.notes,v.total),mood:avg(v.moods),energy:avg(v.energies)}))
+  const moodArr=ids.map(id=>ensureDay(id).mood),energyArr=ids.map(id=>ensureDay(id).energy),avgMood=avg(moodArr),avgEnergy=avg(energyArr),moodCompletionCorr=correlation(moodArr,doneFlags),energyCompletionCorr=correlation(energyArr,doneFlags);
+  const weekdayStats=weekdays.map((name,idx)=>{const ds=dates.filter(d=>d.getDay()===idx),lids=ds.map(getDayId),done=lids.filter(id=>ensureDay(id).done).length;return {name,total:lids.length,done,rate:pct(done,lids.length)}})
+  const bestWeekday=weekdayStats.slice().sort((a,b)=>b.rate-a.rate)[0];
+
+  const habits=Object.keys(state.habits).sort((a,b)=>a.localeCompare(b)).map(name=>{
+    const habit=ensureHabit(name), entries=habit.entries;
+    let scorePoints=0,currentStreak=0,longestStreak=0,temp=0,missAfterDone=0,opportunities=0,recoveryTimes=[],waitingRecovery=false,daysSinceMiss=0;
+    let doneCount=0,minimumCount=0,missedCount=0,noteDays=0;
+    const binary=ids.map((id,idx)=>{
+      const e=ensureHabitEntry(name,id);
+      const val=e.state==="done"?1:e.state==="minimum"?0.5:0;
+      if(e.state==="done") doneCount++;
+      else if(e.state==="minimum") minimumCount++;
+      else missedCount++;
+      if((e.note||"").trim()) noteDays++;
+      if(val>0){scorePoints+=val; temp++; longestStreak=Math.max(longestStreak,temp)} else temp=0;
+      if(idx>0){
+        const prev=ensureHabitEntry(name,ids[idx-1]).state;
+        if(prev!=="missed"){opportunities++; if(e.state==="missed") missAfterDone++;}
+      }
+      if(e.state==="missed"){ waitingRecovery=true; daysSinceMiss=0; }
+      else if(waitingRecovery){ recoveryTimes.push(daysSinceMiss+1); waitingRecovery=false; }
+      else { daysSinceMiss++; }
+      return val;
+    });
+    for(let i=ids.length-1;i>=0;i--){const e=ensureHabitEntry(name,ids[i]); if(e.state!=="missed") currentStreak++; else break}
+    let doneLike=0, totalDoneLike=0, completeWhenDone=0, completeWhenNot=0, totalMissed=0;
+    binary.forEach((v,i)=>{ if(v>0){totalDoneLike++; if(doneFlags[i]) completeWhenDone++;} else {totalMissed++; if(doneFlags[i]) completeWhenNot++;}});
+    const lift = totalDoneLike && totalMissed ? pct(completeWhenDone,totalDoneLike)-pct(completeWhenNot,totalMissed) : null;
+    const weekdayPattern=weekdays.map((wd,idx)=>{let t=0,s=0;dates.forEach((dt,j)=>{if(dt.getDay()===idx){t++; s+=binary[j];}}); return {name:wd, rate:pct(s,t)}})
+    const bestDay=weekdayPattern.slice().sort((a,b)=>b.rate-a.rate)[0];
+    const worstDay=weekdayPattern.slice().sort((a,b)=>a.rate-b.rate)[0];
+    const monthlySeries=Object.entries(monthly).map(([label,_])=>{let t=0,s=0;dates.forEach((dt,j)=>{const k=`${englishMonths[dt.getMonth()].slice(0,3)} ${dt.getFullYear()}`; if(k===label){t++; s+=binary[j];}}); return pct(s,t)});
+    const monthlyBreakdown=Object.entries(monthly).map(([label,_])=>{
+      let t=0,s=0,misses=0;
+      dates.forEach((dt,j)=>{
+        const k=`${englishMonths[dt.getMonth()].slice(0,3)} ${dt.getFullYear()}`;
+        if(k===label){
+          t++;
+          s+=binary[j];
+          if(binary[j]===0) misses++;
+        }
+      });
+      return {label,rate:pct(s,t),misses};
+    });
+    const bestMonth=monthlyBreakdown.slice().sort((a,b)=>b.rate-a.rate)[0]||null;
+    const worstMonth=monthlyBreakdown.slice().sort((a,b)=>a.rate-b.rate)[0]||null;
+    const gapRate=opportunities?pct(missAfterDone,opportunities):null;
+    const recoveryScore = recoveryTimes.length ? Math.max(0, 100 - avg(recoveryTimes)*20) : null;
+    const reasonsCount={}; ids.forEach(id=>{const r=ensureHabitEntry(name,id).missReason||""; if(r) reasonsCount[r]=(reasonsCount[r]||0)+1;});
+    const topReason = Object.entries(reasonsCount).sort((a,b)=>b[1]-a[1])[0];
+    let lackReason="No clear pattern yet.";
+    const scorePct=pct(scorePoints,total);
+    if((gapRate??0)>55) lackReason="This habit often breaks right after a success day. Cue stability is probably weak.";
+    else if((lift??0)>20) lackReason="This behaves like a keystone habit because full-day completion rises when it happens.";
+    else if(scorePct<35) lackReason="Low repetition suggests the habit is not yet small enough or anchored clearly.";
+    else if(topReason) lackReason=`Most common miss reason is "${topReason[0]}".`;
+    const recentTimeline=ids.slice(-21).map((id,idx)=>{
+      const entry=ensureHabitEntry(name,id);
+      return {id,date:dates[dates.length-21+idx]||new Date(id+"T00:00:00"),state:entry.state,note:entry.note||"",missReason:entry.missReason||""};
+    });
+    return {name,cue:habit.cue,time:habit.time,score:scorePct,currentStreak,longestStreak,completionCorr:correlation(binary,doneFlags),binary,lift,gapRate,lackReason,bestDay,worstDay,weekdayPattern,monthlySeries,monthlyBreakdown,bestMonth,worstMonth,completeWhenDone:pct(completeWhenDone,totalDoneLike),completeWhenNot:pct(completeWhenNot,totalMissed),recoveryScore,topReason:topReason?topReason[0]:"-",reasonsCount,doneCount,minimumCount,missedCount,activationRate:pct(doneCount+minimumCount,total),noteDays,noteRate:pct(noteDays,total),recoveryTimes,recentTimeline}
+  });
+
+  const weeklyReview=[];
+  for(let i=0;i<dates.length;i+=7){
+    const idsWeek=ids.slice(i,i+7), days=dates.slice(i,i+7);
+    if(!days.length) continue;
+    const doneRate=pct(idsWeek.filter(id=>ensureDay(id).done).length, idsWeek.length);
+    const mood=avg(idsWeek.map(id=>ensureDay(id).mood));
+    const energy=avg(idsWeek.map(id=>ensureDay(id).energy));
+    const strongestHabit=habits.length ? habits.map(h=>({name:h.name,score:pct(sum(idsWeek.map((id,idx)=>h.binary[i+idx]||0)), idsWeek.length)})).sort((a,b)=>b.score-a.score)[0] : null;
+    weeklyReview.push({label:`Week ${Math.floor(i/7)+1}`,doneRate,mood,energy,strongestHabit:strongestHabit?strongestHabit.name:"-"});
+  }
+
+  return {dates,ids,doneFlags,total,completed,completionRate,currentStreak,longest,notesDays,journalingRate,weeklyRates,monthStats,avgMood,avgEnergy,moodCompletionCorr,energyCompletionCorr,weekdayStats,bestWeekday,habits,weeklyReview}
+}
+
+function setView(v){currentHomeView=v;document.getElementById("detailView").classList.add("hidden");document.getElementById("habitView").classList.add("hidden");document.getElementById("homeView").classList.remove("hidden");for(const id of ["dashboardView","monthlyReportView","habitsHomeView","dailyView","weeklyView","monthlyView"])document.getElementById(id).classList.add("hidden");if(v==="dashboard")document.getElementById("dashboardView").classList.remove("hidden");if(v==="report")document.getElementById("monthlyReportView").classList.remove("hidden");if(v==="habits")document.getElementById("habitsHomeView").classList.remove("hidden");if(v==="daily")document.getElementById("dailyView").classList.remove("hidden");if(v==="weekly")document.getElementById("weeklyView").classList.remove("hidden");if(v==="monthly")document.getElementById("monthlyView").classList.remove("hidden");renderHome()}
+function renderHome(){if(currentHomeView==="dashboard")renderDashboard();if(currentHomeView==="report")renderMonthlyReport();if(currentHomeView==="habits")renderHabitsHome();if(currentHomeView==="daily")renderDaily();if(currentHomeView==="weekly")renderWeekly();if(currentHomeView==="monthly")renderMonthly()}
+function renderHabitsHome(){
+  const el=document.getElementById("habitsHomeView"),a=getAnalytics(),habits=a.habits.slice().sort((x,y)=>y.score-x.score);
+  if(!habits.length){
+    el.innerHTML=`<div class="card empty">No habits yet. Open any day, add a habit in the Habit tracker tab, then come back here.</div>`;
+    return;
+  }
+  el.innerHTML=`
+    <div class="card">
+      <div class="chart-title">Habit library</div>
+      <div class="tiny">Open any habit to inspect consistency, streaks, miss patterns, timing, recovery, and practical actions.</div>
+    </div>
+    <div class="grid-2">
+      ${habits.map(h=>`
+        <div class="card">
+          <div class="row-between">
+            <div>
+              <div><strong>${esc(h.name)}</strong></div>
+              <div class="tiny">Cue: ${esc(h.cue||"-")} • Time: ${esc(h.time||"-")}</div>
+            </div>
+            <span class="badge">${h.score.toFixed(1)}%</span>
+          </div>
+          <div class="grid-2" style="margin-top:10px">
+            <div class="summary-box"><div class="tiny">Activation</div><strong>${h.activationRate.toFixed(1)}%</strong></div>
+            <div class="summary-box"><div class="tiny">Recovery</div><strong>${h.recoveryScore!==null?h.recoveryScore.toFixed(0):"-"}</strong></div>
+            <div class="summary-box"><div class="tiny">Best weekday</div><strong>${esc(h.bestDay.name)}</strong></div>
+            <div class="summary-box"><div class="tiny">Top miss reason</div><strong>${esc(h.topReason)}</strong></div>
+          </div>
+          <div class="tiny" style="margin-top:10px">${esc(h.lackReason)}</div>
+          <div style="margin-top:10px"><button onclick='openHabitDetail(${JSON.stringify(h.name)})'>Open full habit analysis</button></div>
+        </div>
+      `).join("")}
+    </div>`;
+}
+
+function renderDaily(){
+  const el=document.getElementById("dailyView"),list=getDates().filter(matchesSearch);
+  el.innerHTML=list.length?list.map(d=>{const id=getDayId(d),day=ensureDay(id);return `<div class="card"><div class="row-between"><button class="date-btn grow" onclick="openDay('${id}')"><div><strong>${formatEnglish(d)}</strong></div><div class="tiny">${formatNepali(d)}</div></button><label class="row-center"><input class="check" type="checkbox" ${day.done?"checked":""} onchange="setDone('${id}', this.checked)"><span class="tiny">${day.done?"Done":"Open"}</span></label></div><div class="tiny" style="margin-top:8px">${esc((day.note||"").slice(0,90))||"No journal note yet."}</div><div class="tiny" style="margin-top:6px">Mood: ${day.mood??"-"} • Energy: ${day.energy??"-"}</div></div>`}).join(""):`<div class="card empty">No matching days found.</div>`
+}
+function renderWeekly(){
+  const el=document.getElementById("weeklyView"),a=getAnalytics();
+  el.innerHTML=a.weeklyReview.map(w=>`<div class="card"><div class="row-between"><div><strong>${w.label}</strong></div><span class="badge">${w.doneRate.toFixed(1)}%</span></div><div class="tiny" style="margin-top:6px">Mood ${w.mood!==null?w.mood.toFixed(1):"-"} • Energy ${w.energy!==null?w.energy.toFixed(1):"-"} • Strongest habit: ${esc(w.strongestHabit)}</div></div>`).join("")
+}
+function renderMonthly(){
+  const el=document.getElementById("monthlyView"),groups={};for(const d of getDates()){const k=`${englishMonths[d.getMonth()]} ${d.getFullYear()}`;(groups[k] ||= []).push(d)}
+  el.innerHTML=Object.entries(groups).map(([name,arr])=>`<div class="card"><div class="row-between"><strong>${name}</strong><span class="badge">${arr.filter(d=>ensureDay(getDayId(d)).done).length}/${arr.length} done</span></div><div style="margin-top:10px">`+arr.filter(matchesSearch).map(d=>{const id=getDayId(d),day=ensureDay(id);return `<button class="summary-box" style="width:100%;margin:8px 0" onclick="openDay('${id}')"><div class="row-between"><div><strong>${formatEnglish(d)}</strong><div class="tiny">${formatNepali(d)}</div></div><span class="pill">${day.done?"Done":"Open"}</span></div></button>`}).join("")+`</div></div>`).join("")
+}
+function renderDashboard(){
+  const a=getAnalytics(),el=document.getElementById("dashboardView");
+  const topRecovery = a.habits.length ? a.habits.slice().sort((x,y)=>(y.recoveryScore??-999)-(x.recoveryScore??-999))[0] : null;
+  el.innerHTML=`
+    <div class="kpi-grid">
+      <div class="kpi ${a.completionRate>=80?"good":a.completionRate>=55?"warn":"bad"}"><div class="tiny">Completion rate</div><div class="value">${a.completionRate.toFixed(1)}%</div><div class="tiny">${a.completed}/${a.total} days completed</div></div>
+      <div class="kpi good"><div class="tiny">Current streak</div><div class="value">${a.currentStreak}</div><div class="tiny">days in a row</div></div>
+      <div class="kpi good"><div class="tiny">Longest streak</div><div class="value">${a.longest}</div><div class="tiny">best run so far</div></div>
+      <div class="kpi ${topRecovery&&topRecovery.recoveryScore!==null&&topRecovery.recoveryScore>=60?"good":"warn"}"><div class="tiny">Best recovery habit</div><div class="value">${topRecovery?shorten(topRecovery.name,8):"-"}</div><div class="tiny">${topRecovery&&topRecovery.recoveryScore!==null?topRecovery.recoveryScore.toFixed(0)+" score":"-"}</div></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card"><div class="chart-title">Weekly consistency trend</div>${lineChart(a.weeklyRates,320,160,"#2563eb")}</div>
+      <div class="chart-card"><div class="chart-title">Monthly completion vs journaling</div>${groupedBars(a.monthStats,360,180)}</div>
+      <div class="chart-card"><div class="chart-title">Mood and energy by month</div>${dualLine(a.monthStats.map(x=>x.mood),a.monthStats.map(x=>x.energy),360,180)}</div>
+      <div class="chart-card"><div class="chart-title">Best weekday analysis</div>${weekdayBars(a.weekdayStats,360,220)}</div>
+      <div class="chart-card"><div class="chart-title">Habit score ranking</div>${a.habits.length?hBars(a.habits.slice().sort((x,y)=>y.score-x.score).slice(0,8),360,220,"score"):`<div class="empty">Add habits to see analytics.</div>`}</div>
+      <div class="chart-card"><div class="chart-title">Habit correlation with completion</div>${a.habits.length?hBars(a.habits.slice().sort((x,y)=>(y.completionCorr??-9)-(x.completionCorr??-9)).slice(0,8),360,220,"corr"):`<div class="empty">Add habits to calculate correlation.</div>`}</div>
+      <div class="chart-card"><div class="chart-title">Completion when habit happens vs missed</div>${a.habits.length?compareBars(a.habits.slice(0,6),380,220):`<div class="empty">Add habits to compare effect.</div>`}</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="chart-title">Short weekly review</div>
+        ${a.weeklyReview.slice(-4).map(w=>`<div class="summary-box" style="margin:8px 0"><div class="row-between"><div><strong>${w.label}</strong></div><span class="badge">${w.doneRate.toFixed(1)}%</span></div><div class="tiny" style="margin-top:6px">Mood ${w.mood!==null?w.mood.toFixed(1):"-"} • Energy ${w.energy!==null?w.energy.toFixed(1):"-"} • Strongest habit: ${esc(w.strongestHabit)}</div></div>`).join("")}
+      </div>
+      <div class="card">
+        <div class="chart-title">Top habits</div>
+        ${a.habits.length?a.habits.slice().sort((x,y)=>y.score-x.score).slice(0,6).map(h=>`<div class="summary-box" style="margin:8px 0"><div class="row-between"><div><strong>${esc(h.name)}</strong></div><span class="badge">${h.score.toFixed(1)}%</span></div><div class="tiny" style="margin-top:6px">Cue: ${esc(h.cue||"-")} • Time: ${esc(h.time||"-")} • Recovery: ${h.recoveryScore!==null?h.recoveryScore.toFixed(0):"-"} • Top miss reason: ${esc(h.topReason)}</div><div style="margin-top:8px"><button onclick='openHabitDetail(${JSON.stringify(h.name)})'>Open habit detail</button></div></div>`).join(""):`<div class="empty">No habits yet.</div>`}
+      </div>
+    </div>
+  `;
+}
+function renderMonthlyReport(){
+  const el=document.getElementById("monthlyReportView"),dates=getDates(),groups={};
+  dates.forEach(d=>{const k=`${englishMonths[d.getMonth()].slice(0,3)} ${d.getFullYear()}`;(groups[k] ||= []).push(d)});
+  const yearGroups={}; dates.forEach(d=>{const k=String(d.getFullYear()); (yearGroups[k] ||= []).push(d)});
+  const monthOpts=Object.keys(groups).map((label,i)=>`<option value="${i}">${label}</option>`).join("");
+  const yearOpts=Object.keys(yearGroups).map((label,i)=>`<option value="${i}">${label}</option>`).join("");
+  const weekOpts=Array.from({length:Math.ceil(dates.length/7)},(_,i)=>`<option value="${i}">Week ${i+1}</option>`).join("");
+  const dayOpts=dates.map((d,i)=>`<option value="${i}">${formatEnglish(d)}</option>`).join("");
+  if(!document.getElementById("reportTypeSelect"))el.innerHTML=`
+    <div class="card report-controls">
+      <div class="row-between">
+        <div>
+          <div class="chart-title">Printable reports</div>
+          <div class="tiny">Choose daily, weekly, monthly, or a custom duration. Summary gives the full report, and PDF chart prints the color matrix.</div>
+        </div>
+        <div class="row">
+          <select id="reportTypeSelect" class="month-select" onchange="updatePrintableReport()">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="daily">Daily</option>
+            <option value="yearly">Yearly</option>
+            <option value="duration">Duration</option>
+          </select>
+          <button onclick="printCurrentReport()">Print</button>
+        </div>
+      </div>
+      <div class="report-layout-tabs">
+        <button id="reportLayoutSummary" class="tab active" onclick="setReportLayout('summary')">Summary</button>
+        <button id="reportLayoutChart" class="tab" onclick="setReportLayout('chart')">PDF chart</button>
+      </div>
+      <div class="grid-2" style="margin-top:10px">
+        <div id="reportMonthlyControls">
+          <div class="tiny">Month</div>
+          <select id="reportMonthSelect" class="month-select" onchange="updatePrintableReport()">${monthOpts}</select>
+        </div>
+        <div id="reportWeeklyControls" class="hidden">
+          <div class="tiny">Week</div>
+          <select id="reportWeekSelect" class="month-select" onchange="updatePrintableReport()">${weekOpts}</select>
+        </div>
+        <div id="reportDailyControls" class="hidden">
+          <div class="tiny">Day</div>
+          <select id="reportDaySelect" class="month-select" onchange="updatePrintableReport()">${dayOpts}</select>
+        </div>
+        <div id="reportYearlyControls" class="hidden">
+          <div class="tiny">Year</div>
+          <select id="reportYearSelect" class="month-select" onchange="updatePrintableReport()">${yearOpts}</select>
+        </div>
+        <div id="reportDurationControls" class="hidden">
+          <div class="tiny">Start date</div>
+          <input id="reportStartDate" type="date" onchange="syncDurationFromDays()">
+        </div>
+        <div id="reportDurationDaysWrap" class="hidden">
+          <div class="tiny">Days</div>
+          <input id="reportDurationDays" type="number" min="1" step="1" placeholder="Enter days" onchange="syncDurationFromDays()">
+        </div>
+        <div id="reportDurationControlsEnd" class="hidden">
+          <div class="tiny">End date</div>
+          <input id="reportEndDate" type="date" onchange="syncDurationFromEndDate()">
+        </div>
+      </div>
+    </div>
+    <div id="reportBody"></div>`;
+  const ids=dates.map(getDayId);
+  const startInput=document.getElementById("reportStartDate"),endInput=document.getElementById("reportEndDate"),daysInput=document.getElementById("reportDurationDays");
+  if(startInput&&!startInput.value) startInput.value=ids[0];
+  if(endInput&&!endInput.value) endInput.value=ids[Math.min(6,ids.length-1)];
+  if(daysInput&&!daysInput.value) daysInput.value=String(Math.min(7,Math.max(ids.length,1)));
+  syncDurationFromDays(false);
+  updatePrintableReport();
+}
+function syncDurationFromDays(shouldRender=true){
+  const dates=getDates(),allIds=dates.map(getDayId),startEl=document.getElementById("reportStartDate"),endEl=document.getElementById("reportEndDate"),daysEl=document.getElementById("reportDurationDays");
+  if(!startEl||!endEl||!daysEl||!allIds.length){ if(shouldRender) updatePrintableReport(); return; }
+  let startId=startEl.value||allIds[0];
+  if(!allIds.includes(startId)){ startId=allIds[0]; startEl.value=startId; }
+  let daysCount=clamp(Number(daysEl.value||1),1,allIds.length);
+  daysEl.value=String(daysCount);
+  const startIdx=Math.max(allIds.indexOf(startId),0),endIdx=Math.min(startIdx+daysCount-1,allIds.length-1);
+  endEl.value=allIds[endIdx];
+  if(shouldRender) updatePrintableReport();
+}
+function syncDurationFromEndDate(){
+  const dates=getDates(),allIds=dates.map(getDayId),startEl=document.getElementById("reportStartDate"),endEl=document.getElementById("reportEndDate"),daysEl=document.getElementById("reportDurationDays");
+  if(!startEl||!endEl||!daysEl||!allIds.length){ updatePrintableReport(); return; }
+  let startId=startEl.value||allIds[0],endId=endEl.value||allIds[allIds.length-1];
+  if(!allIds.includes(startId)) startId=allIds[0];
+  if(!allIds.includes(endId)) endId=allIds[allIds.length-1];
+  let startIdx=allIds.indexOf(startId),endIdx=allIds.indexOf(endId);
+  if(startIdx>endIdx){
+    const temp=startIdx; startIdx=endIdx; endIdx=temp;
+    startEl.value=allIds[startIdx];
+    endEl.value=allIds[endIdx];
+  }
+  daysEl.value=String(endIdx-startIdx+1);
+  updatePrintableReport();
+}
+function getReportSelection(){
+  const dates=getDates(),groups={};dates.forEach(d=>{const k=`${englishMonths[d.getMonth()].slice(0,3)} ${d.getFullYear()}`;(groups[k] ||= []).push(d)});
+  const yearGroups={};dates.forEach(d=>{const k=String(d.getFullYear());(yearGroups[k] ||= []).push(d)});
+  const monthEntries=Object.entries(groups),yearEntries=Object.entries(yearGroups),type=document.getElementById("reportTypeSelect")?.value||"monthly";
+  if(type==="monthly"){
+    const idx=clamp(Number(document.getElementById("reportMonthSelect")?.value||0),0,Math.max(monthEntries.length-1,0)),pair=monthEntries[idx]||monthEntries[0];
+    if(!pair)return null;
+    return {type,label:pair[0],dates:pair[1]};
+  }
+  if(type==="weekly"){
+    const weekIdx=clamp(Number(document.getElementById("reportWeekSelect")?.value||0),0,Math.max(Math.ceil(dates.length/7)-1,0));
+    const arr=dates.slice(weekIdx*7,weekIdx*7+7);
+    if(!arr.length)return null;
+    return {type,label:`Week ${weekIdx+1} (${formatEnglish(arr[0])} to ${formatEnglish(arr[arr.length-1])})`,dates:arr};
+  }
+  if(type==="daily"){
+    const dayIdx=clamp(Number(document.getElementById("reportDaySelect")?.value||0),0,Math.max(dates.length-1,0));
+    const day=dates[dayIdx];
+    if(!day)return null;
+    return {type,label:`Daily report for ${formatEnglish(day)}`,dates:[day]};
+  }
+  if(type==="yearly"){
+    const yearIdx=clamp(Number(document.getElementById("reportYearSelect")?.value||0),0,Math.max(yearEntries.length-1,0)),pair=yearEntries[yearIdx]||yearEntries[0];
+    if(!pair)return null;
+    return {type,label:`Yearly report for ${pair[0]}`,dates:pair[1]};
+  }
+  const allIds=dates.map(getDayId),startEl=document.getElementById("reportStartDate"),endEl=document.getElementById("reportEndDate"),daysEl=document.getElementById("reportDurationDays");
+  let startId=startEl?.value||allIds[0],endId=endEl?.value||allIds[allIds.length-1];
+  if(startId>endId){const temp=startId;startId=endId;endId=temp;if(startEl)startEl.value=startId;if(endEl)endEl.value=endId}
+  const arr=dates.filter(d=>{const id=getDayId(d);return id>=startId&&id<=endId});
+  if(!arr.length)return null;
+  if(daysEl) daysEl.value=String(arr.length);
+  return {type,label:`Duration report (${formatEnglish(arr[0])} to ${formatEnglish(arr[arr.length-1])})`,dates:arr};
+}
+function buildPrintableReport(selection){
+  if(!selection||!selection.dates.length)return `<div class="card empty">No report data available.</div>`;
+  const arr=selection.dates,ids=arr.map(getDayId),trackedIds=ids.filter(id=>!isFutureDayId(id)),done=trackedIds.filter(id=>ensureDay(id).done).length,notes=trackedIds.filter(id=>(ensureDay(id).note||"").trim()).length,moods=trackedIds.map(id=>ensureDay(id).mood),energies=trackedIds.map(id=>ensureDay(id).energy);
+  const bucketMode=getRangeBucketMode(selection);
+  const viewText=bucketMode==="day"?"daily detail":bucketMode==="week"?"weekly grouped view":"monthly grouped view";
+  const habitRows=Object.keys(state.habits).sort((a,b)=>a.localeCompare(b)).map(name=>{
+    const entries=trackedIds.map(id=>ensureHabitEntry(name,id));
+    const doneLike=entries.filter(e=>e.state==="done"||e.state==="minimum").length;
+    const misses=entries.filter(e=>e.state==="missed").length;
+    const reasons={}; entries.forEach(e=>{if(e.missReason) reasons[e.missReason]=(reasons[e.missReason]||0)+1});
+    const topReason=Object.entries(reasons).sort((a,b)=>b[1]-a[1])[0]?.[0]||"-";
+    return {name,rate:pct(doneLike,trackedIds.length),misses,topReason};
+  });
+  const journalList=arr.filter(d=>(ensureDay(getDayId(d)).note||"").trim()).map(d=>{
+    const id=getDayId(d),day=ensureDay(id);
+    return `<div class="summary-box" style="margin:8px 0"><div class="row-between"><strong>${formatEnglish(d)}</strong><span class="pill">${day.done?"Done":"Open"}</span></div><div class="tiny" style="margin-top:6px">Mood: ${day.mood??"-"} • Energy: ${day.energy??"-"}</div><div style="margin-top:8px">${esc(day.note)}</div></div>`;
+  }).join("")||`<div class="card empty">No journal entries in this report period.</div>`;
+  const dailyList=arr.map(d=>{
+    const id=getDayId(d),day=ensureDay(id);
+    return `<div class="summary-box" style="margin:8px 0"><div class="row-between"><div><strong>${formatEnglish(d)}</strong><div class="tiny">${formatNepali(d)}</div></div><span class="pill">${day.done?"Done":"Open"}</span></div><div class="tiny" style="margin-top:6px">Mood: ${day.mood??"-"} • Energy: ${day.energy??"-"}</div><div class="tiny" style="margin-top:6px">${esc(shorten(day.note||"No journal note yet.",140))}</div></div>`;
+  }).join("");
+  return `
+    <div class="card">
+      <div class="chart-title">${selection.label}</div>
+      <div class="tiny">Printable ${selection.type} report for ${ids.length} selected day${ids.length===1?"":"s"}.</div>
+      <div class="tiny">${esc(fullDateRangeLabel(arr))} • ${trackedIds.length} tracked day${trackedIds.length===1?"":"s"}${ids.length!==trackedIds.length?` • ${ids.length-trackedIds.length} upcoming day${ids.length-trackedIds.length===1?"":"s"}`:""}.</div>
+      <div class="tiny">Chart view uses ${viewText} so it stays easy to read and print.</div>
+    </div>
+    <div class="grid-4">
+      <div class="kpi good"><div class="tiny">Completion</div><div class="value">${pct(done,trackedIds.length).toFixed(1)}%</div><div class="tiny">${done}/${trackedIds.length||0} tracked days</div></div>
+      <div class="kpi warn"><div class="tiny">Journaling</div><div class="value">${pct(notes,trackedIds.length).toFixed(1)}%</div><div class="tiny">${notes}/${trackedIds.length||0} tracked days</div></div>
+      <div class="kpi good"><div class="tiny">Average mood</div><div class="value">${avg(moods)!==null?avg(moods).toFixed(1):"-"}</div><div class="tiny">Scale 1 to 10</div></div>
+      <div class="kpi good"><div class="tiny">Average energy</div><div class="value">${avg(energies)!==null?avg(energies).toFixed(1):"-"}</div><div class="tiny">Scale 1 to 10</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="chart-card"><div class="chart-title">Completion trend</div>${lineChart(trackedIds.map(id=>ensureDay(id).done?100:0),360,180,"#2563eb")}</div>
+      <div class="chart-card"><div class="chart-title">Mood and energy</div>${dualLine(moods,energies,360,180)}</div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="chart-title">Day summary</div>
+        ${dailyList}
+      </div>
+      <div class="card">
+        <div class="chart-title">Habit summary</div>
+        ${habitRows.length?habitRows.map(h=>`<div class="summary-box" style="margin:8px 0"><div class="row-between"><strong>${esc(h.name)}</strong><span class="badge">${h.rate.toFixed(1)}%</span></div><div class="tiny" style="margin-top:6px">Missed days: ${h.misses} • Top miss reason: ${esc(h.topReason)}</div></div>`).join(""):`<div class="empty">No habits added yet.</div>`}
+      </div>
+    </div>
+    <div class="card">
+      <div class="chart-title">Journal entries</div>
+      ${journalList}
+    </div>`;
+}
+function setReportLayout(layout){
+  currentReportLayout=layout==="chart"?"chart":"summary";
+  document.getElementById("reportLayoutSummary")?.classList.toggle("active",currentReportLayout==="summary");
+  document.getElementById("reportLayoutChart")?.classList.toggle("active",currentReportLayout==="chart");
+  updatePrintableReport();
+}
+function printCurrentReport(){
+  document.body.classList.toggle("print-chart",currentReportLayout==="chart");
+  window.print();
+  setTimeout(()=>document.body.classList.remove("print-chart"),100);
+}
+function printChartPdf(){
+  currentReportLayout="chart";
+  document.getElementById("reportLayoutSummary")?.classList.remove("active");
+  document.getElementById("reportLayoutChart")?.classList.add("active");
+  printCurrentReport();
+}
+function updatePrintableReport(){
+  const type=document.getElementById("reportTypeSelect")?.value||"monthly";
+  document.getElementById("reportMonthlyControls")?.classList.toggle("hidden",type!=="monthly");
+  document.getElementById("reportWeeklyControls")?.classList.toggle("hidden",type!=="weekly");
+  document.getElementById("reportDailyControls")?.classList.toggle("hidden",type!=="daily");
+  document.getElementById("reportYearlyControls")?.classList.toggle("hidden",type!=="yearly");
+  document.getElementById("reportDurationControls")?.classList.toggle("hidden",type!=="duration");
+  document.getElementById("reportDurationDaysWrap")?.classList.toggle("hidden",type!=="duration");
+  document.getElementById("reportDurationControlsEnd")?.classList.toggle("hidden",type!=="duration");
+  const selection=getReportSelection();
+  document.getElementById("reportLayoutSummary")?.classList.toggle("active",currentReportLayout==="summary");
+  document.getElementById("reportLayoutChart")?.classList.toggle("active",currentReportLayout==="chart");
+  document.getElementById("reportBody").innerHTML=currentReportLayout==="chart"?buildHabitMatrix(selection):buildPrintableReport(selection)+(type==="duration"?buildHabitMatrix(selection):"");
+}
+
+function openHabitDetail(name){
+  const a=getAnalytics(), h=a.habits.find(x=>x.name===name); if(!h) return;
+  document.getElementById("homeView").classList.add("hidden");
+  document.getElementById("detailView").classList.add("hidden");
+  document.getElementById("habitView").classList.remove("hidden");
+  document.getElementById("habitTitle").textContent=h.name;
+  document.getElementById("habitSub").textContent=`Cue: ${h.cue||"-"} • Time: ${h.time||"-"} • Recovery score: ${h.recoveryScore!==null?h.recoveryScore.toFixed(0):"-"}`;
+  const moodDone=[],moodNot=[],energyDone=[],energyNot=[]; const ids=a.ids;
+  ids.forEach((id,i)=>{const day=ensureDay(id),active=h.binary[i]>0;if(active){if(typeof day.mood==="number")moodDone.push(day.mood);if(typeof day.energy==="number")energyDone.push(day.energy)}else{if(typeof day.mood==="number")moodNot.push(day.mood);if(typeof day.energy==="number")energyNot.push(day.energy)}})
+  const reasonEntries=Object.entries(h.reasonsCount).sort((x,y)=>y[1]-x[1]);
+  const recentRows=h.recentTimeline.slice().reverse().map(item=>`<div class="summary-box" style="margin:8px 0"><div class="row-between"><strong>${formatEnglish(item.date)}</strong><span class="pill">${esc(item.state)}</span></div><div class="tiny" style="margin-top:6px">${item.missReason?`Miss reason: ${esc(item.missReason)}`:`No miss reason recorded.`}</div><div class="tiny" style="margin-top:6px">${esc(shorten(item.note||"No habit note recorded.",120))}</div></div>`).join("");
+  const scientificInterpretation=[
+    h.score>=80?"The habit is already stable. The main goal is protecting the cue and preventing relapse after disruptions."
+    :h.score>=55?"The habit exists but is not yet automatic. It still depends on context support and deliberate effort."
+    :"The habit is still fragile. Reduce friction and make the first action smaller so repetition becomes easier.",
+    (h.lift??0)>=15?"This is acting like a keystone habit: when it happens, whole-day completion improves noticeably."
+    :(h.lift??0)<=0?"This habit is not yet translating into better full-day execution. The cue may be too weak or the action may be too detached from core goals."
+    :"This habit has a mild positive effect on daily completion but not enough to rely on it alone.",
+    (h.gapRate??0)>55?"Relapse risk is high right after successful days. That usually means success is effort-driven rather than cue-driven."
+    :"Relapse risk after a success day is relatively controlled, which suggests the routine has some repeatability."
+  ];
+  const practicalActions=[
+    h.cue?"Keep the cue fixed and visible. Repeating the same trigger matters more than adding intensity.":"Add a concrete cue such as a time, location, or action that always happens before the habit.",
+    h.time?`Protect the ${h.time.toLowerCase()} slot and avoid moving this habit around unless the data clearly shows a better window.`:"Assign a stable time window so the habit stops competing with the whole day.",
+    h.topReason!=="-"?`Design around the main miss reason: "${h.topReason}". Remove that friction before trying to increase ambition.`:"Track misses for longer so the dominant friction becomes visible.",
+    h.score<35?"Shrink the habit to a minimum version that can be done on the worst day.":"Use the minimum version only as a rescue behavior, not the default target.",
+    (h.recoveryScore??100)<50?"Plan an explicit restart rule for the next day after a miss. Recovery speed is currently too slow.":"Keep the next-day restart rule simple so misses do not turn into multi-day gaps."
+  ];
+  document.getElementById("habitBody").innerHTML=`
+    <div class="kpi-grid">
+      <div class="kpi ${h.score>=80?"good":h.score>=55?"warn":"bad"}"><div class="tiny">Habit score</div><div class="value">${h.score.toFixed(1)}%</div><div class="tiny">done + minimum weighted</div></div>
+      <div class="kpi good"><div class="tiny">Current streak</div><div class="value">${h.currentStreak}</div><div class="tiny">days</div></div>
+      <div class="kpi good"><div class="tiny">Longest streak</div><div class="value">${h.longestStreak}</div><div class="tiny">days</div></div>
+      <div class="kpi ${h.recoveryScore!==null&&h.recoveryScore>=60?"good":"warn"}"><div class="tiny">Recovery score</div><div class="value">${h.recoveryScore!==null?h.recoveryScore.toFixed(0):"-"}</div><div class="tiny">automatic</div></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi good"><div class="tiny">Active days</div><div class="value">${h.doneCount+h.minimumCount}</div><div class="tiny">${h.activationRate.toFixed(1)}% of tracked days</div></div>
+      <div class="kpi warn"><div class="tiny">Missed days</div><div class="value">${h.missedCount}</div><div class="tiny">full misses</div></div>
+      <div class="kpi good"><div class="tiny">Minimum saves</div><div class="value">${h.minimumCount}</div><div class="tiny">fallback completions</div></div>
+      <div class="kpi ${h.noteRate>=30?"good":"warn"}"><div class="tiny">Habit notes</div><div class="value">${h.noteRate.toFixed(1)}%</div><div class="tiny">${h.noteDays} days documented</div></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi ${h.lift!==null&&h.lift>10?"good":"warn"}"><div class="tiny">Completion lift</div><div class="value">${h.lift!==null?(h.lift>=0?"+":"")+h.lift.toFixed(1):"-"}</div><div class="tiny">vs missed</div></div>
+      <div class="kpi ${h.gapRate!==null&&h.gapRate>55?"warn":"good"}"><div class="tiny">Break-after-success gap</div><div class="value">${h.gapRate!==null?h.gapRate.toFixed(1):"-"}</div><div class="tiny">%</div></div>
+      <div class="kpi ${h.bestDay.rate>=50?"good":"warn"}"><div class="tiny">Best weekday</div><div class="value">${h.bestDay.name.slice(0,3)}</div><div class="tiny">${h.bestDay.rate.toFixed(1)}%</div></div>
+      <div class="kpi ${h.completionCorr!==null&&h.completionCorr>0.3?"good":"warn"}"><div class="tiny">Completion correlation</div><div class="value">${h.completionCorr!==null?h.completionCorr.toFixed(2):"-"}</div><div class="tiny">${classifyCorr(h.completionCorr)}</div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card"><div class="chart-title">Monthly habit trend</div>${lineChart(h.monthlySeries,360,180,"#7c3aed")}</div>
+      <div class="chart-card"><div class="chart-title">Weekday pattern</div>${weekdayBars(h.weekdayPattern,360,220)}</div>
+      <div class="chart-card"><div class="chart-title">Completion when habit happens vs missed</div>${compareBars([{name:h.name,completeWhenDone:h.completeWhenDone,completeWhenNot:h.completeWhenNot}],380,120)}</div>
+      <div class="chart-card"><div class="chart-title">Mood and energy effect</div>${compareMetricBars([{label:"Mood when active",value:avg(moodDone)},{label:"Mood when missed",value:avg(moodNot)},{label:"Energy when active",value:avg(energyDone)},{label:"Energy when missed",value:avg(energyNot)}],360,180)}</div>
+      <div class="chart-card"><div class="chart-title">Habit heatmap</div>${heatmap(h.binary.map(v=>v>0?1:0),10)}</div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="chart-title">Scientific interpretation</div>
+        ${scientificInterpretation.map(text=>`<div class="insight ${(h.score>=55&&text===scientificInterpretation[0])||((h.lift??0)>=15&&text===scientificInterpretation[1])?"good":"warn"}">${esc(text)}</div>`).join("")}
+        <div class="insight ${(h.lift??-999)>15?"good":((h.gapRate??0)>55?"warn":"bad")}"><strong>Why consistency may lack:</strong> ${esc(h.lackReason)}</div>
+        <div class="insight ${(h.completionCorr??0)>0.3?"good":"warn"}"><strong>Correlation:</strong> ${h.completionCorr!==null?h.completionCorr.toFixed(2):"-"} with daily completion.</div>
+        <div class="insight ${(h.recoveryScore!==null&&h.recoveryScore<50)?"warn":"good"}"><strong>Practical action:</strong> ${h.score<35?"Make this habit smaller and easier.":"Keep the same cue and time window."} ${h.gapRate!==null&&h.gapRate>55?"Use minimum version on hard days so it doesn't collapse into missed.":""}</div>
+      </div>
+      <div class="card">
+        <div class="chart-title">Practical habit design</div>
+        ${practicalActions.map(text=>`<div class="summary-box" style="margin:8px 0">${esc(text)}</div>`).join("")}
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="chart-title">Habit profile</div>
+        <div class="summary-box" style="margin:8px 0"><strong>Cue:</strong> ${esc(h.cue||"-")}</div>
+        <div class="summary-box" style="margin:8px 0"><strong>Preferred time:</strong> ${esc(h.time||"-")}</div>
+        <div class="summary-box" style="margin:8px 0"><strong>Top miss reason:</strong> ${esc(h.topReason)}</div>
+        <div class="summary-box" style="margin:8px 0"><strong>Main strength:</strong> ${(h.lift??-999)>15?"improves full-day completion":h.bestDay.rate>50?"works better on certain weekdays":"still forming"}</div>
+        <div class="summary-box" style="margin:8px 0"><strong>Best month:</strong> ${h.bestMonth?`${esc(h.bestMonth.label)} (${h.bestMonth.rate.toFixed(1)}%)`:"-"}</div>
+        <div class="summary-box" style="margin:8px 0"><strong>Weakest month:</strong> ${h.worstMonth?`${esc(h.worstMonth.label)} (${h.worstMonth.rate.toFixed(1)}%)`:"-"}</div>
+        <div class="summary-box" style="margin:8px 0"><strong>Weakest weekday:</strong> ${h.worstDay?`${esc(h.worstDay.name)} (${h.worstDay.rate.toFixed(1)}%)`:"-"}</div>
+      </div>
+      <div class="card">
+        <div class="chart-title">Miss pattern analysis</div>
+        ${reasonEntries.length?reasonEntries.map(([reason,count])=>`<div class="summary-box" style="margin:8px 0"><div class="row-between"><strong>${esc(reason)}</strong><span class="badge">${count}</span></div><div class="tiny" style="margin-top:6px">${pct(count,h.missedCount||1).toFixed(1)}% of missed days</div></div>`).join(""):`<div class="empty">No miss reasons recorded yet.</div>`}
+        <div class="summary-box" style="margin:8px 0"><strong>Average recovery time:</strong> ${h.recoveryTimes.length?`${avg(h.recoveryTimes).toFixed(1)} days`:"No recovery cycle measured yet."}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="chart-title">Recent habit log</div>
+      ${recentRows||`<div class="empty">No recent habit data.</div>`}
+    </div>
+    <div class="card">
+      <div class="chart-title">Monthly breakdown</div>
+      ${h.monthlyBreakdown.map(item=>`<div class="summary-box" style="margin:8px 0"><div class="row-between"><strong>${esc(item.label)}</strong><span class="badge">${item.rate.toFixed(1)}%</span></div><div class="tiny" style="margin-top:6px">Missed days: ${item.misses}</div></div>`).join("")}
+      </div>
+    </div>
+  `
+}
+
+function openDay(dayId){currentDayId=dayId;const d=new Date(dayId+"T00:00:00"),day=ensureDay(dayId);document.getElementById("homeView").classList.add("hidden");document.getElementById("habitView").classList.add("hidden");document.getElementById("detailView").classList.remove("hidden");document.getElementById("detailTitle").textContent=formatEnglish(d);document.getElementById("detailSub").textContent=formatNepali(d);document.getElementById("detailDone").checked=day.done;document.getElementById("detailNote").value=day.note||"";document.getElementById("detailMood").value=day.mood??"";document.getElementById("detailEnergy").value=day.energy??"";setDetailTab(currentDetailTab);renderHabitList()}
+function goHome(){document.getElementById("detailView").classList.add("hidden");document.getElementById("habitView").classList.add("hidden");document.getElementById("homeView").classList.remove("hidden");renderHome()}
+function openPrevDay(){const ids=getDates().map(getDayId),i=ids.indexOf(currentDayId);if(i>0)openDay(ids[i-1])}
+function openNextDay(){const ids=getDates().map(getDayId),i=ids.indexOf(currentDayId);if(i>=0&&i<ids.length-1)openDay(ids[i+1])}
+function setDone(dayId,checked){ensureDay(dayId).done=checked;queueSave("Day saved");renderHome();if(currentDayId===dayId)document.getElementById("detailDone").checked=checked}
+function toggleDoneFromDetail(){setDone(currentDayId,document.getElementById("detailDone").checked)}
+function setDetailTab(tab){currentDetailTab=tab;document.getElementById("journalTab").classList.toggle("hidden",tab!=="journal");document.getElementById("habitTab").classList.toggle("hidden",tab!=="habit");document.getElementById("tabJournal").classList.toggle("active",tab==="journal");document.getElementById("tabHabit").classList.toggle("active",tab==="habit")}
+function normalizeHabitName(name){return name.trim().replace(/\s+/g," ")}
+
+function addHabit(){
+  const name=normalizeHabitName(document.getElementById("newHabitName").value);
+  const cue=document.getElementById("newHabitCue").value.trim();
+  const time=document.getElementById("newHabitTime").value;
+  if(!name) return;
+  const h=ensureHabit(name); h.cue=cue; h.time=time;
+  ensureHabitEntry(name,currentDayId);
+  document.getElementById("newHabitName").value=""; document.getElementById("newHabitCue").value=""; document.getElementById("newHabitTime").value="";
+  queueSave("Habit added"); renderHabitList(); renderHome();
+}
+function deleteHabit(name){if(!confirm(`Delete habit "${name}" from all days?`))return;delete state.habits[name];queueSave("Habit deleted");renderHabitList();renderHome()}
+function setHabitState(name,stateVal){const e=ensureHabitEntry(name,currentDayId);e.state=stateVal;if(stateVal!=="missed") e.missReason="";queueSave("Habit saved");renderHabitList();renderHome()}
+function setHabitNote(name,val){ensureHabitEntry(name,currentDayId).note=val;queueSave("Habit note saved")}
+function setHabitMissReason(name,val){ensureHabitEntry(name,currentDayId).missReason=val;queueSave("Miss reason saved");renderHome()}
+function renderHabitList(){
+  const el=document.getElementById("habitList"),names=Object.keys(state.habits).sort((a,b)=>a.localeCompare(b));
+  if(!names.length){el.innerHTML=`<div class="empty">No habits yet. Add one above.</div>`;return}
+  el.innerHTML=names.map(name=>{
+    const h=ensureHabit(name), e=ensureHabitEntry(name,currentDayId);
+    const stateLabel = e.state==="done"?"Done":e.state==="minimum"?"Minimum":"Missed";
+    return `<div class="habit-item">
+      <div class="row-between">
+        <div>
+          <div><strong>${esc(name)}</strong></div>
+          <div class="tiny">Cue: ${esc(h.cue||"-")} • Time: ${esc(h.time||"-")} • Today: ${stateLabel}</div>
+        </div>
+        <div class="row">
+          <button onclick='openHabitDetail(${JSON.stringify(name)})'>Detail</button>
+          <button onclick='deleteHabit(${JSON.stringify(name)})'>Delete</button>
+        </div>
+      </div>
+      <div class="segment" style="margin-top:8px">
+        <button class="${e.state==="done"?"active":""}" onclick='setHabitState(${JSON.stringify(name)},"done")'>Done</button>
+        <button class="${e.state==="minimum"?"active":""}" onclick='setHabitState(${JSON.stringify(name)},"minimum")'>Minimum</button>
+        <button class="${e.state==="missed"?"active":""}" onclick='setHabitState(${JSON.stringify(name)},"missed")'>Missed</button>
+      </div>
+      ${e.state==="missed" ? `<div style="margin-top:8px"><div class="tiny">Miss reason</div><select onchange='setHabitMissReason(${JSON.stringify(name)}, this.value)'><option value="">Choose reason</option>${MISS_REASONS.map(r=>`<option ${e.missReason===r?"selected":""}>${r}</option>`).join("")}</select></div>` : ``}
+      <div style="margin-top:8px"><textarea placeholder="Habit note for this day..." oninput='setHabitNote(${JSON.stringify(name)}, this.value)'>${esc(e.note||"")}</textarea></div>
+    </div>`
+  }).join("")
+}
+function exportBackup(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="daily_checker_clean_working_v2_backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importBackup(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=async()=>{try{const parsed=JSON.parse(reader.result);if(!parsed.days)throw new Error("bad");state=parsed;await persistState("Backup imported");renderHome();alert("Backup imported successfully.")}catch(e){alert("Import failed.")}};reader.readAsText(file);event.target.value=""}
+
+async function init(){
+  state=await loadState();
+  const addedDefaults=seedDefaultHabits();
+  setStatus("Saved data loaded");
+  if(addedDefaults) queueSave("Default habits added");
+  setView("dashboard");
+  const note=document.getElementById("detailNote"),mood=document.getElementById("detailMood"),energy=document.getElementById("detailEnergy");
+  note.addEventListener("input",function(){if(currentDayId){ensureDay(currentDayId).note=this.value;queueSave("Journal saved")}})
+  note.addEventListener("blur",function(){if(currentDayId){ensureDay(currentDayId).note=this.value;persistState("Journal saved")}})
+  function saveScores(){if(!currentDayId)return;const day=ensureDay(currentDayId),mv=Number(mood.value),ev=Number(energy.value);day.mood=mood.value===""||mv<1||mv>10?null:mv;day.energy=energy.value===""||ev<1||ev>10?null:ev;queueSave("Scores saved");renderHome()}
+  mood.addEventListener("input",saveScores);energy.addEventListener("input",saveScores);mood.addEventListener("blur",saveScores);energy.addEventListener("blur",saveScores);
+  window.addEventListener("beforeunload",()=>persistState("Saved"));document.addEventListener("visibilitychange",()=>{if(document.hidden)persistState("Saved")})
+}
+init();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function (err) {
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>

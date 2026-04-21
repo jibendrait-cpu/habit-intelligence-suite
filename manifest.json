@@ -1,0 +1,25 @@
+{
+  "name": "Habit Intelligence Suite",
+  "short_name": "Habit Suite",
+  "description": "Premium offline-first habit intelligence suite with monthly, weekly, and annual analytics in a single-file app shell.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#04101f",
+  "theme_color": "#071427",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
