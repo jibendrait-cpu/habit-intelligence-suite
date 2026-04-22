@@ -1,12 +1,12 @@
-const CACHE_NAME = "habit-intelligence-suite-v4";
+const CACHE_NAME = "habit-intelligence-suite-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./icons/favicon-32-v2.png",
-  "./icons/apple-touch-icon-v2.png",
-  "./icons/icon-192-v2.png",
-  "./icons/icon-512-v2.png"
+  "./icons/favicon-32-v3.png",
+  "./icons/apple-touch-icon-v3.png",
+  "./icons/icon-192-v3.png",
+  "./icons/icon-512-v3.png"
 ];
 
 self.addEventListener("install", (event) => {
