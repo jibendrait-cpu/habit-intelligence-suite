@@ -1,10 +1,12 @@
-const CACHE_NAME = "habit-intelligence-suite-v2";
+const CACHE_NAME = "habit-intelligence-suite-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/favicon-32-v2.png",
+  "./icons/apple-touch-icon-v2.png",
+  "./icons/icon-192-v2.png",
+  "./icons/icon-512-v2.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -24,6 +26,27 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  const requestUrl = new URL(event.request.url);
+  const isAppShellNavigation = event.request.mode === "navigate"
+    || (requestUrl.origin === self.location.origin && (requestUrl.pathname.endsWith("/") || requestUrl.pathname.endsWith("/index.html")));
+
+  if (isAppShellNavigation) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put("./index.html", copy).catch(() => {});
+            }).catch(() => {});
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cached) => {

@@ -7,15 +7,25 @@
   <meta name="theme-color" content="#061426">
   <meta name="description" content="Premium habit intelligence suite with monthly, weekly, and annual analytics dashboards, offline-first persistence, and installable PWA support.">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32-v2.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon-v2.png">
   <style>
     :root {
       --bg-0: #020912;
       --bg-1: #04101f;
       --bg-2: #07192f;
+      --body-radial-1: rgba(83, 216, 251, 0.13);
+      --body-radial-2: rgba(156, 140, 255, 0.13);
+      --body-radial-3: rgba(87, 227, 160, 0.08);
+      --body-grad-start: #071427;
+      --body-grad-mid: #04101f;
+      --body-grad-end: #020912;
       --panel: rgba(8, 24, 45, 0.9);
       --panel-2: rgba(11, 30, 54, 0.94);
       --panel-3: rgba(7, 19, 36, 0.96);
+      --shell-border: rgba(120, 174, 240, 0.16);
+      --shell-bg-start: rgba(5, 16, 30, 0.92);
+      --shell-bg-end: rgba(3, 12, 22, 0.97);
       --line: rgba(122, 177, 245, 0.15);
       --line-strong: rgba(139, 195, 255, 0.24);
       --text: #eff6ff;
@@ -47,6 +57,31 @@
       --topbar-h: 74px;
     }
 
+    :root[data-theme="light"] {
+      --bg-0: #f5f9ff;
+      --bg-1: #e8f1ff;
+      --bg-2: #d7e6fb;
+      --body-radial-1: rgba(83, 184, 251, 0.18);
+      --body-radial-2: rgba(140, 149, 255, 0.16);
+      --body-radial-3: rgba(87, 227, 160, 0.12);
+      --body-grad-start: #f5f9ff;
+      --body-grad-mid: #e9f2ff;
+      --body-grad-end: #dbe8fb;
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-2: rgba(248, 251, 255, 0.96);
+      --panel-3: rgba(239, 245, 255, 0.98);
+      --shell-border: rgba(88, 128, 188, 0.18);
+      --shell-bg-start: rgba(255, 255, 255, 0.92);
+      --shell-bg-end: rgba(240, 247, 255, 0.98);
+      --line: rgba(79, 118, 176, 0.14);
+      --line-strong: rgba(70, 109, 169, 0.24);
+      --text: #10233f;
+      --muted: #4f6484;
+      --muted-2: #7286a1;
+      --shadow-lg: 0 28px 70px rgba(41, 75, 120, 0.14);
+      --shadow-md: 0 18px 40px rgba(41, 75, 120, 0.1);
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -55,17 +90,23 @@
       color-scheme: dark;
     }
 
+    :root[data-theme="light"] html,
+    html[data-theme="light"] {
+      color-scheme: light;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top left, rgba(83, 216, 251, 0.13), transparent 25%),
-        radial-gradient(circle at top right, rgba(156, 140, 255, 0.13), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(87, 227, 160, 0.08), transparent 22%),
-        linear-gradient(180deg, #071427 0%, #04101f 58%, #020912 100%);
+        radial-gradient(circle at top left, var(--body-radial-1), transparent 25%),
+        radial-gradient(circle at top right, var(--body-radial-2), transparent 28%),
+        radial-gradient(circle at bottom left, var(--body-radial-3), transparent 22%),
+        linear-gradient(180deg, var(--body-grad-start) 0%, var(--body-grad-mid) 58%, var(--body-grad-end) 100%);
       color: var(--text);
       font-family: Bahnschrift, "Segoe UI Variable Display", "Trebuchet MS", "Segoe UI", sans-serif;
       letter-spacing: 0.01em;
+      transition: background 180ms ease, color 180ms ease;
     }
 
     button,
@@ -92,10 +133,76 @@
       margin: 10px auto;
       padding: 16px;
       border-radius: 34px;
-      border: 1px solid rgba(120, 174, 240, 0.16);
-      background: linear-gradient(180deg, rgba(5, 16, 30, 0.92), rgba(3, 12, 22, 0.97));
+      border: 1px solid var(--shell-border);
+      background: linear-gradient(180deg, var(--shell-bg-start), var(--shell-bg-end));
       box-shadow: var(--shadow-lg);
       backdrop-filter: blur(18px);
+      transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    :root[data-theme="light"] .panel,
+    :root[data-theme="light"] .grouped-week-card,
+    :root[data-theme="light"] .task-week-card,
+    :root[data-theme="light"] .summary-card,
+    :root[data-theme="light"] .stat-card,
+    :root[data-theme="light"] .habit-row,
+    :root[data-theme="light"] .ranking-item,
+    :root[data-theme="light"] .analytics-row,
+    :root[data-theme="light"] .setup-item,
+    :root[data-theme="light"] .week-bar-item,
+    :root[data-theme="light"] .formula-item,
+    :root[data-theme="light"] .check-item,
+    :root[data-theme="light"] .annual-progress-row,
+    :root[data-theme="light"] .setup-architecture-row,
+    :root[data-theme="light"] .setup-mobile-card,
+    :root[data-theme="light"] .planner-master-row,
+    :root[data-theme="light"] .executive-kpi,
+    :root[data-theme="light"] .kpi-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 247, 255, 0.96));
+      border-color: rgba(88, 128, 188, 0.14);
+      box-shadow: 0 12px 28px rgba(41, 75, 120, 0.08);
+    }
+
+    :root[data-theme="light"] .button,
+    :root[data-theme="light"] .nav-tab,
+    :root[data-theme="light"] .status-pill,
+    :root[data-theme="light"] .eyebrow,
+    :root[data-theme="light"] .segmented,
+    :root[data-theme="light"] .chip-button {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(88, 128, 188, 0.16);
+      color: var(--text);
+    }
+
+    :root[data-theme="light"] .button.primary,
+    :root[data-theme="light"] .nav-tab.active,
+    :root[data-theme="light"] .segmented button.active {
+      background: linear-gradient(135deg, rgba(83, 216, 251, 0.18), rgba(125, 134, 255, 0.16));
+      border-color: rgba(88, 128, 188, 0.22);
+    }
+
+    :root[data-theme="light"] .button.danger {
+      background: linear-gradient(135deg, rgba(255, 106, 150, 0.12), rgba(255, 156, 110, 0.12));
+      border-color: rgba(210, 103, 132, 0.18);
+    }
+
+    :root[data-theme="light"] textarea,
+    :root[data-theme="light"] select,
+    :root[data-theme="light"] input[type="month"],
+    :root[data-theme="light"] input[type="text"],
+    :root[data-theme="light"] input[type="number"],
+    :root[data-theme="light"] input[type="date"],
+    :root[data-theme="light"] input[type="time"],
+    :root[data-theme="light"] input[type="color"] {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(88, 128, 188, 0.16);
+      color: var(--text);
+    }
+
+    :root[data-theme="light"] .note-box {
+      background: rgba(83, 216, 251, 0.08);
+      border-color: rgba(88, 128, 188, 0.16);
+      color: var(--muted);
     }
 
     .topbar {
@@ -119,16 +226,26 @@
     .brand-mark {
       width: 56px;
       height: 56px;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 18px;
       background:
         radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.18), transparent 32%),
         linear-gradient(135deg, rgba(83, 216, 251, 0.24), rgba(156, 140, 255, 0.2));
       border: 1px solid rgba(137, 194, 255, 0.24);
       box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.03), 0 12px 30px rgba(0, 0, 0, 0.28);
-      font-size: 1.35rem;
-      font-weight: 800;
+      overflow: hidden;
+      padding: 4px;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 14px;
+      display: block;
     }
 
     .brand-copy h1 {
@@ -257,6 +374,215 @@
       gap: 18px;
     }
 
+    .planner-layout {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .planner-main {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .planner-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(88px, 1fr));
+      gap: 10px;
+    }
+
+    .planner-month-card {
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: rgba(8, 21, 39, 0.82);
+      border: 1px solid rgba(122, 177, 249, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+      text-align: center;
+    }
+
+    .planner-month-card span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .planner-month-card strong {
+      display: block;
+      font-size: 1rem;
+    }
+
+    .planner-month-bar {
+      height: 84px;
+      border-radius: 14px;
+      border: 1px dashed rgba(83, 216, 251, 0.4);
+      background: linear-gradient(180deg, rgba(13, 34, 61, 0.72), rgba(8, 21, 39, 0.6));
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .planner-month-bar span {
+      display: block;
+      width: 100%;
+      border-radius: 10px 10px 4px 4px;
+      background: linear-gradient(180deg, rgba(83, 216, 251, 0.32), rgba(83, 216, 251, 0.08));
+      box-shadow: inset 0 0 0 1px rgba(83, 216, 251, 0.28);
+    }
+
+    .planner-config-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .planner-config-row {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .planner-config-row label,
+    .planner-config-row span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .planner-master-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .planner-master-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(8, 21, 39, 0.82);
+      border: 1px solid rgba(122, 177, 249, 0.12);
+    }
+
+    .planner-master-row.overall-row {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .planner-master-row .mini-input {
+      min-height: 38px;
+    }
+
+    .planner-sheet {
+      display: grid;
+      grid-template-columns: 240px repeat(12, 92px) 104px;
+      gap: 6px;
+      min-width: max-content;
+      align-items: stretch;
+    }
+
+    .planner-group,
+    .planner-head,
+    .planner-cell,
+    .planner-total,
+    .planner-label {
+      border-radius: 14px;
+      border: 1px solid rgba(123, 177, 250, 0.12);
+      background: rgba(8, 22, 40, 0.86);
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8px;
+      position: relative;
+      min-width: 0;
+    }
+
+    .planner-group {
+      min-height: 56px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: rgba(240, 246, 255, 0.95);
+    }
+
+    .planner-head {
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .planner-head strong,
+    .planner-label strong,
+    .planner-total strong {
+      display: block;
+      font-size: 0.94rem;
+      color: var(--text);
+    }
+
+    .planner-label {
+      justify-content: flex-start;
+      padding: 10px 14px;
+    }
+
+    .planner-label small,
+    .planner-head small,
+    .planner-total small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .planner-cell {
+      padding: 0;
+      background: rgba(5, 17, 32, 0.88);
+    }
+
+    .planner-cell input {
+      width: 100%;
+      height: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: inherit;
+      background: transparent;
+      color: var(--text);
+      text-align: center;
+      font-weight: 700;
+      padding: 10px 6px;
+    }
+
+    .planner-total {
+      background: linear-gradient(180deg, rgba(88, 72, 185, 0.32), rgba(55, 38, 134, 0.4));
+    }
+
+    .planner-capacity {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .planner-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .dashboard-grid-weekly {
       display: grid;
       grid-template-columns: 290px minmax(0, 1fr) 330px;
@@ -275,6 +601,25 @@
       gap: 8px;
       min-width: max-content;
       align-items: center;
+    }
+
+    .carryover-header {
+      min-height: 32px;
+      padding: 0 4px 8px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .carryover-header:first-child {
+      justify-content: flex-start;
+      padding-left: 12px;
     }
 
     .carryover-cell {
@@ -394,6 +739,13 @@
     .mini-bar-value {
       font-size: 0.72rem;
       color: var(--muted);
+    }
+
+    .mini-bar-seq {
+      font-size: 0.68rem;
+      color: var(--muted-2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .week-metric-line {
@@ -572,9 +924,11 @@
 
     .field,
     textarea,
+    select,
     input[type="month"],
     input[type="text"],
     input[type="number"],
+    input[type="date"],
     input[type="color"] {
       width: 100%;
       min-height: 42px;
@@ -1373,6 +1727,28 @@
       gap: 18px;
     }
 
+    .annual-weekly-lower {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr) 330px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .annual-weekly-summary-stack,
+    .annual-weekly-center,
+    .annual-weekly-side {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .annual-stat-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
     .annual-weekly-right {
       display: flex;
       flex-direction: column;
@@ -1409,6 +1785,14 @@
       box-shadow: inset 0 0 0 1px rgba(83, 216, 251, 0.08);
     }
 
+    .annual-overflow-track {
+      overflow: visible;
+    }
+
+    .annual-overflow-track .fill {
+      min-width: 8px;
+    }
+
     .quarter-card {
       padding: 14px;
       border-radius: 20px;
@@ -1443,6 +1827,160 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
+    }
+
+    .setup-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .setup-architecture-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .setup-table-shell {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .setup-table-header,
+    .setup-architecture-row {
+      display: grid;
+      grid-template-columns: minmax(210px, 1.15fr) minmax(170px, 0.95fr) minmax(120px, 0.7fr) minmax(170px, 1fr) minmax(140px, 0.82fr) minmax(190px, 1.08fr) 90px minmax(210px, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .setup-table-header {
+      padding: 0 10px 6px;
+      color: var(--muted);
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .setup-architecture-row,
+    .setup-mobile-card {
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(122, 177, 249, 0.12);
+      background: rgba(8, 21, 39, 0.82);
+    }
+
+    .setup-architecture-row.selected,
+    .setup-mobile-card.selected {
+      border-color: rgba(83, 216, 251, 0.28);
+      box-shadow: inset 0 0 0 1px rgba(83, 216, 251, 0.08);
+    }
+
+    .setup-table-cell {
+      min-width: 0;
+    }
+
+    .setup-table-habit {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .stacked-field,
+    .setup-card-fields,
+    .setup-actions,
+    .setup-mobile-footer,
+    .chip-row,
+    .detail-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stacked-field,
+    .setup-card-fields {
+      flex-direction: column;
+    }
+
+    .setup-actions {
+      align-items: center;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(122, 177, 249, 0.14);
+      background: rgba(8, 21, 39, 0.9);
+    }
+
+    .status-badge.draft {
+      color: #ffd166;
+      border-color: rgba(255, 209, 102, 0.25);
+      background: rgba(255, 209, 102, 0.08);
+    }
+
+    .status-badge.partial {
+      color: #53d8fb;
+      border-color: rgba(83, 216, 251, 0.24);
+      background: rgba(83, 216, 251, 0.08);
+    }
+
+    .status-badge.ready {
+      color: #57e3a0;
+      border-color: rgba(87, 227, 160, 0.24);
+      background: rgba(87, 227, 160, 0.08);
+    }
+
+    .setup-mobile-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .setup-card-fields {
+      margin-bottom: 14px;
+    }
+
+    .setup-mobile-footer {
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-setup-cards {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chip-button {
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(122, 177, 249, 0.14);
+      background: rgba(83, 216, 251, 0.08);
+      color: var(--text);
+      font-size: 0.78rem;
+    }
+
+    .setup-detail-grid,
+    .setup-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
 
     .setup-item {
@@ -1542,6 +2080,10 @@
         grid-template-columns: 270px minmax(0, 1fr) 330px;
       }
 
+      .planner-layout {
+        grid-template-columns: 280px minmax(0, 1fr);
+      }
+
       .dashboard-grid-weekly {
         grid-template-columns: 270px minmax(0, 1fr) 310px;
       }
@@ -1562,13 +2104,20 @@
       .annual-weekly-section {
         grid-template-columns: 1fr;
       }
+
+      .annual-weekly-lower {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 1260px) {
       .dashboard-grid-monthly,
       .dashboard-grid-weekly,
       .dashboard-grid-annual,
+      .planner-layout,
       .monthly-weekly-grid,
+      .annual-weekly-lower,
+      .setup-architecture-layout,
       .setup-grid,
       .data-grid,
       .report-grid {
@@ -1576,7 +2125,8 @@
       }
 
       .grouped-week-chart,
-      .task-board {
+      .task-board,
+      .planner-overview-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1607,6 +2157,9 @@
       .summary-band,
       .kpi-grid,
       .annual-kpi-strip,
+      .setup-summary-grid,
+      .setup-detail-grid,
+      .setup-preview-grid,
       .annual-quarter-strip,
       .inline-grid.two,
       .inline-grid.three {
@@ -1630,6 +2183,18 @@
         grid-template-columns: 180px 72px minmax(0, 1fr) 92px 78px 60px;
       }
 
+      .planner-sheet {
+        grid-template-columns: 190px repeat(12, 80px) 88px;
+      }
+
+      .desktop-setup-table {
+        display: none;
+      }
+
+      .mobile-setup-cards {
+        display: flex;
+      }
+
       .analytics-row {
         grid-template-columns: 1fr;
       }
@@ -1651,24 +2216,43 @@
     <div id="app"></div>
   </div>
 
+  <script src="vendor/nepali-date-converter.umd.js"></script>
   <script>
-    const STORAGE_KEY = "habit-intelligence-suite-v3";
+    const STORAGE_KEY = "habit-intelligence-suite-v4";
     const DEFAULT_MONTH = "2024-08";
     const DEFAULT_YEAR = 2024;
     const NAV_ITEMS = [
+      { key: "setup", label: "Habit Setup" },
+      { key: "planner", label: "Year Planner" },
       { key: "monthly", label: "Monthly Dashboard" },
+      { key: "monthly-weekly", label: "Monthly Weekly Subsystem" },
       { key: "weekly", label: "Weekly Dashboard" },
       { key: "annual", label: "Annual Dashboard" },
+      { key: "annual-weekly", label: "Annual Weekly-Habits Extension" },
       { key: "duration", label: "Duration Dashboard" },
-      { key: "setup", label: "Habit Setup" },
-      { key: "data", label: "Data" },
+      { key: "data", label: "Settings + Import / Export" },
       { key: "reports", label: "Reports" }
     ];
     const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const BS_MONTHS_ROMAN = ["Baisakh", "Jestha", "Asadh", "Shrawan", "Bhadra", "Ashwin", "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"];
+    const BS_MONTHS_NEPALI = ["बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "आश्विन", "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुण", "चैत्र"];
     const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const QUARTER_LABELS = ["Q1", "Q2", "Q3", "Q4"];
     const PALETTE = ["#53d8fb", "#57e3a0", "#9c8cff", "#ffd166", "#ff6ea9", "#ff9c6e", "#78b9ff", "#82f4cb", "#c1a8ff", "#ffe39b", "#49d0ff", "#67efa6", "#b998ff", "#ffd98c", "#ff90bc", "#f9a67a"];
+    const FREQUENCY_PRESETS = ["", "daily", "5 days / week", "3 days / week", "weekdays", "weekends only", "custom"];
+    const TIME_SUGGESTIONS = ["Morning", "Afternoon", "Evening", "Before sleep"];
+    const CUE_SUGGESTIONS = ["After waking up", "After brushing teeth", "After tea", "After breakfast", "After lunch", "After work", "Before bed"];
+    const MINIMUM_VERSION_SUGGESTIONS = ["2 minutes", "5 minutes", "1 page", "1 glass", "10 steps", "2 repetitions"];
+    const RECOVERY_SUGGESTIONS = [
+      "Do reduced version next day; restart normally",
+      "Resume normal schedule without punishment",
+      "Complete minimum version within 24 hours",
+      "Do not double the next day; continue gently",
+      "Review obstacle and restart next session"
+    ];
+    const dualCalendarCache = new Map();
+    const dualMonthSpanCache = new Map();
     const app = document.getElementById("app");
     let deferredInstallPrompt = null;
     let state = loadState();
@@ -1685,6 +2269,263 @@
       return normalizeState(seedState());
     }
 
+    function isStandaloneMode() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
+    function isInstallableContext() {
+      const protocol = window.location.protocol;
+      return window.isSecureContext || protocol === "http:" && /^(localhost|127(?:\.\d{1,3}){3})$/i.test(window.location.hostname);
+    }
+
+    function getInstallSupportState() {
+      if (isStandaloneMode()) {
+        return {
+          canPrompt: false,
+          label: "Installed",
+          detail: "This app is already running in installed standalone mode."
+        };
+      }
+      if (deferredInstallPrompt) {
+        return {
+          canPrompt: true,
+          label: "Install PWA",
+          detail: "Ready to install on this device."
+        };
+      }
+      if (!isInstallableContext()) {
+        return {
+          canPrompt: false,
+          label: "Install Unavailable",
+          detail: "Open this app from https:// or http://localhost to enable PWA installation."
+        };
+      }
+      return {
+        canPrompt: false,
+        label: "Install Unavailable",
+        detail: "The browser has not exposed the install prompt yet. Check the manifest, service worker, and browser installability rules."
+      };
+    }
+
+    function cleanInlineText(value) {
+      return String(value || "").trim().replace(/\s+/g, " ");
+    }
+
+    function titleCaseWords(value) {
+      return cleanInlineText(value)
+        .toLowerCase()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    function nowIso() {
+      return new Date().toISOString();
+    }
+
+    function createHabitBlueprint(overrides = {}) {
+      const timestamp = overrides.created_at || nowIso();
+      const id = overrides.id || overrides.habit_id || `habit-${Math.random().toString(36).slice(2, 10)}`;
+      const habitName = cleanInlineText(overrides.habit_name || overrides.name || "New Habit");
+      return {
+        id,
+        habit_id: id,
+        name: habitName,
+        habit_name: habitName,
+        frequency_rule: overrides.frequency_rule ?? "daily",
+        frequency_rule_mode: overrides.frequency_rule_mode || "",
+        custom_frequency_rule: overrides.custom_frequency_rule || "",
+        time_anchor: overrides.time_anchor ?? "",
+        cue_trigger: overrides.cue_trigger ?? "",
+        minimum_version: overrides.minimum_version ?? "",
+        miss_recovery_step: overrides.miss_recovery_step ?? "",
+        habit_type: overrides.habit_type || "daily",
+        active: overrides.active !== false,
+        display_order: Number.isFinite(Number(overrides.display_order)) ? Number(overrides.display_order) : 0,
+        orderIndex: Number.isFinite(Number(overrides.orderIndex)) ? Number(overrides.orderIndex) : 0,
+        created_at: timestamp,
+        updated_at: overrides.updated_at || timestamp,
+        color: overrides.color || PALETTE[0],
+        defaultGoal: Number.isFinite(Number(overrides.defaultGoal)) ? Number(overrides.defaultGoal) : 20,
+        notes: overrides.notes || "",
+        category: overrides.category || "",
+        location: overrides.location || "",
+        duration: overrides.duration || "",
+        priority: overrides.priority || "",
+        difficulty: overrides.difficulty || "",
+        success_metric: overrides.success_metric || "",
+        reminder_enabled: !!overrides.reminder_enabled
+      };
+    }
+
+    function inferFrequencyRule(value) {
+      const clean = cleanInlineText(value).toLowerCase();
+      if (!clean) return "";
+      if (FREQUENCY_PRESETS.includes(clean)) return clean;
+      if (/^\d+\s+days?\s*\/\s*week$/.test(clean)) return clean;
+      return clean;
+    }
+
+    function normalizeHabitDefinition(habit, index) {
+      const timestamp = nowIso();
+      const id = cleanInlineText(habit.habit_id || habit.id || `habit-${index + 1}`) || `habit-${index + 1}`;
+      const habitName = cleanInlineText(habit.habit_name || habit.name || "New Habit");
+      const frequencyRule = inferFrequencyRule(habit.frequency_rule || "");
+      const frequencyRuleMode = habit.frequency_rule_mode || (FREQUENCY_PRESETS.includes(frequencyRule) ? frequencyRule : (frequencyRule ? "custom" : ""));
+      const customFrequencyRule = cleanInlineText(habit.custom_frequency_rule || (frequencyRuleMode === "custom" ? frequencyRule : ""));
+      const displayOrder = Number.isFinite(Number(habit.display_order))
+        ? Number(habit.display_order)
+        : (Number.isFinite(Number(habit.orderIndex)) ? Number(habit.orderIndex) : index);
+      const normalized = {
+        ...habit,
+        id,
+        habit_id: id,
+        name: habitName,
+        habit_name: habitName,
+        frequency_rule: frequencyRuleMode === "custom" ? customFrequencyRule : frequencyRule,
+        frequency_rule_mode: frequencyRuleMode,
+        custom_frequency_rule: customFrequencyRule,
+        time_anchor: cleanInlineText(habit.time_anchor || ""),
+        cue_trigger: cleanInlineText(habit.cue_trigger || ""),
+        minimum_version: cleanInlineText(habit.minimum_version || ""),
+        miss_recovery_step: cleanInlineText(habit.miss_recovery_step || ""),
+        habit_type: habit.habit_type || "daily",
+        active: habit.active !== false,
+        display_order: displayOrder,
+        orderIndex: displayOrder,
+        created_at: habit.created_at || timestamp,
+        updated_at: habit.updated_at || timestamp,
+        color: habit.color || PALETTE[index % PALETTE.length],
+        defaultGoal: Number.isFinite(Number(habit.defaultGoal)) ? Number(habit.defaultGoal) : 20,
+        notes: habit.notes || "",
+        category: habit.category || "",
+        location: habit.location || "",
+        duration: habit.duration || "",
+        priority: habit.priority || "",
+        difficulty: habit.difficulty || "",
+        success_metric: habit.success_metric || "",
+        reminder_enabled: !!habit.reminder_enabled
+      };
+      if (!normalized.defaultGoal) {
+        normalized.defaultGoal = 20;
+      }
+      if (!normalized.time_anchor && /^(\d{1,2}:\d{2})$/.test(habit.time_exact || "")) {
+        normalized.time_anchor = formatTimeValue(habit.time_exact);
+      }
+      return normalized;
+    }
+
+    function formatTimeValue(value) {
+      const clean = cleanInlineText(value);
+      if (!/^\d{2}:\d{2}$/.test(clean)) return clean;
+      const [hoursString, minutes] = clean.split(":");
+      const hours = Number(hoursString);
+      const suffix = hours >= 12 ? "PM" : "AM";
+      const normalizedHour = hours % 12 || 12;
+      return `${normalizedHour}:${minutes} ${suffix}`;
+    }
+
+    function convertToTimeInput(value) {
+      const clean = cleanInlineText(value).toUpperCase();
+      const match = clean.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/);
+      if (!match) return "";
+      let hours = Number(match[1]);
+      const minutes = match[2];
+      const suffix = match[3];
+      if (suffix === "AM") {
+        hours = hours === 12 ? 0 : hours;
+      } else if (suffix === "PM") {
+        hours = hours === 12 ? 12 : hours + 12;
+      }
+      return `${String(hours).padStart(2, "0")}:${minutes}`;
+    }
+
+    function normalizeHabitOrder() {
+      state.monthlyHabits = state.monthlyHabits.map((habit, index) => ({
+        ...habit,
+        display_order: index,
+        orderIndex: index
+      }));
+    }
+
+    function touchHabit(habit) {
+      habit.updated_at = nowIso();
+    }
+
+    function getHabitSetupStatus(habit) {
+      const fields = [
+        cleanInlineText(habit.habit_name),
+        cleanInlineText(habit.frequency_rule),
+        cleanInlineText(habit.time_anchor),
+        cleanInlineText(habit.cue_trigger),
+        cleanInlineText(habit.minimum_version),
+        cleanInlineText(habit.miss_recovery_step)
+      ];
+      const filled = fields.filter(Boolean).length;
+      if (filled === 6) return { key: "ready", label: "Ready" };
+      if (filled <= 1) return { key: "draft", label: "Draft" };
+      return { key: "partial", label: "Partial" };
+    }
+
+    function getSetupCounts() {
+      return state.monthlyHabits.reduce((summary, habit) => {
+        const status = getHabitSetupStatus(habit).key;
+        summary[status] += 1;
+        return summary;
+      }, { draft: 0, partial: 0, ready: 0 });
+    }
+
+    function getFilteredSetupHabits() {
+      const sorted = [...state.monthlyHabits].sort((a, b) => a.orderIndex - b.orderIndex);
+      if (state.ui.setupFilter === "incomplete") {
+        return sorted.filter((habit) => getHabitSetupStatus(habit).key !== "ready");
+      }
+      if (state.ui.setupFilter === "ready") {
+        return sorted.filter((habit) => getHabitSetupStatus(habit).key === "ready");
+      }
+      return sorted;
+    }
+
+    function getSelectedSetupHabit() {
+      return state.monthlyHabits.find((habit) => habit.id === state.ui.selectedSetupHabitId) || state.monthlyHabits[0] || null;
+    }
+
+    function countMatchingWeekdays(monthKey, predicate, fallbackDays) {
+      if (typeof monthKey !== "string" || !/^\d{4}-\d{2}$/.test(monthKey)) {
+        return clampInteger(Math.round(fallbackDays * 0.71), 0, fallbackDays);
+      }
+      return getMonthDates(monthKey).reduce((count, date) => count + (predicate(date) ? 1 : 0), 0);
+    }
+
+    function estimateMonthlyTargetFromFrequency(habit, monthKey, fallbackDays = getMonthDates(monthKey).length) {
+      const rule = cleanInlineText(habit.frequency_rule).toLowerCase();
+      if (!rule) return clampInteger(habit.defaultGoal || Math.round(fallbackDays * 0.65), 0, fallbackDays);
+      if (rule === "daily") return fallbackDays;
+      if (rule === "weekdays") return countMatchingWeekdays(monthKey, (date) => {
+        const day = date.getDay();
+        return day >= 1 && day <= 5;
+      }, fallbackDays);
+      if (rule === "weekends only") return countMatchingWeekdays(monthKey, (date) => {
+        const day = date.getDay();
+        return day === 0 || day === 6;
+      }, fallbackDays);
+      const weeklyMatch = rule.match(/^(\d+)\s+days?\s*\/\s*week$/);
+      if (weeklyMatch) {
+        return clampInteger(Math.round((fallbackDays / 7) * Number(weeklyMatch[1])), 0, fallbackDays);
+      }
+      const monthlyMatch = rule.match(/^(\d+)\s+times?\s*\/\s*month$/);
+      if (monthlyMatch) {
+        return clampInteger(Number(monthlyMatch[1]), 0, fallbackDays);
+      }
+      return clampInteger(habit.defaultGoal || Math.round(fallbackDays * 0.65), 0, fallbackDays);
+    }
+
+    function getHabitArchitectureSummary(habit) {
+      const pieces = [];
+      if (habit.frequency_rule) pieces.push(titleCaseWords(habit.frequency_rule));
+      if (habit.time_anchor) pieces.push(habit.time_anchor);
+      if (habit.cue_trigger) pieces.push(habit.cue_trigger);
+      return pieces.join(" • ") || "Draft architecture";
+    }
+
     function normalizeState(input) {
       const seed = seedState();
       const next = {
@@ -1698,12 +2539,22 @@
           monthlySort: "default",
           selectedWeeklyFocus: 0,
           lastSavedAt: Date.now(),
-          firebaseConfigText: ""
+          firebaseConfigText: "",
+          dualCalendarEnabled: true,
+          dateDisplayMode: "dual",
+          nepaliScriptEnabled: false,
+          nepaliNumeralsEnabled: false,
+          theme: "dark",
+          selectedSetupHabitId: "",
+          setupFilter: "all"
         }, input.ui || {}),
-        monthlyHabits: Array.isArray(input.monthlyHabits) && input.monthlyHabits.length ? input.monthlyHabits : seed.monthlyHabits,
+        monthlyHabits: (Array.isArray(input.monthlyHabits) && input.monthlyHabits.length ? input.monthlyHabits : seed.monthlyHabits).map((habit, index) => normalizeHabitDefinition(habit, index)),
         weeklyHabits: Array.isArray(input.weeklyHabits) && input.weeklyHabits.length ? input.weeklyHabits : seed.weeklyHabits,
         years: input.years && typeof input.years === "object" ? input.years : seed.years
       };
+      if (!next.ui.selectedSetupHabitId || !next.monthlyHabits.some((habit) => habit.id === next.ui.selectedSetupHabitId)) {
+        next.ui.selectedSetupHabitId = next.monthlyHabits[0] ? next.monthlyHabits[0].id : "";
+      }
       ensureYearData(next, next.selectedYear);
       ensureMonthData(next, next.selectedMonth);
       return next;
@@ -1711,23 +2562,107 @@
 
     function seedState() {
       const monthlyHabits = [
-        { id: "hydration", name: "Hydration", color: PALETTE[0], defaultGoal: 28 },
-        { id: "deep-work", name: "Deep Work", color: PALETTE[2], defaultGoal: 20 },
-        { id: "workout", name: "Workout", color: PALETTE[1], defaultGoal: 16 },
-        { id: "reading", name: "Reading", color: PALETTE[3], defaultGoal: 24 },
-        { id: "meditation", name: "Meditation", color: PALETTE[6], defaultGoal: 22 },
-        { id: "journaling", name: "Journaling", color: PALETTE[4], defaultGoal: 18 },
-        { id: "no-sugar", name: "No Sugar", color: PALETTE[5], defaultGoal: 25 },
-        { id: "walk", name: "8k Walk", color: PALETTE[7], defaultGoal: 20 },
-        { id: "language", name: "Language Practice", color: PALETTE[8], defaultGoal: 15 },
-        { id: "sleep", name: "Sleep Before 11:30", color: PALETTE[9], defaultGoal: 22 },
-        { id: "stretch", name: "Mobility Stretch", color: PALETTE[10], defaultGoal: 20 },
-        { id: "protein", name: "Protein Target", color: PALETTE[11], defaultGoal: 23 },
-        { id: "focus-plan", name: "Plan Tomorrow", color: PALETTE[12], defaultGoal: 18 },
-        { id: "sunlight", name: "Morning Sunlight", color: PALETTE[13], defaultGoal: 22 },
-        { id: "screen-curfew", name: "Screen Curfew", color: PALETTE[14], defaultGoal: 19 },
-        { id: "steps", name: "10k Steps", color: PALETTE[15], defaultGoal: 17 }
-      ];
+        createHabitBlueprint({
+          id: "morning-walk",
+          habit_name: "Morning walk",
+          color: PALETTE[0],
+          frequency_rule: "5 days / week",
+          time_anchor: "6:30 AM",
+          cue_trigger: "After brushing teeth",
+          minimum_version: "5 minutes",
+          miss_recovery_step: "Do 2 minutes next day; restart normally",
+          category: "Movement"
+        }),
+        createHabitBlueprint({
+          id: "warm-lemon-water",
+          habit_name: "Warm lemon water",
+          color: PALETTE[1],
+          frequency_rule: "",
+          time_anchor: "",
+          cue_trigger: "",
+          minimum_version: "",
+          miss_recovery_step: "",
+          defaultGoal: 24,
+          category: "Hydration"
+        }),
+        createHabitBlueprint({
+          id: "plan-day",
+          habit_name: "Plan my day",
+          color: PALETTE[2],
+          frequency_rule: "daily",
+          time_anchor: "8:00 AM",
+          cue_trigger: "After breakfast",
+          minimum_version: "3 bullet priorities",
+          miss_recovery_step: "Review obstacle and restart next session",
+          category: "Focus"
+        }),
+        createHabitBlueprint({
+          id: "stretch-10",
+          habit_name: "Stretch for 10 mins",
+          color: PALETTE[3],
+          frequency_rule: "daily",
+          time_anchor: "Morning",
+          cue_trigger: "After waking up",
+          minimum_version: "2 minutes",
+          miss_recovery_step: "Complete minimum version within 24 hours",
+          category: "Mobility"
+        }),
+        createHabitBlueprint({
+          id: "water-2-5l",
+          habit_name: "Drink 2.5L of water",
+          color: PALETTE[4],
+          frequency_rule: "daily",
+          time_anchor: "Morning",
+          cue_trigger: "After breakfast",
+          minimum_version: "1 glass",
+          miss_recovery_step: "Resume normal schedule without punishment",
+          category: "Hydration"
+        }),
+        createHabitBlueprint({
+          id: "meditation",
+          habit_name: "Meditate",
+          color: PALETTE[5],
+          frequency_rule: "daily",
+          time_anchor: "Before sleep",
+          cue_trigger: "Before bed",
+          minimum_version: "2 minutes meditation",
+          miss_recovery_step: "Do not double the next day; continue gently",
+          category: "Mind"
+        }),
+        createHabitBlueprint({
+          id: "reading",
+          habit_name: "Read 10 pages",
+          color: PALETTE[6],
+          frequency_rule: "5 days / week",
+          time_anchor: "Evening",
+          cue_trigger: "After tea",
+          minimum_version: "1 page",
+          miss_recovery_step: "Resume normal schedule without punishment",
+          category: "Learning"
+        }),
+        createHabitBlueprint({
+          id: "sunlight",
+          habit_name: "Morning sunlight",
+          color: PALETTE[7],
+          frequency_rule: "weekdays",
+          time_anchor: "7:15 AM",
+          cue_trigger: "After waking up",
+          minimum_version: "10 steps outside",
+          miss_recovery_step: "Do reduced version next day; restart normally",
+          category: "Energy"
+        }),
+        createHabitBlueprint({
+          id: "screen-curfew",
+          habit_name: "Screen curfew",
+          color: PALETTE[8],
+          frequency_rule: "daily",
+          time_anchor: "Before sleep",
+          cue_trigger: "After dinner",
+          minimum_version: "Put phone away for 10 minutes",
+          miss_recovery_step: "Review obstacle and restart next session",
+          category: "Recovery"
+        })
+      ].map((habit, index) => normalizeHabitDefinition(habit, index));
 
       const weeklyHabits = [
         { id: "meal-prep", name: "Meal Prep", color: PALETTE[0] },
@@ -1745,7 +2680,7 @@
       };
 
       return {
-        view: "monthly",
+        view: "planner",
         selectedMonth: DEFAULT_MONTH,
         selectedYear: DEFAULT_YEAR,
         durationStart: "2024-08-01",
@@ -1755,7 +2690,10 @@
           monthlySort: "default",
           selectedWeeklyFocus: 0,
           lastSavedAt: Date.now(),
-          firebaseConfigText: ""
+          firebaseConfigText: "",
+          theme: "dark",
+          selectedSetupHabitId: monthlyHabits[0].id,
+          setupFilter: "all"
         },
         monthlyHabits,
         weeklyHabits,
@@ -1771,7 +2709,25 @@
       }
       return {
         brandBadge: "Bestseller",
-        months
+        months,
+        planner: seedPlannerData(year, monthlyHabits)
+      };
+    }
+
+    function seedPlannerData(year, monthlyHabits) {
+      const monthlyTargets = {};
+      monthlyHabits.forEach((habit, habitIndex) => {
+        monthlyTargets[habit.id] = MONTH_NAMES.map((_, monthIndex) => {
+          const monthKey = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+          const maxDays = getMonthDates(monthKey).length;
+          return clampInteger(estimateMonthlyTargetFromFrequency(habit, monthKey, maxDays), 0, maxDays);
+        });
+      });
+      return {
+        startDate: `${year}-01-01`,
+        endDate: `${year}-12-31`,
+        streakCarryOver: true,
+        monthlyTargets
       };
     }
 
@@ -1798,17 +2754,17 @@
 
       if (monthKey === "2024-08") {
         [4, 10, 18, 27, 30].forEach((day) => {
-          setSeedDaily(dailyLogs, monthKey, "hydration", day, true);
-          setSeedDaily(dailyLogs, monthKey, "deep-work", day, true);
+          setSeedDaily(dailyLogs, monthKey, "water-2-5l", day, true);
+          setSeedDaily(dailyLogs, monthKey, "plan-day", day, true);
           setSeedDaily(dailyLogs, monthKey, "reading", day, true);
-          setSeedDaily(dailyLogs, monthKey, "no-sugar", day, true);
-          setSeedDaily(dailyLogs, monthKey, "walk", day, true);
+          setSeedDaily(dailyLogs, monthKey, "screen-curfew", day, true);
+          setSeedDaily(dailyLogs, monthKey, "morning-walk", day, true);
         });
-        [2, 5, 8, 11, 16, 20, 24, 29, 31].forEach((day) => setSeedDaily(dailyLogs, monthKey, "workout", day, true));
-        [3, 4, 9, 15, 17, 22, 28, 29, 31].forEach((day) => setSeedDaily(dailyLogs, monthKey, "journaling", day, true));
-        [1, 2, 6, 12, 19, 23, 26].forEach((day) => setSeedDaily(dailyLogs, monthKey, "sleep", day, false));
+        [2, 5, 8, 11, 16, 20, 24, 29, 31].forEach((day) => setSeedDaily(dailyLogs, monthKey, "stretch-10", day, true));
+        [3, 4, 9, 15, 17, 22, 28, 29, 31].forEach((day) => setSeedDaily(dailyLogs, monthKey, "meditation", day, true));
+        [1, 2, 6, 12, 19, 23, 26].forEach((day) => setSeedDaily(dailyLogs, monthKey, "screen-curfew", day, false));
         [7, 14, 21].forEach((day) => {
-          setSeedDaily(dailyLogs, monthKey, "hydration", day, false);
+          setSeedDaily(dailyLogs, monthKey, "water-2-5l", day, false);
           setSeedDaily(dailyLogs, monthKey, "reading", day, false);
           setSeedDaily(dailyLogs, monthKey, "meditation", day, false);
         });
@@ -1878,32 +2834,22 @@
     }
 
     function computeMonthlyGoal(habit, monthIndex, habitIndex, daysInMonth) {
-      const seasonCurve = Math.sin((monthIndex + 1) * 0.75 + habitIndex * 0.33) * 2.2;
-      const wave = Math.cos((monthIndex + 1) * 0.52 + habit.name.length * 0.11) * 1.7;
-      const base = habit.defaultGoal;
-      const shifted = Math.round(base + seasonCurve + wave);
-      return clampInteger(shifted, 12, daysInMonth);
+      const monthKey = `${DEFAULT_YEAR}-${String(monthIndex + 1).padStart(2, "0")}`;
+      return estimateMonthlyTargetFromFrequency(habit, monthKey, daysInMonth);
     }
 
     function seededDailyCompletion(habit, year, monthIndex, habitIndex, dayNumber, weekday, daysInMonth) {
       const profiles = {
-        "hydration": { base: 0.83, weekend: -0.04, swing: 0.08, month: 0.04 },
-        "deep-work": { base: 0.64, weekend: -0.17, swing: 0.17, month: 0.05 },
-        "workout": { base: 0.49, weekend: 0.1, swing: 0.18, month: 0.07 },
-        "reading": { base: 0.7, weekend: 0.05, swing: 0.09, month: 0.04 },
-        "meditation": { base: 0.68, weekend: 0.02, swing: 0.1, month: 0.03 },
-        "journaling": { base: 0.55, weekend: 0.08, swing: 0.16, month: 0.05 },
-        "no-sugar": { base: 0.72, weekend: -0.11, swing: 0.11, month: 0.05 },
-        "walk": { base: 0.66, weekend: 0.03, swing: 0.13, month: 0.04 },
-        "language": { base: 0.5, weekend: -0.08, swing: 0.17, month: 0.06 },
-        "sleep": { base: 0.61, weekend: -0.13, swing: 0.14, month: 0.05 },
-        "stretch": { base: 0.58, weekend: 0.03, swing: 0.13, month: 0.04 },
-        "protein": { base: 0.69, weekend: -0.05, swing: 0.1, month: 0.03 },
-        "focus-plan": { base: 0.56, weekend: -0.12, swing: 0.15, month: 0.06 },
-        "sunlight": { base: 0.64, weekend: 0.04, swing: 0.12, month: 0.04 },
-        "screen-curfew": { base: 0.52, weekend: -0.15, swing: 0.16, month: 0.06 },
-        "steps": { base: 0.48, weekend: 0.07, swing: 0.19, month: 0.06 }
-      }[habit.id];
+        "morning-walk": { base: 0.71, weekend: -0.09, swing: 0.12, month: 0.05 },
+        "warm-lemon-water": { base: 0.79, weekend: -0.05, swing: 0.08, month: 0.04 },
+        "plan-day": { base: 0.68, weekend: -0.16, swing: 0.15, month: 0.05 },
+        "stretch-10": { base: 0.66, weekend: 0.02, swing: 0.11, month: 0.04 },
+        "water-2-5l": { base: 0.75, weekend: -0.04, swing: 0.1, month: 0.03 },
+        "meditation": { base: 0.62, weekend: 0.03, swing: 0.12, month: 0.05 },
+        "reading": { base: 0.69, weekend: 0.04, swing: 0.1, month: 0.04 },
+        "sunlight": { base: 0.64, weekend: 0.06, swing: 0.12, month: 0.04 },
+        "screen-curfew": { base: 0.58, weekend: -0.12, swing: 0.15, month: 0.06 }
+      }[habit.id] || { base: 0.62, weekend: -0.04, swing: 0.12, month: 0.04 };
       const annualSeason = Math.sin((monthIndex + 1) * 0.58 + habitIndex * 0.19) * profiles.month;
       const monthlyWave = Math.sin((dayNumber + monthIndex * 2.2) * 0.64 + habitIndex * 0.17) * profiles.swing;
       const echo = Math.cos((dayNumber + habit.name.length) * 0.27) * 0.07;
@@ -2007,12 +2953,42 @@
           yearData.months[monthKey] = seedMonthData(year, monthIndex, targetState.monthlyHabits, targetState.weeklyHabits);
         }
       }
+      ensurePlannerData(targetState, year);
+    }
+
+    function ensurePlannerData(targetState, year) {
+      const yearData = targetState.years[year];
+      const seeded = seedPlannerData(year, targetState.monthlyHabits);
+      yearData.planner = Object.assign({}, seeded, yearData.planner || {});
+      yearData.planner.startDate = rebasePlannerDateToYear(yearData.planner.startDate, year, "01-01");
+      yearData.planner.endDate = rebasePlannerDateToYear(yearData.planner.endDate, year, "12-31");
+      if (yearData.planner.endDate < yearData.planner.startDate) {
+        yearData.planner.endDate = yearData.planner.startDate;
+      }
+      yearData.planner.streakCarryOver = !!yearData.planner.streakCarryOver;
+      yearData.planner.monthlyTargets = yearData.planner.monthlyTargets || {};
+      const capacities = getPlannerMonthCapacities(yearData.planner.startDate, yearData.planner.endDate);
+      targetState.monthlyHabits.forEach((habit, habitIndex) => {
+        const seededTargets = seeded.monthlyTargets[habit.id] || MONTH_NAMES.map(() => 0);
+        const existingTargets = Array.isArray(yearData.planner.monthlyTargets[habit.id]) ? yearData.planner.monthlyTargets[habit.id] : [];
+        yearData.planner.monthlyTargets[habit.id] = MONTH_NAMES.map((_, monthIndex) => {
+          const monthKey = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+          const fallback = seededTargets[monthIndex] ?? estimateMonthlyTargetFromFrequency(habit, monthKey, capacities[monthIndex].totalDays || 31);
+          return clampInteger(existingTargets[monthIndex] ?? fallback, 0, capacities[monthIndex].daysAvailable);
+        });
+      });
+      Object.keys(yearData.planner.monthlyTargets).forEach((habitId) => {
+        if (!targetState.monthlyHabits.some((habit) => habit.id === habitId)) {
+          delete yearData.planner.monthlyTargets[habitId];
+        }
+      });
     }
 
     function ensureMonthData(targetState, monthKey) {
       const year = Number(monthKey.slice(0, 4));
       ensureYearData(targetState, year);
       const yearData = targetState.years[year];
+      const planner = yearData.planner;
       if (!yearData.months[monthKey]) {
         const monthIndex = Number(monthKey.slice(5, 7)) - 1;
         yearData.months[monthKey] = seedMonthData(year, monthIndex, targetState.monthlyHabits, targetState.weeklyHabits);
@@ -2025,10 +3001,11 @@
       monthData.notes = Object.assign({ weeklyReview: "", nextMoves: "" }, monthData.notes || {});
 
       targetState.monthlyHabits.forEach((habit, habitIndex) => {
-        if (!Number.isFinite(Number(monthData.monthlyGoals[habit.id]))) {
-          const monthIndex = Number(monthKey.slice(5, 7)) - 1;
-          monthData.monthlyGoals[habit.id] = computeMonthlyGoal(habit, monthIndex, habitIndex, getMonthDates(monthKey).length);
-        }
+        const monthIndex = Number(monthKey.slice(5, 7)) - 1;
+        const plannerTarget = planner && planner.monthlyTargets && Array.isArray(planner.monthlyTargets[habit.id])
+          ? planner.monthlyTargets[habit.id][monthIndex]
+          : computeMonthlyGoal(habit, monthIndex, habitIndex, getMonthDates(monthKey).length);
+        monthData.monthlyGoals[habit.id] = clampInteger(plannerTarget, 0, getMonthDates(monthKey).length);
       });
 
       targetState.weeklyHabits.forEach((habit, weeklyIndex) => {
@@ -2060,6 +3037,18 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
+    function syncPlannerTargetsToYear(targetState, year) {
+      ensureYearData(targetState, year);
+      const planner = targetState.years[year].planner;
+      targetState.monthlyHabits.forEach((habit) => {
+        MONTH_NAMES.forEach((_, monthIndex) => {
+          const monthKey = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+          const monthData = targetState.years[year].months[monthKey];
+          monthData.monthlyGoals[habit.id] = clampInteger((planner.monthlyTargets[habit.id] || [])[monthIndex] ?? 0, 0, getMonthDates(monthKey).length);
+        });
+      });
+    }
+
     function getYearData(year) {
       ensureYearData(state, year);
       return state.years[year];
@@ -2089,11 +3078,181 @@
 
     function formatMonthLabel(monthKey) {
       const [yearString, monthString] = monthKey.split("-");
-      return `${MONTH_NAMES[Number(monthString) - 1]} ${yearString}`;
+      return formatAdMonthLabel(Number(yearString), Number(monthString) - 1);
     }
 
     function formatShortDate(date) {
-      return `${MONTH_NAMES[date.getMonth()].slice(0, 3)} ${date.getDate()}`;
+      return formatDualExactDate(date, "short");
+    }
+
+    function formatLongDate(dateLike) {
+      const date = dateLike instanceof Date ? dateLike : new Date(dateLike);
+      return formatDualExactDate(date, "long");
+    }
+
+    function getDateSettings() {
+      return {
+        dualCalendarEnabled: state.ui.dualCalendarEnabled !== false,
+        dateDisplayMode: state.ui.dateDisplayMode || "dual",
+        nepaliScriptEnabled: !!state.ui.nepaliScriptEnabled,
+        nepaliNumeralsEnabled: !!state.ui.nepaliNumeralsEnabled
+      };
+    }
+
+    function toNepaliDigits(value) {
+      return String(value).replace(/\d/g, (digit) => ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"][Number(digit)]);
+    }
+
+    function formatMaybeNepaliNumerals(value) {
+      return getDateSettings().nepaliNumeralsEnabled ? toNepaliDigits(value) : String(value);
+    }
+
+    function getNepaliDateInstance(date) {
+      const NepaliDateCtor = window.NepaliDate && (window.NepaliDate.default || window.NepaliDate);
+      return NepaliDateCtor ? new NepaliDateCtor(date) : null;
+    }
+
+    function convertAdToBs(dateLike) {
+      const date = dateLike instanceof Date ? dateLike : new Date(dateLike);
+      const cacheKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      if (dualCalendarCache.has(cacheKey)) return dualCalendarCache.get(cacheKey);
+      const nepali = getNepaliDateInstance(date);
+      if (!nepali) return null;
+      const bs = nepali.getBS();
+      const converted = {
+        year: bs.year,
+        monthIndex: bs.month,
+        day: bs.date,
+        weekday: bs.day
+      };
+      dualCalendarCache.set(cacheKey, converted);
+      return converted;
+    }
+
+    function getBsMonthName(monthIndex, short = false) {
+      const settings = getDateSettings();
+      const source = settings.nepaliScriptEnabled ? BS_MONTHS_NEPALI : BS_MONTHS_ROMAN;
+      const value = source[monthIndex] || "";
+      if (!short || settings.nepaliScriptEnabled) return value;
+      return value.slice(0, Math.min(value.length, 3));
+    }
+
+    function formatBsExactDate(bsDate, style = "long") {
+      if (!bsDate) return "";
+      const monthName = getBsMonthName(bsDate.monthIndex, style === "short");
+      const dayValue = formatMaybeNepaliNumerals(bsDate.day);
+      const yearValue = formatMaybeNepaliNumerals(bsDate.year);
+      return style === "short"
+        ? `${monthName} ${dayValue}, ${yearValue}`
+        : `${monthName} ${dayValue}, ${yearValue}`;
+    }
+
+    function combineAdBs(adLabel, bsLabel) {
+      const settings = getDateSettings();
+      if (!settings.dualCalendarEnabled || settings.dateDisplayMode === "en") return adLabel;
+      if (settings.dateDisplayMode === "np-primary") return `${bsLabel} • ${adLabel}`;
+      return `${adLabel} • ${bsLabel}`;
+    }
+
+    function formatDualExactDate(dateLike, style = "long") {
+      const date = dateLike instanceof Date ? dateLike : new Date(dateLike);
+      const adLabel = style === "short"
+        ? `${MONTH_SHORT[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
+        : `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+      const bs = convertAdToBs(date);
+      return combineAdBs(adLabel, formatBsExactDate(bs, style));
+    }
+
+    function getBsMonthSpanForAdMonth(year, monthIndex, short = false) {
+      const cacheKey = `${year}-${monthIndex}-${short ? "short" : "long"}-${getDateSettings().nepaliScriptEnabled ? "np" : "en"}-${getDateSettings().nepaliNumeralsEnabled ? "num" : "latn"}`;
+      if (dualMonthSpanCache.has(cacheKey)) return dualMonthSpanCache.get(cacheKey);
+      const firstDate = new Date(year, monthIndex, 1);
+      const lastDate = new Date(year, monthIndex + 1, 0);
+      const firstBs = convertAdToBs(firstDate);
+      const lastBs = convertAdToBs(lastDate);
+      if (!firstBs || !lastBs) return "";
+      const firstMonth = getBsMonthName(firstBs.monthIndex, short);
+      const lastMonth = getBsMonthName(lastBs.monthIndex, short);
+      const firstYear = formatMaybeNepaliNumerals(firstBs.year);
+      const lastYear = formatMaybeNepaliNumerals(lastBs.year);
+      if (firstBs.monthIndex === lastBs.monthIndex && firstBs.year === lastBs.year) {
+        const same = `${firstMonth} ${firstYear}`;
+        dualMonthSpanCache.set(cacheKey, same);
+        return same;
+      }
+      if (firstBs.year === lastBs.year) {
+        const sameYear = `${firstMonth}/${lastMonth} ${firstYear}`;
+        dualMonthSpanCache.set(cacheKey, sameYear);
+        return sameYear;
+      }
+      const span = `${firstMonth} ${firstYear}/${lastMonth} ${lastYear}`;
+      dualMonthSpanCache.set(cacheKey, span);
+      return span;
+    }
+
+    function formatAdMonthLabel(year, monthIndex, short = false) {
+      const adLabel = short ? MONTH_SHORT[monthIndex] : `${MONTH_NAMES[monthIndex]} ${year}`;
+      return combineAdBs(adLabel, getBsMonthSpanForAdMonth(year, monthIndex, short));
+    }
+
+    function formatDualYearLabel(year) {
+      const firstBs = convertAdToBs(new Date(year, 0, 1));
+      const lastBs = convertAdToBs(new Date(year, 11, 31));
+      const adLabel = String(year);
+      if (!firstBs || !lastBs) return adLabel;
+      const bsLabel = firstBs.year === lastBs.year
+        ? `${formatMaybeNepaliNumerals(firstBs.year)} BS`
+        : `${formatMaybeNepaliNumerals(firstBs.year)}/${formatMaybeNepaliNumerals(lastBs.year)} BS`;
+      return combineAdBs(adLabel, bsLabel);
+    }
+
+    function normalizePlannerBoundary(value, year, fallback) {
+      if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return fallback;
+      const [yearString, monthString, dayString] = value.split("-");
+      const numericYear = Number(yearString);
+      const numericMonth = clampInteger(monthString, 1, 12);
+      const maxDay = getMonthDates(`${year}-${String(numericMonth).padStart(2, "0")}`).length;
+      const numericDay = clampInteger(dayString, 1, maxDay);
+      return `${year}-${String(numericMonth).padStart(2, "0")}-${String(numericDay).padStart(2, "0")}`;
+    }
+
+    function rebasePlannerDateToYear(value, year, fallbackMonthDay) {
+      const fallback = `${year}-${fallbackMonthDay}`;
+      if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return fallback;
+      const [, monthString, dayString] = value.split("-");
+      const numericMonth = clampInteger(monthString, 1, 12);
+      const maxDay = getMonthDates(`${year}-${String(numericMonth).padStart(2, "0")}`).length;
+      const numericDay = clampInteger(dayString, 1, maxDay);
+      return `${year}-${String(numericMonth).padStart(2, "0")}-${String(numericDay).padStart(2, "0")}`;
+    }
+
+    function getPlannerMonthCapacities(startKey, endKey) {
+      return MONTH_NAMES.map((_, monthIndex) => {
+        const [yearString] = String(startKey).split("-");
+        const year = Number(yearString);
+        const monthStart = new Date(year, monthIndex, 1);
+        const monthEnd = new Date(year, monthIndex + 1, 0);
+        const totalDays = monthEnd.getDate();
+        const rangeStart = new Date(startKey);
+        const rangeEnd = new Date(endKey);
+        const overlapStart = monthStart > rangeStart ? monthStart : rangeStart;
+        const overlapEnd = monthEnd < rangeEnd ? monthEnd : rangeEnd;
+        const daysAvailable = overlapEnd >= overlapStart
+          ? Math.floor((new Date(overlapEnd.getFullYear(), overlapEnd.getMonth(), overlapEnd.getDate()) - new Date(overlapStart.getFullYear(), overlapStart.getMonth(), overlapStart.getDate())) / 86400000) + 1
+          : 0;
+        return {
+          monthIndex,
+          label: MONTH_NAMES[monthIndex],
+          shortLabel: MONTH_SHORT[monthIndex],
+          daysAvailable,
+          totalDays
+        };
+      });
+    }
+
+    function getPlannerData(year = state.selectedYear) {
+      ensureYearData(state, year);
+      return state.years[year].planner;
     }
 
     function getWeekBucket(dayNumber) {
@@ -2160,6 +3319,21 @@
     }
 
     function calculateCurrentStreak(habitId, dates, dailyLogs) {
+      const planner = getPlannerData(Number(dates[0]?.getFullYear?.() || state.selectedYear));
+      const allowCarryOver = planner && planner.streakCarryOver;
+      if (allowCarryOver && dates.length) {
+        let streak = 0;
+        let cursor = new Date(dates[dates.length - 1]);
+        while (cursor.getFullYear() >= dates[0].getFullYear()) {
+          const key = toDateKey(cursor);
+          if (getDailyLogForDateKey(key)[habitId]) streak += 1;
+          else if (streak > 0) break;
+          else if (cursor < dates[0]) break;
+          cursor.setDate(cursor.getDate() - 1);
+          if (streak === 0 && cursor < dates[0]) break;
+        }
+        return streak;
+      }
       let streak = 0;
       for (let index = dates.length - 1; index >= 0; index -= 1) {
         const key = toDateKey(dates[index]);
@@ -2225,6 +3399,7 @@
           label: weekIndex < 4 ? `Week ${weekIndex + 1}` : "Extra Days",
           weekIndex,
           days: group,
+          dateRangeLabel: `${formatDualExactDate(group[0], "short")} → ${formatDualExactDate(group[group.length - 1], "short")}`,
           completed,
           possible,
           percentage: possible ? (completed / possible) * 100 : 0
@@ -2316,6 +3491,7 @@
           label: weekIndex < 4 ? `Week ${weekIndex + 1}` : "Extra Days",
           weekIndex,
           days: group.days,
+          dateRangeLabel: group.dateRangeLabel,
           dailyCompleted,
           dailyPossible,
           dailyPercentage: dailyPossible ? (dailyCompleted / dailyPossible) * 100 : 0,
@@ -2358,15 +3534,24 @@
       const activeWeeklyHabits = weeklyAnalytics.habitRows.filter((habit) => habit.totalTarget > 0);
       const activeCount = activeWeeklyHabits.length;
       const isAugustDemo = state.selectedMonth === "2024-08";
+      const carryDates = monthlyAnalytics.dates.slice(0, Math.min(24, monthlyAnalytics.dates.length));
+      const monthWeekColors = ["#43c7ff", "#58da91", "#8f79ff", "#ffd166", "#ff4f8b"];
 
       if (isAugustDemo) {
+        const carryChecks = [
+          1,0,0,1,0,0,1,0,0,1,1,0,
+          1,1,1,1,1,0,1,1,1,1,0,0
+        ].map(Boolean);
         const demoWeekRows = [
           { label: "Week 1", weekIndex: 0, dailyValues: [8, 3, 7, 6, 9, 8, 6], dailyCompleted: 47, dailyPossible: 66, dailyPercentage: 71, weeklyTaskGoal: 0, weeklyTaskDone: 0, weeklyTaskRemaining: 0, weeklyTaskPercentage: 0 },
           { label: "Week 2", weekIndex: 1, dailyValues: [7, 8, 8, 7, 8, 7, 9], dailyCompleted: 54, dailyPossible: 66, dailyPercentage: 82, weeklyTaskGoal: 2, weeklyTaskDone: 2, weeklyTaskRemaining: 0, weeklyTaskPercentage: 100 },
           { label: "Week 3", weekIndex: 2, dailyValues: [9, 6, 7, 9, 7, 8, 7], dailyCompleted: 53, dailyPossible: 66, dailyPercentage: 80, weeklyTaskGoal: 3, weeklyTaskDone: 2, weeklyTaskRemaining: 1, weeklyTaskPercentage: 67 },
           { label: "Week 4", weekIndex: 3, dailyValues: [3, 10, 6, 10, 6, 5, 10], dailyCompleted: 50, dailyPossible: 66, dailyPercentage: 76, weeklyTaskGoal: 4, weeklyTaskDone: 3, weeklyTaskRemaining: 1, weeklyTaskPercentage: 75 },
           { label: "Extra Days", weekIndex: 4, dailyValues: [9, 8, 8], dailyCompleted: 25, dailyPossible: 29, dailyPercentage: 86, weeklyTaskGoal: 3, weeklyTaskDone: 2, weeklyTaskRemaining: 1, weeklyTaskPercentage: 67 }
-        ];
+        ].map((week) => ({
+          ...week,
+          color: monthWeekColors[week.weekIndex]
+        }));
 
         const taskWeeks = [
           { label: "Week 1", weekIndex: 0, tasks: [] },
@@ -2378,8 +3563,18 @@
           ...week,
           completed: week.tasks.filter((task) => task.done).length,
           goal: week.tasks.length,
-          percentage: week.tasks.length ? Math.round((week.tasks.filter((task) => task.done).length / week.tasks.length) * 100) : 0
+          percentage: week.tasks.length ? Math.round((week.tasks.filter((task) => task.done).length / week.tasks.length) * 100) : 0,
+          color: monthWeekColors[week.weekIndex],
+          tasks: week.tasks.map((task) => ({
+            ...task,
+            slots: [task.done],
+            goal: 1,
+            completed: task.done ? 1 : 0
+          }))
         }));
+
+        const totalDailyCompleted = demoWeekRows.reduce((sum, week) => sum + week.dailyCompleted, 0);
+        const totalDailyPossible = demoWeekRows.reduce((sum, week) => sum + week.dailyPossible, 0);
 
         return {
           carryHabit: {
@@ -2389,10 +3584,8 @@
             percentage: 75,
             currentStreak: 1
           },
-          carryChecks: [
-            1,0,0,1,0,0,1,0,0,1,1,0,
-            1,1,1,1,1,0,1,1,1,1,0,0
-          ].map(Boolean),
+          carryDates,
+          carryChecks,
           activeWeeklyHabits: [
             { name: "Meal prep" },
             { name: "Laundry" },
@@ -2405,15 +3598,59 @@
           weeklyCompletedTotal: 9,
           weeklyRemainingTotal: 3,
           weeklyProgressPercent: 75,
+          dailyProgressPercent: totalDailyPossible ? (totalDailyCompleted / totalDailyPossible) * 100 : 0,
           notes: monthData.notes,
           displayWeekRows: demoWeekRows,
           taskWeeks
         };
       }
 
+      const carryHabit = monthlyAnalytics.habitRows.find((habit) => habit.id === "sleep") || monthlyAnalytics.habitRows[0];
+      const displayWeekRows = weeklyAnalytics.weekRows.map((week) => {
+        const dailyItems = monthlyAnalytics.dailySeries.filter((item) => item.weekIndex === week.weekIndex);
+        return {
+          ...week,
+          dailyValues: dailyItems.map((item) => item.completed),
+          color: monthWeekColors[week.weekIndex]
+        };
+      });
+      const taskWeeks = weeklyAnalytics.weekRows.map((week) => ({
+        label: week.label,
+        weekIndex: week.weekIndex,
+        dateRangeLabel: week.dateRangeLabel,
+        completed: week.weeklyTaskDone,
+        goal: week.weeklyTaskGoal,
+        percentage: week.weeklyTaskGoal ? Math.round((week.weeklyTaskDone / week.weeklyTaskGoal) * 100) : 0,
+        color: monthWeekColors[week.weekIndex],
+        tasks: activeWeeklyHabits
+          .map((habit) => ({
+            name: habit.name,
+            data: habit.perWeek.find((item) => item.weekIndex === week.weekIndex),
+            habit
+          }))
+          .filter((entry) => entry.data && entry.data.target > 0)
+          .map((entry) => ({
+            name: entry.name,
+            slots: entry.data.slots,
+            done: entry.data.done > 0,
+            completed: entry.data.done,
+            goal: entry.data.target,
+            habitId: entry.habit.id
+          }))
+      }));
+
+      const totalDailyCompleted = displayWeekRows.reduce((sum, week) => sum + week.dailyCompleted, 0);
+      const totalDailyPossible = displayWeekRows.reduce((sum, week) => sum + week.dailyPossible, 0);
+
       return {
-        carryHabit: monthlyAnalytics.habitRows.find((habit) => habit.id === "sleep") || monthlyAnalytics.habitRows[0],
-        carryDates: monthlyAnalytics.dates.slice(0, Math.min(24, monthlyAnalytics.dates.length)),
+        carryHabit,
+        carryDates,
+        carryChecks: carryHabit
+          ? carryDates.map((date) => {
+            const key = toDateKey(date);
+            return !!(monthData.dailyLogs[key] && monthData.dailyLogs[key][carryHabit.id]);
+          })
+          : [],
         activeWeeklyHabits,
         activeWeeklyCount: activeCount,
         weeklyGoalTotal: activeWeeklyHabits.reduce((sum, habit) => sum + habit.totalTarget, 0),
@@ -2422,29 +3659,10 @@
         weeklyProgressPercent: activeWeeklyHabits.reduce((sum, habit) => sum + habit.totalTarget, 0)
           ? (activeWeeklyHabits.reduce((sum, habit) => sum + habit.totalDone, 0) / activeWeeklyHabits.reduce((sum, habit) => sum + habit.totalTarget, 0)) * 100
           : 0,
+        dailyProgressPercent: totalDailyPossible ? (totalDailyCompleted / totalDailyPossible) * 100 : 0,
         notes: monthData.notes,
-        displayWeekRows: weeklyAnalytics.weekRows,
-        taskWeeks: weeklyAnalytics.weekRows.map((week) => ({
-          label: week.label,
-          weekIndex: week.weekIndex,
-          completed: week.weeklyTaskDone,
-          goal: week.weeklyTaskGoal,
-          percentage: week.weeklyTaskGoal ? Math.round((week.weeklyTaskDone / week.weeklyTaskGoal) * 100) : 0,
-          tasks: activeWeeklyHabits
-            .map((habit) => ({
-              name: habit.name,
-              data: habit.perWeek.find((item) => item.weekIndex === week.weekIndex)
-            }))
-            .filter((entry) => entry.data && entry.data.target > 0)
-            .map((entry) => ({
-              name: entry.name,
-              slots: entry.data.slots,
-              done: entry.data.done > 0,
-              completed: entry.data.done,
-              goal: entry.data.target,
-              habitId: entry.data.target ? activeWeeklyHabits.find((habit) => habit.name === entry.name)?.id : null
-            }))
-        }))
+        displayWeekRows,
+        taskWeeks
       };
     }
 
@@ -2478,6 +3696,8 @@
           monthIndex,
           label: MONTH_SHORT[monthIndex],
           monthLabel: MONTH_NAMES[monthIndex],
+          dualLabel: formatAdMonthLabel(year, monthIndex, true),
+          bsSpan: getBsMonthSpanForAdMonth(year, monthIndex, true),
           totalGoal,
           totalCompleted,
           remaining,
@@ -2583,6 +3803,7 @@
           return {
             monthIndex: month.monthIndex,
             monthKey: month.monthKey,
+            label: month.label,
             goal,
             completed,
             remaining: Math.max(goal - completed, 0),
@@ -2594,7 +3815,10 @@
         const annualRemaining = Math.max(annualGoal - annualCompleted, 0);
         return {
           ...habit,
+          type: "weekly",
           monthlyBreakdown,
+          monthlyGoals: monthlyBreakdown.map((item) => item.goal),
+          monthlyCompleted: monthlyBreakdown.map((item) => item.completed),
           annualGoal,
           annualCompleted,
           annualRemaining,
@@ -2602,12 +3826,9 @@
         };
       });
 
-      const weeklyGoalTotal = weeklyHabitRows.reduce((sum, habit) => sum + habit.annualGoal, 0);
-      const weeklyCompletedTotal = weeklyHabitRows.reduce((sum, habit) => sum + habit.annualCompleted, 0);
-      const weeklyRemainingTotal = Math.max(weeklyGoalTotal - weeklyCompletedTotal, 0);
-      const weeklyProgress = weeklyGoalTotal ? (weeklyCompletedTotal / weeklyGoalTotal) * 100 : 0;
-      const rankedWeeklyHabits = [...weeklyHabitRows].sort((a, b) => b.annualCompleted - a.annualCompleted || b.annualPercentage - a.annualPercentage || a.name.localeCompare(b.name));
-      const weeklyCompositionTotal = Math.max(weeklyCompletedTotal, 1);
+      const weeklySource = year === 2024
+        ? buildAnnualWeeklyDemoAnalytics(year, months)
+        : buildAnnualWeeklyAnalyticsFromRows(weeklyMonths, weeklyHabitRows);
 
       const dailyMonthlyTotals = months.map((month) => ({
         monthIndex: month.monthIndex,
@@ -2632,18 +3853,193 @@
         months,
         dailyMonthlyTotals,
         quarters,
-        habitRows,
+        habitRows: habitRows.map((habit) => ({
+          ...habit,
+          type: "daily",
+          annualTotal: habit.annualCompleted
+        })),
         rankedHabits,
         weekly: {
-          totalHabits: state.weeklyHabits.length,
-          goalTotal: weeklyGoalTotal,
-          completedTotal: weeklyCompletedTotal,
-          remainingTotal: weeklyRemainingTotal,
-          progress: weeklyProgress,
-          months: weeklyMonths,
-          rankedHabits: rankedWeeklyHabits,
-          compositionTotal: weeklyCompositionTotal
+          ...weeklySource,
+          totalHabits: weeklySource.totalHabits,
+          goalTotal: weeklySource.goalTotal,
+          completedTotal: weeklySource.completedTotal,
+          remainingTotal: weeklySource.remainingTotal,
+          progress: weeklySource.progress,
+          months: weeklySource.months,
+          rankedHabits: weeklySource.rankedHabits,
+          compositionTotal: weeklySource.compositionTotal
         }
+      };
+    }
+
+    function buildAnnualWeeklyAnalyticsFromRows(weeklyMonths, weeklyHabitRows) {
+      const weeklyGoalTotal = weeklyHabitRows.reduce((sum, habit) => sum + habit.annualGoal, 0);
+      const weeklyCompletedTotal = weeklyHabitRows.reduce((sum, habit) => sum + habit.annualCompleted, 0);
+      const weeklyRemainingTotal = Math.max(weeklyGoalTotal - weeklyCompletedTotal, 0);
+      const weeklyProgress = weeklyGoalTotal ? (weeklyCompletedTotal / weeklyGoalTotal) * 100 : 0;
+      const rankedWeeklyHabits = [...weeklyHabitRows].sort((a, b) => b.annualCompleted - a.annualCompleted || b.annualPercentage - a.annualPercentage || a.name.localeCompare(b.name));
+      return {
+        totalHabits: weeklyHabitRows.length,
+        goalTotal: weeklyGoalTotal,
+        completedTotal: weeklyCompletedTotal,
+        remainingTotal: weeklyRemainingTotal,
+        progress: weeklyProgress,
+        months: weeklyMonths.map((month) => ({
+          ...month,
+          label: month.label
+        })),
+        rankedHabits: rankedWeeklyHabits,
+        compositionTotal: Math.max(weeklyCompletedTotal, 1)
+      };
+    }
+
+    function buildAnnualWeeklyDemoAnalytics(year, months) {
+      const monthlyCompleted = [13, 14, 10, 11, 14, 13, 12, 14, 16, 18, 11, 9];
+      const monthlyGoal = [17, 18, 17, 17, 18, 17, 18, 18, 18, 18, 16, 15];
+      const habits = [
+        {
+          id: "annual-meal-prep",
+          name: "Meal prep",
+          color: "#2cc9f2",
+          monthlyCompleted: [4, 5, 4, 4, 5, 5, 4, 5, 5, 6, 4, 4],
+          monthlyGoals: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4]
+        },
+        {
+          id: "annual-laundry",
+          name: "Laundry",
+          color: "#22d26b",
+          monthlyCompleted: [4, 4, 3, 3, 4, 4, 4, 4, 5, 5, 4, 0],
+          monthlyGoals: [5, 5, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5]
+        },
+        {
+          id: "annual-budget",
+          name: "Budget",
+          color: "#8f79ff",
+          monthlyCompleted: [1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 2, 2],
+          monthlyGoals: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2]
+        },
+        {
+          id: "annual-clean-car",
+          name: "Clean the car",
+          color: "#ffbf2f",
+          monthlyCompleted: [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 2],
+          monthlyGoals: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        },
+        {
+          id: "annual-learn-new",
+          name: "Learn something new",
+          color: "#ff5f86",
+          monthlyCompleted: [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+          monthlyGoals: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+        },
+        {
+          id: "annual-dog-grooming",
+          name: "Dog grooming",
+          color: "#4dc1ff",
+          monthlyCompleted: [1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+          monthlyGoals: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+        },
+        {
+          id: "annual-volunteer",
+          name: "Volunteer work",
+          color: "#1fdb8e",
+          monthlyCompleted: [1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0],
+          monthlyGoals: [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1]
+        },
+        {
+          id: "annual-clean-garage",
+          name: "Clean the garage",
+          color: "#7a4dff",
+          monthlyCompleted: [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+          monthlyGoals: [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2]
+        }
+      ].map((habit) => {
+        const monthlyBreakdown = months.map((month, index) => {
+          const goal = habit.monthlyGoals[index];
+          const completed = habit.monthlyCompleted[index];
+          return {
+            monthIndex: month.monthIndex,
+            monthKey: month.monthKey,
+            label: month.label,
+            goal,
+            completed,
+            remaining: Math.max(goal - completed, 0),
+            percentage: goal ? (completed / goal) * 100 : 0
+          };
+        });
+        const annualGoal = habit.monthlyGoals.reduce((sum, value) => sum + value, 0);
+        const annualCompleted = habit.monthlyCompleted.reduce((sum, value) => sum + value, 0);
+        const annualRemaining = Math.max(annualGoal - annualCompleted, 0);
+        return {
+          ...habit,
+          type: "weekly",
+          monthlyBreakdown,
+          annualGoal,
+          annualCompleted,
+          annualRemaining,
+          annualPercentage: annualGoal ? (annualCompleted / annualGoal) * 100 : 0
+        };
+      }).sort((a, b) => b.annualCompleted - a.annualCompleted || b.annualPercentage - a.annualPercentage || a.name.localeCompare(b.name));
+
+      const monthlyRows = months.map((month, index) => ({
+        ...month,
+        label: month.label,
+        weeklyGoal: monthlyGoal[index],
+        weeklyCompleted: monthlyCompleted[index],
+        weeklyRemaining: Math.max(monthlyGoal[index] - monthlyCompleted[index], 0),
+        weeklyProgress: monthlyGoal[index] ? (monthlyCompleted[index] / monthlyGoal[index]) * 100 : 0
+      }));
+
+      const completedTotal = monthlyCompleted.reduce((sum, value) => sum + value, 0);
+      const goalTotal = monthlyGoal.reduce((sum, value) => sum + value, 0);
+      return {
+        totalHabits: habits.length,
+        goalTotal,
+        completedTotal,
+        remainingTotal: Math.max(goalTotal - completedTotal, 0),
+        progress: goalTotal ? (completedTotal / goalTotal) * 100 : 0,
+        months: monthlyRows,
+        rankedHabits: habits,
+        compositionTotal: Math.max(completedTotal, 1)
+      };
+    }
+
+    function getPlannerAnalytics() {
+      const year = state.selectedYear;
+      const planner = getPlannerData(year);
+      const capacities = getPlannerMonthCapacities(planner.startDate, planner.endDate);
+      const habitRows = state.monthlyHabits
+        .filter((habit) => habit.active !== false)
+        .sort((a, b) => a.orderIndex - b.orderIndex)
+        .map((habit, rowIndex) => {
+          const targets = MONTH_NAMES.map((_, monthIndex) => clampInteger((planner.monthlyTargets[habit.id] || [])[monthIndex] ?? 0, 0, capacities[monthIndex].daysAvailable));
+          return {
+            ...habit,
+            rowIndex,
+            targets,
+            annualTotal: targets.reduce((sum, value) => sum + value, 0)
+          };
+        });
+      const monthlyTotals = MONTH_NAMES.map((_, monthIndex) => ({
+        monthIndex,
+        label: MONTH_NAMES[monthIndex],
+        shortLabel: MONTH_SHORT[monthIndex],
+        total: habitRows.reduce((sum, habit) => sum + habit.targets[monthIndex], 0),
+        daysAvailable: capacities[monthIndex].daysAvailable,
+        totalDays: capacities[monthIndex].totalDays
+      }));
+      return {
+        year,
+        startDate: planner.startDate,
+        endDate: planner.endDate,
+        daysLeft: getDateRange(planner.startDate, planner.endDate).length,
+        streakCarryOver: planner.streakCarryOver,
+        capacities,
+        habitRows,
+        monthlyTotals,
+        grandTotal: monthlyTotals.reduce((sum, month) => sum + month.total, 0),
+        monthMax: Math.max(...monthlyTotals.map((month) => month.total), 1)
       };
     }
 
@@ -2655,12 +4051,24 @@
       const today = new Date();
       const elapsedDays = safeDates.filter((date) => date <= today).length;
       const daysLeft = safeDates.filter((date) => date > today).length;
-      const dateKeys = safeDates.map(toDateKey);
+      const monthGoalCache = {};
+      const dateEntries = safeDates.map((date) => {
+        const dateKey = toDateKey(date);
+        const monthKey = dateKey.slice(0, 7);
+        const monthData = getMonthData(monthKey);
+        if (!monthGoalCache[monthKey]) monthGoalCache[monthKey] = monthData.monthlyGoals;
+        return {
+          date,
+          dateKey,
+          monthKey,
+          log: monthData.dailyLogs[dateKey] || {}
+        };
+      });
 
       const habitRows = state.monthlyHabits.map((habit, index) => {
-        const completed = dateKeys.reduce((sum, key) => sum + (getDailyLogForDateKey(key)[habit.id] ? 1 : 0), 0);
-        const goal = dateKeys.reduce((sum, key) => sum + (getMonthData(key.slice(0, 7)).monthlyGoals[habit.id] ? 1 : 0), 0);
-        const effectiveGoal = Math.min(goal, safeDates.length);
+        const completed = dateEntries.reduce((sum, entry) => sum + (entry.log[habit.id] ? 1 : 0), 0);
+        const goal = dateEntries.reduce((sum, entry) => sum + (monthGoalCache[entry.monthKey][habit.id] ? 1 : 0), 0);
+        const effectiveGoal = goal;
         const remaining = Math.max(effectiveGoal - completed, 0);
         const percentage = effectiveGoal ? (completed / effectiveGoal) * 100 : 0;
         return {
@@ -2673,12 +4081,11 @@
         };
       });
 
-      const dailySeries = safeDates.map((date) => {
-        const key = toDateKey(date);
-        const completed = state.monthlyHabits.reduce((sum, habit) => sum + (getDailyLogForDateKey(key)[habit.id] ? 1 : 0), 0);
+      const dailySeries = dateEntries.map((entry) => {
+        const completed = state.monthlyHabits.reduce((sum, habit) => sum + (entry.log[habit.id] ? 1 : 0), 0);
         return {
-          date,
-          dateKey: key,
+          date: entry.date,
+          dateKey: entry.dateKey,
           completed,
           percentage: state.monthlyHabits.length ? (completed / state.monthlyHabits.length) * 100 : 0
         };
@@ -2694,11 +4101,26 @@
       const rankedHabits = [...habitRows].sort((a, b) => b.percentage - a.percentage || b.completed - a.completed);
       const compact = safeDates.length <= 45;
       const chunks = compact ? [] : chunkDatesByWeek(safeDates);
+      const dateLogByKey = Object.fromEntries(dateEntries.map((entry) => [entry.dateKey, entry.log]));
+      const chunkSummaries = compact ? [] : chunks.map((chunk) => {
+        const chunkDateKeys = chunk.map(toDateKey);
+        const perHabit = Object.fromEntries(state.monthlyHabits.map((habit) => ([
+          habit.id,
+          chunkDateKeys.reduce((sum, key) => sum + (dateLogByKey[key] && dateLogByKey[key][habit.id] ? 1 : 0), 0)
+        ])));
+        return {
+          chunk,
+          chunkDateKeys,
+          perHabit
+        };
+      });
 
       return {
         startDate,
         endDate,
         dates: safeDates,
+        dateEntries,
+        dateLogByKey,
         totalDays: safeDates.length,
         elapsedDays,
         daysLeft,
@@ -2711,7 +4133,8 @@
         rankedHabits,
         dailySeries,
         compact,
-        chunks
+        chunks,
+        chunkSummaries
       };
     }
 
@@ -2738,18 +4161,48 @@
     }
 
     function render() {
-      const monthly = getMonthlyAnalytics();
-      const weekly = getWeeklyAnalytics(monthly);
-      const monthlyWeekly = getMonthlyWeeklySubsystem(monthly, weekly);
-      const annual = getAnnualAnalytics();
-      const duration = getDurationAnalytics();
+      const activeTheme = state.ui.theme === "light" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", activeTheme);
+      document.documentElement.style.colorScheme = activeTheme;
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (themeMeta) themeMeta.setAttribute("content", activeTheme === "light" ? "#f5f9ff" : "#061426");
+
+      let planner = null;
+      let monthly = null;
+      let weekly = null;
+      let monthlyWeekly = null;
+      let annual = null;
+      let duration = null;
+
+      if (state.view === "planner") {
+        planner = getPlannerAnalytics();
+      }
+
+      if (state.view === "monthly" || state.view === "monthly-weekly" || state.view === "weekly" || state.view === "setup" || state.view === "reports") {
+        monthly = getMonthlyAnalytics();
+        weekly = getWeeklyAnalytics(monthly);
+      }
+
+      if (state.view === "monthly" || state.view === "monthly-weekly") {
+        monthlyWeekly = getMonthlyWeeklySubsystem(monthly, weekly);
+      }
+
+      if (state.view === "annual" || state.view === "annual-weekly" || state.view === "reports") {
+        annual = getAnnualAnalytics();
+      }
+
+      if (state.view === "duration") {
+        duration = getDurationAnalytics();
+      }
+
       app.innerHTML = `
         ${renderTopbar()}
         ${renderNav()}
         <div class="page">
-          ${state.view === "monthly" ? renderMonthlyPage(monthly, weekly, monthlyWeekly) : ""}
+          ${state.view === "planner" ? renderPlannerPage(planner) : ""}
+          ${state.view === "monthly" || state.view === "monthly-weekly" ? renderMonthlyPage(monthly, weekly, monthlyWeekly) : ""}
           ${state.view === "weekly" ? renderWeeklyPage(monthly, weekly) : ""}
-          ${state.view === "annual" ? renderAnnualPage(annual) : ""}
+          ${state.view === "annual" || state.view === "annual-weekly" ? renderAnnualPage(annual) : ""}
           ${state.view === "duration" ? renderDurationPage(duration) : ""}
           ${state.view === "setup" ? renderSetupPage(monthly, weekly) : ""}
           ${state.view === "data" ? renderDataPage() : ""}
@@ -2759,19 +4212,21 @@
     }
 
     function renderTopbar() {
+      const installState = getInstallSupportState();
       return `
         <div class="topbar">
           <div class="brand">
-            <div class="brand-mark">◎</div>
+            <div class="brand-mark"><img src="icons/icon-192-v2.png" alt="Habit Intelligence Suite icon"></div>
             <div class="brand-copy">
               <h1>Habit Intelligence Suite</h1>
               <p>Single-file premium analytics system spanning monthly, weekly, and annual habit performance with offline-first persistence and installable PWA support.</p>
             </div>
           </div>
           <div class="topbar-right">
+            <button class="button" data-action="toggle-theme">Theme: ${state.ui.theme === "light" ? "Light" : "Dark"}</button>
             <div class="status-pill"><span class="dot" style="background:${navigator.onLine ? "var(--green)" : "var(--pink)"}"></span><span>${navigator.onLine ? "Online" : "Offline"} first</span></div>
             <div class="status-pill"><span class="dot"></span><span>Saved ${timeAgo(state.ui.lastSavedAt)}</span></div>
-            <button class="button primary" data-action="install-pwa" ${deferredInstallPrompt ? "" : "disabled"}>Install PWA</button>
+            <button class="button primary" data-action="install-pwa" ${installState.canPrompt ? "" : "disabled"} title="${escapeHtml(installState.detail)}">${installState.label}</button>
           </div>
         </div>
       `;
@@ -2781,6 +4236,183 @@
       return `
         <div class="app-nav">
           ${NAV_ITEMS.map((item) => `<button class="nav-tab ${state.view === item.key ? "active" : ""}" data-nav="${item.key}">${item.label}</button>`).join("")}
+        </div>
+      `;
+    }
+
+    function renderPlannerPage(planner) {
+      return `
+        <div class="planner-layout">
+          <div class="column">
+            <section class="panel">
+              <div class="panel-body">
+                <div class="annual-hero">
+                  <span class="eyebrow">Habit Planner</span>
+                  <h2>${formatDualYearLabel(planner.year)}</h2>
+                  <p>Formula-driven yearly planning sheet for defining month-by-month targets before execution, review, and analytics begin.</p>
+                </div>
+                <div class="month-switcher">
+                  <button class="button" data-action="shift-year" data-offset="-1">←</button>
+                  <input type="number" min="2000" max="2100" value="${planner.year}" data-input="year-picker">
+                  <button class="button" data-action="shift-year" data-offset="1">→</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Planner Settings</span>
+                    <h3>Annual Planning Window</h3>
+                  </div>
+                </div>
+                <div class="planner-config-list">
+                  <div class="planner-config-row">
+                    <label for="plannerStart">Start Date</label>
+                    <div>
+                      <input id="plannerStart" type="date" value="${planner.startDate}" data-input="planner-start">
+                      <div class="muted" style="font-size:0.78rem;margin-top:6px">${formatLongDate(planner.startDate)}</div>
+                    </div>
+                  </div>
+                  <div class="planner-config-row">
+                    <label for="plannerEnd">End Date</label>
+                    <div>
+                      <input id="plannerEnd" type="date" value="${planner.endDate}" data-input="planner-end">
+                      <div class="muted" style="font-size:0.78rem;margin-top:6px">${formatLongDate(planner.endDate)}</div>
+                    </div>
+                  </div>
+                  <div class="planner-config-row">
+                    <span>Days Left</span>
+                    <div class="stat-card"><strong>${planner.daysLeft}</strong><span style="margin:4px 0 0">days in active yearly plan window</span></div>
+                  </div>
+                  <div class="planner-config-row">
+                    <label for="plannerStreakCarry">Streaks Carry Over</label>
+                    <select id="plannerStreakCarry" data-change="planner-streak">
+                      <option value="yes" ${planner.streakCarryOver ? "selected" : ""}>Yes</option>
+                      <option value="no" ${planner.streakCarryOver ? "" : "selected"}>No</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="planner-toolbar" style="margin-top:14px">
+                  <button class="button" data-action="copy-planner-targets">Copy Planner Targets Into Tracker</button>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="button primary" data-action="export-json">Export Planner Data</button>
+                    <label class="button" for="importFile">Import Planner Data</label>
+                    <input id="importFile" type="file" accept=".json,application/json" class="hidden">
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Habit Architecture</span>
+                    <h3>Habit Master + Setup Readiness</h3>
+                  </div>
+                  <button class="button tiny" data-action="add-monthly-habit">Add Habit</button>
+                </div>
+                <div class="planner-master-list">
+                  ${planner.habitRows.map((habit) => `
+                    <div class="planner-master-row">
+                      <div>
+                        <input class="mini-input" type="text" value="${escapeHtml(habit.name)}" data-change="monthly-name" data-id="${habit.id}">
+                        <div class="muted" style="font-size:0.76rem;margin-top:6px">${getHabitArchitectureSummary(habit)}</div>
+                      </div>
+                      ${renderSetupStatusBadge(habit)}
+                      <button class="button tiny danger" data-action="delete-monthly-habit" data-id="${habit.id}">Delete</button>
+                    </div>
+                  `).join("")}
+                  <div class="planner-master-row overall-row">
+                    <strong>TOTAL HABITS • ${planner.habitRows.length}</strong>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="planner-main">
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Monthly Goals</span>
+                    <h3>MONTHLY GOALS</h3>
+                  </div>
+                  <div class="muted">Front-loaded and back-loaded months are visible before detailed editing.</div>
+                </div>
+                <div class="planner-overview-grid">
+                  ${planner.monthlyTotals.map((month) => `
+                    <div class="planner-month-card" title="${formatAdMonthLabel(planner.year, month.monthIndex)}">
+                      <span>${MONTH_NAMES[month.monthIndex]}</span>
+                      <small class="muted">${getBsMonthSpanForAdMonth(planner.year, month.monthIndex, true)}</small>
+                      <div class="planner-month-bar"><span style="height:${Math.max((month.total / planner.monthMax) * 100, 6)}%"></span></div>
+                      <strong>${month.total}</strong>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Goals</span>
+                    <h3>Yearly Goal-Setting Engine</h3>
+                    <div class="muted" style="margin-top:6px">Rows are habits, columns are months, and each cell is a target count constrained by available calendar capacity.</div>
+                  </div>
+                </div>
+                <div class="matrix-scroll">
+                  ${renderPlannerMatrix(planner)}
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlannerMatrix(planner) {
+      return `
+        <div class="planner-sheet">
+          <div class="planner-group sticky-col">Habits</div>
+          ${planner.monthlyTotals.map((month, monthIndex) => `<div class="planner-group ${quarterBgClass(monthIndex)}" title="${formatAdMonthLabel(planner.year, monthIndex)}">${MONTH_NAMES[monthIndex]}</div>`).join("")}
+          <div class="planner-group">Total</div>
+
+          <div class="planner-head sticky-col"><strong>Month Header</strong><small>Planning columns</small></div>
+          ${planner.monthlyTotals.map((month, monthIndex) => `<div class="planner-head ${quarterBgClass(monthIndex)}" title="${formatAdMonthLabel(planner.year, monthIndex)}"><strong>${MONTH_NAMES[monthIndex]}</strong><small>${getBsMonthSpanForAdMonth(planner.year, monthIndex, true)}</small></div>`).join("")}
+          <div class="planner-head"><strong>Total</strong><small>Annual</small></div>
+
+          <div class="planner-head sticky-col"><strong>Days Left</strong><small>Calendar capacity</small></div>
+          ${planner.monthlyTotals.map((month, monthIndex) => `<div class="planner-head ${quarterBgClass(monthIndex)}" title="${formatAdMonthLabel(planner.year, monthIndex)}"><strong>${month.daysAvailable}</strong><small>${getBsMonthSpanForAdMonth(planner.year, monthIndex, true)}</small></div>`).join("")}
+          <div class="planner-head"><strong>${planner.grandTotal}</strong><small>Grand total</small></div>
+
+          ${planner.habitRows.map((habit) => `
+            <div class="planner-label sticky-col" style="--habit-color:${habit.color}">
+              <div>
+                <strong>${escapeHtml(habit.name)}</strong>
+                <small>${habit.frequency_rule ? `${escapeHtml(titleCaseWords(habit.frequency_rule))} • ` : ""}${escapeHtml(habit.minimum_version || "No minimum version")} • ${habit.annualTotal} annual target</small>
+              </div>
+            </div>
+            ${habit.targets.map((value, monthIndex) => `
+              <div class="planner-cell ${quarterBgClass(monthIndex)}">
+                <input type="number" min="0" max="${planner.capacities[monthIndex].daysAvailable}" value="${value}" data-change="planner-target" data-id="${habit.id}" data-month-index="${monthIndex}">
+              </div>
+            `).join("")}
+            <div class="planner-total"><strong>${habit.annualTotal}</strong><small>annual</small></div>
+          `).join("")}
+
+          <div class="planner-label sticky-col overall-row">
+            <div>
+              <strong>TOTAL</strong>
+              <small>Monthly totals</small>
+            </div>
+          </div>
+          ${planner.monthlyTotals.map((month, monthIndex) => `<div class="planner-total ${quarterBgClass(monthIndex)}" title="${formatAdMonthLabel(planner.year, monthIndex)}"><strong>${month.total}</strong><small>${MONTH_SHORT[monthIndex]} • ${getBsMonthSpanForAdMonth(planner.year, monthIndex, true)}</small></div>`).join("")}
+          <div class="planner-total overall-row"><strong>${planner.grandTotal}</strong><small>yearly total</small></div>
         </div>
       `;
     }
@@ -2795,7 +4427,7 @@
                 <div class="month-hero">
                   <span class="eyebrow">Monthly Identity</span>
                   <h2>${monthly.monthLabel}</h2>
-                  <p>High-information monthly habit intelligence board with variable targets, live rankings, streak-aware scoring, and calendar-aware matrix editing.</p>
+                  <p>High-information monthly habit intelligence board with variable targets, live rankings, streak-aware scoring, calendar-aware matrix editing, and English + Nepali date context.</p>
                 </div>
                 <div class="month-switcher">
                   <button class="button" data-action="shift-month" data-offset="-1">←</button>
@@ -2851,7 +4483,8 @@
                       <div class="swatch" style="background:${habit.color};color:${habit.color}"></div>
                       <div>
                         <strong>${escapeHtml(habit.name)}</strong>
-                        <small>${habit.doneCount} completed days • ${habit.currentStreak}d streak</small>
+                        <small>${habit.doneCount} completed days • ${habit.currentStreak}d streak • ${escapeHtml(habit.time_anchor || "No time anchor")} • ${escapeHtml(habit.minimum_version || "No minimum version")}</small>
+                        <small>${escapeHtml(habit.cue_trigger || "Cue not defined")} • Recovery: ${escapeHtml(habit.miss_recovery_step || "Not set")}</small>
                       </div>
                       <div class="row-value">
                         <strong>${habit.goal}</strong>
@@ -3041,7 +4674,7 @@
                   </div>
                 </div>
                 <div class="formula-list">
-                  <div class="formula-item"><strong>Daily Progress:</strong> ${monthly.kpis.weeklyProgress.toFixed(0)}% across week-grouped daily execution.</div>
+                  <div class="formula-item"><strong>Daily Progress:</strong> ${monthlyWeekly.dailyProgressPercent.toFixed(0)}% across week-grouped daily execution.</div>
                   <div class="formula-item"><strong>Completed Daily:</strong> ${monthly.totalCompleted} completed daily habit actions this month.</div>
                   <div class="formula-item"><strong>Completed Weekly:</strong> ${monthlyWeekly.weeklyCompletedTotal} completed weekly-task occurrences this month.</div>
                   <div class="formula-item"><strong>Weekly Goal:</strong> ${monthlyWeekly.weeklyGoalTotal} planned weekly-task occurrences.</div>
@@ -3099,7 +4732,7 @@
                         <div class="week-bar-meta">${week.weeklyTaskDone}/${week.weeklyTaskGoal || 0} complete</div>
                       </div>
                       <div class="stacked-track">
-                        <div class="stacked-complete" style="width:${week.weeklyTaskGoal ? (week.weeklyTaskDone / week.weeklyTaskGoal) * 100 : 0}%"></div>
+                        <div class="stacked-complete" style="width:${week.weeklyTaskGoal ? (week.weeklyTaskDone / week.weeklyTaskGoal) * 100 : 0}%;background:linear-gradient(90deg, ${week.color || "var(--green)"}, rgba(255,255,255,0.65))"></div>
                         <div class="stacked-remaining" style="width:${week.weeklyTaskGoal ? (week.weeklyTaskRemaining / week.weeklyTaskGoal) * 100 : 0}%"></div>
                       </div>
                       <div class="week-bar-meta">${week.weeklyTaskGoal ? week.weeklyTaskPercentage.toFixed(0) : 0}% • ${week.weeklyTaskRemaining} remaining</div>
@@ -3224,11 +4857,12 @@
                 </div>
                 <div class="week-bar-list">
                   ${weekly.weekRows.map((week) => `
-                    <button class="week-bar-item" data-action="focus-week" data-week-index="${week.weekIndex}">
+                    <button class="week-bar-item" data-action="focus-week" data-week-index="${week.weekIndex}" title="${week.dateRangeLabel}">
                       <div class="week-bar-top">
                         <strong>${week.label}</strong>
                         <div class="week-bar-meta">${week.weeklyTaskDone}/${week.weeklyTaskGoal} weekly tasks • ${week.weeklyTaskPercentage.toFixed(0)}%</div>
                       </div>
+                      <div class="week-bar-meta">${week.dateRangeLabel}</div>
                       <div class="weekly-overview-bar"><span style="width:${Math.min(week.weeklyTaskPercentage, 100)}%;--bar-color:var(--${["week-1","week-2","week-3","week-4","week-5"][week.weekIndex]})"></span></div>
                       <div class="week-bar-meta">${week.dailyCompleted}/${week.dailyPossible} daily habit hits • ${week.dailyPercentage.toFixed(0)}%</div>
                     </button>
@@ -3304,6 +4938,14 @@
                     <textarea id="weeklyNextMoves" data-note="nextMoves">${escapeHtml(getMonthData(state.selectedMonth).notes.nextMoves)}</textarea>
                   </div>
                 </div>
+                <div class="note-box" style="margin-top:14px">
+                  <strong style="display:block;color:var(--text);margin-bottom:8px">Miss Recovery Guidance</strong>
+                  ${monthly.habitRows
+                    .filter((habit) => habit.remaining > 0)
+                    .slice(0, 4)
+                    .map((habit) => `${escapeHtml(habit.name)}: ${escapeHtml(habit.miss_recovery_step || "Define a recovery rule in Habit Setup.")}`)
+                    .join("<br>")}
+                </div>
               </div>
             </section>
           </div>
@@ -3321,7 +4963,7 @@
                 <div class="annual-hero">
                   <div class="brand-badge">${escapeHtml(annual.brandBadge)}</div>
                   <span class="eyebrow" style="margin-top:12px">Annual Scope</span>
-                  <h2>${annual.year}</h2>
+                  <h2>${formatDualYearLabel(annual.year)}</h2>
                   <p>Executive year-level behavior analytics board showing annual goals, month-specific execution, quarter-aware performance, and habit-level standings.</p>
                 </div>
                 <div class="month-switcher">
@@ -3522,8 +5164,8 @@
                         </div>
                         <div><strong>${habit.annualPercentage.toFixed(0)}%</strong></div>
                       </div>
-                      <div class="track">
-                        <div class="fill" style="width:${Math.min(habit.annualPercentage, 100)}%;background:linear-gradient(90deg, ${habit.color}, var(--green))"></div>
+                      <div class="track annual-overflow-track">
+                        <div class="fill" style="width:${Math.min(habit.annualPercentage, 140)}%;background:linear-gradient(90deg, ${habit.color}, var(--green))"></div>
                       </div>
                     </div>
                   `).join("")}
@@ -3550,7 +5192,7 @@
                         <div class="annual-progress-stat"><strong>${habit.annualPercentage.toFixed(0)}%</strong>${habit.annualCompleted}/${habit.annualGoal}</div>
                       </div>
                       <div class="annual-progress-meta">
-                        <div class="track"><div class="fill" style="width:${Math.min(habit.annualPercentage, 100)}%;background:linear-gradient(90deg, ${habit.color}, var(--cyan))"></div></div>
+                        <div class="track annual-overflow-track"><div class="fill" style="width:${Math.min(habit.annualPercentage, 140)}%;background:linear-gradient(90deg, ${habit.color}, var(--cyan))"></div></div>
                         <span>${habit.annualPercentage > 100 ? "Over target" : "Toward target"} • ${habit.annualCompleted}/${habit.annualGoal}</span>
                       </div>
                     </div>
@@ -3564,7 +5206,7 @@
                       <div class="annual-progress-stat"><strong>${annual.totalProgress.toFixed(0)}%</strong>${annual.annualCompletedTotal}/${annual.annualGoalTotal}</div>
                     </div>
                     <div class="annual-progress-meta">
-                      <div class="track"><div class="fill" style="width:${Math.min(annual.totalProgress, 100)}%;background:linear-gradient(90deg, var(--cyan), var(--teal))"></div></div>
+                      <div class="track annual-overflow-track"><div class="fill" style="width:${Math.min(annual.totalProgress, 140)}%;background:linear-gradient(90deg, var(--cyan), var(--teal))"></div></div>
                       <span>${annual.totalProgress > 100 ? "Over target" : "Toward target"} • ${annual.annualCompletedTotal}/${annual.annualGoalTotal}</span>
                     </div>
                   </div>
@@ -3573,76 +5215,74 @@
             </section>
           </div>
         </div>
-        <section class="panel">
-          <div class="panel-body">
-            <div class="panel-header">
-              <div>
-                <span class="eyebrow">Weekly Habits</span>
-                <h3>WEEKLY HABITS</h3>
-                <div class="muted" style="margin-top:6px">Annual weekly-habit subsystem for multi-frequency reporting alongside the daily-habit yearly audit.</div>
-              </div>
-            </div>
-            <div class="summary-band">
-              <div class="summary-card completed">
-                <span>Total Weekly Habits</span>
-                <strong>${annual.weekly.totalHabits}</strong>
-                <p>Weekly recurrence habits tracked in the annual system.</p>
-              </div>
-              <div class="summary-card completed">
-                <span>Weekly Habits Goals</span>
-                <strong>${annual.weekly.goalTotal}</strong>
-                <p>Total annual planned weekly occurrences across all weekly habits.</p>
-              </div>
-              <div class="summary-card completed">
-                <span>Completed</span>
-                <strong>${annual.weekly.completedTotal}</strong>
-                <p>Total completed weekly occurrences for the year.</p>
-              </div>
-              <div class="summary-card remaining">
-                <span>Remaining</span>
-                <strong>${annual.weekly.remainingTotal}</strong>
-                <p>Remaining weekly occurrences against the annual weekly plan.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div class="annual-weekly-section">
-          <section class="panel chart-shell">
-            <div class="panel-body">
-              <div class="panel-header">
-                <div>
-                  <span class="eyebrow">Weekly Habits Overview</span>
-                  <h3>WEEKLY HABITS OVERVIEW</h3>
-                  <div class="muted" style="margin-top:6px">Completed bars, goal line, and remaining line for weekly-habit performance by month.</div>
-                </div>
-              </div>
-              ${renderAnnualWeeklyOverviewChart(annual.weekly)}
-              <div class="chart-legend">
-                <div class="legend-inline">
-                  <span><i class="legend-dot" style="background:var(--green)"></i>Completed</span>
-                  <span><i class="legend-dot" style="background:var(--cyan)"></i>Goal</span>
-                  <span><i class="legend-dot" style="background:var(--pink)"></i>Remaining</span>
-                </div>
-                <div>${annual.weekly.completedTotal}/${annual.weekly.goalTotal} annual weekly completions</div>
-              </div>
-            </div>
-          </section>
-
-          <div class="annual-weekly-right">
+        <div class="annual-weekly-lower">
+          <div class="annual-weekly-summary-stack">
             <section class="panel">
               <div class="panel-body">
                 <div class="panel-header">
                   <div>
-                    <span class="eyebrow">Weekly KPI Ring</span>
-                    <h3>Overall Weekly Progress</h3>
+                    <span class="eyebrow">Weekly Habits</span>
+                    <h3>WEEKLY HABITS</h3>
+                    <div class="muted" style="margin-top:6px">Annual weekly-habit analytics layer integrated with the daily-habit yearly audit for a dual-frequency annual dashboard.</div>
                   </div>
                 </div>
-                <div style="max-width:220px;margin:0 auto">
-                  ${renderDonutChart(annual.weekly.progress, "#57e3a0", "Weekly Progress")}
+              </div>
+            </section>
+
+            <div class="annual-stat-stack">
+              <section class="panel">
+                <div class="panel-body">
+                  <div class="stat-card">
+                    <span>Total Weekly Habits</span>
+                    <strong>${annual.weekly.totalHabits}</strong>
+                  </div>
                 </div>
-                <div class="note-box" style="margin-top:14px">
-                  ${annual.weekly.completedTotal}/${annual.weekly.goalTotal} weekly occurrences completed for ${annual.weekly.progress.toFixed(0)}% annual weekly progress.
+              </section>
+              <section class="panel">
+                <div class="panel-body">
+                  <div class="stat-card">
+                    <span>Weekly Habits Goals</span>
+                    <strong>${annual.weekly.goalTotal}</strong>
+                  </div>
+                </div>
+              </section>
+              <section class="panel">
+                <div class="panel-body">
+                  <div class="stat-card">
+                    <span>Completed</span>
+                    <strong style="color:var(--green)">${annual.weekly.completedTotal}</strong>
+                  </div>
+                </div>
+              </section>
+              <section class="panel">
+                <div class="panel-body">
+                  <div class="stat-card">
+                    <span>Remaining</span>
+                    <strong style="color:var(--pink)">${annual.weekly.remainingTotal}</strong>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div class="annual-weekly-center">
+            <section class="panel chart-shell">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Weekly Habits Overview</span>
+                    <h3>WEEKLY HABITS OVERVIEW</h3>
+                    <div class="muted" style="margin-top:6px">Green completed bars plus cyan goal and pink remaining lines across Jan to Dec.</div>
+                  </div>
+                </div>
+                ${renderAnnualWeeklyOverviewChart(annual.weekly)}
+                <div class="chart-legend">
+                  <div class="legend-inline">
+                    <span><i class="legend-dot" style="background:var(--green)"></i>Completed</span>
+                    <span><i class="legend-dot" style="background:var(--cyan)"></i>Goal</span>
+                    <span><i class="legend-dot" style="background:var(--pink)"></i>Remaining</span>
+                  </div>
+                  <div>${annual.weekly.completedTotal}/${annual.weekly.goalTotal} annual weekly completions</div>
                 </div>
               </div>
             </section>
@@ -3655,7 +5295,7 @@
                     <h3>WEEKLY HABITS BREAKDOWN</h3>
                   </div>
                 </div>
-                <div style="max-width:220px;margin:0 auto">
+                <div style="max-width:260px;margin:0 auto">
                   ${renderWeeklyBreakdownDonut(annual.weekly)}
                 </div>
                 <div class="donut-legend">
@@ -3672,67 +5312,56 @@
               </div>
             </section>
           </div>
-        </div>
 
-        <div class="dashboard-grid-annual" style="grid-template-columns: minmax(0, 1fr) 360px">
-          <section class="panel">
-            <div class="panel-body">
-              <div class="panel-header">
-                <div>
-                  <span class="eyebrow">Top Weekly Habits</span>
-                  <h3>Completed vs Remaining</h3>
+          <div class="annual-weekly-side">
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Top Weekly Habits</span>
+                    <h3>Completed vs Remaining</h3>
+                  </div>
                 </div>
-              </div>
-              <div class="ranking-list">
-                ${annual.weekly.rankedHabits.map((habit, index) => `
-                  <div class="ranking-item">
-                    <div class="ranking-head">
-                      <div style="display:flex;align-items:center;gap:10px;min-width:0">
-                        <div class="rank-badge">${index + 1}</div>
-                        <div style="min-width:0">
-                          <strong>${escapeHtml(habit.name)}</strong>
-                          <div class="muted" style="font-size:0.8rem">${habit.annualCompleted} completed${habit.annualRemaining ? ` • ${habit.annualRemaining} remaining` : ""}</div>
+                <div class="ranking-list">
+                  ${annual.weekly.rankedHabits.map((habit, index) => `
+                    <div class="ranking-item">
+                      <div class="ranking-head">
+                        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                          <div class="rank-badge">${index + 1}</div>
+                          <div style="min-width:0">
+                            <strong>${escapeHtml(habit.name)}</strong>
+                            <div class="muted" style="font-size:0.8rem">${habit.annualCompleted} completed${habit.annualRemaining ? ` • ${habit.annualRemaining} remaining` : ""}</div>
+                          </div>
                         </div>
+                        <div><strong>${habit.annualPercentage.toFixed(0)}%</strong></div>
                       </div>
-                      <div><strong>${habit.annualPercentage.toFixed(0)}%</strong></div>
+                      <div class="stacked-track">
+                        <div class="stacked-complete" style="width:${habit.annualGoal ? (habit.annualCompleted / habit.annualGoal) * 100 : 0}%"></div>
+                        <div class="stacked-remaining" style="width:${habit.annualGoal ? (habit.annualRemaining / habit.annualGoal) * 100 : 0}%"></div>
+                      </div>
                     </div>
-                    <div class="stacked-track">
-                      <div class="stacked-complete" style="width:${habit.annualGoal ? (habit.annualCompleted / habit.annualGoal) * 100 : 0}%"></div>
-                      <div class="stacked-remaining" style="width:${habit.annualGoal ? (habit.annualRemaining / habit.annualGoal) * 100 : 0}%"></div>
-                    </div>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-body">
-              <div class="panel-header">
-                <div>
-                  <span class="eyebrow">Weekly Totals</span>
-                  <h3>Monthly Annual Weekly Totals</h3>
+                  `).join("")}
                 </div>
               </div>
-              <div class="analytics-table">
-                ${annual.weekly.months.map((month) => `
-                  <div class="annual-progress-row">
-                    <div class="ranking-head" style="margin-bottom:8px">
-                      <div>
-                        <strong>${month.label}</strong>
-                        <div class="muted" style="font-size:0.8rem">${month.weeklyCompleted}/${month.weeklyGoal}</div>
-                      </div>
-                      <div class="annual-progress-stat"><strong>${month.weeklyProgress.toFixed(0)}%</strong>${month.weeklyRemaining} rem</div>
-                    </div>
-                    <div class="annual-progress-meta">
-                      <div class="track"><div class="fill" style="width:${Math.min(month.weeklyProgress, 100)}%;background:linear-gradient(90deg, var(--green), var(--cyan))"></div></div>
-                      <span>${MONTH_NAMES[month.monthIndex]} weekly habits total</span>
-                    </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Weekly KPI Ring</span>
+                    <h3>Overall Weekly Progress</h3>
                   </div>
-                `).join("")}
+                </div>
+                <div style="max-width:240px;margin:0 auto">
+                  ${renderDonutChart(annual.weekly.progress, "#57e3a0", "Weekly Progress")}
+                </div>
+                <div class="note-box" style="margin-top:14px">
+                  ${annual.weekly.completedTotal}/${annual.weekly.goalTotal} weekly occurrences completed for ${annual.weekly.progress.toFixed(0)}% annual weekly progress.
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
         </div>
       `;
@@ -3881,72 +5510,327 @@
       `;
     }
 
+    function renderSetupStatusBadge(habit) {
+      const status = getHabitSetupStatus(habit);
+      return `<span class="status-badge ${status.key}">${status.label}</span>`;
+    }
+
+    function renderFrequencyControl(habit) {
+      const cleanRule = cleanInlineText(habit.frequency_rule).toLowerCase();
+      const selected = habit.frequency_rule_mode || (FREQUENCY_PRESETS.includes(cleanRule) ? cleanRule : (cleanRule ? "custom" : ""));
+      const customValue = selected === "custom" ? (habit.custom_frequency_rule || habit.frequency_rule) : "";
+      return `
+        <div class="stacked-field">
+          <select class="mini-input" data-change="habit-field" data-id="${habit.id}" data-field="frequency_rule_preset">
+            ${FREQUENCY_PRESETS.map((option) => `<option value="${option}" ${selected === option ? "selected" : ""}>${option ? titleCaseWords(option) : "Select frequency"}</option>`).join("")}
+          </select>
+          ${selected === "custom" ? `<input class="mini-input" type="text" value="${escapeHtml(customValue)}" placeholder="Custom recurrence" data-change="habit-field" data-id="${habit.id}" data-field="frequency_rule_custom">` : ""}
+        </div>
+      `;
+    }
+
+    function renderSetupTableRow(habit, monthlyRow) {
+      return `
+        <div class="setup-architecture-row ${state.ui.selectedSetupHabitId === habit.id ? "selected" : ""}">
+          <div class="setup-table-cell setup-table-habit">
+            <div class="setup-color"><input type="color" value="${habit.color}" data-change="monthly-color" data-id="${habit.id}"></div>
+            <div>
+              <input class="mini-input" type="text" value="${escapeHtml(habit.habit_name)}" data-change="habit-field" data-id="${habit.id}" data-field="habit_name">
+              <small>${monthlyRow ? `${monthlyRow.doneCount}/${monthlyRow.goal} tracked this month` : "No tracker data yet"}</small>
+            </div>
+          </div>
+          <div class="setup-table-cell">${renderFrequencyControl(habit)}</div>
+          <div class="setup-table-cell">
+            <input class="mini-input" type="text" value="${escapeHtml(habit.time_anchor)}" placeholder="6:30 AM or Morning" data-change="habit-field" data-id="${habit.id}" data-field="time_anchor" list="timeAnchorSuggestions">
+          </div>
+          <div class="setup-table-cell">
+            <input class="mini-input" type="text" value="${escapeHtml(habit.cue_trigger)}" placeholder="After brushing teeth" data-change="habit-field" data-id="${habit.id}" data-field="cue_trigger" list="cueSuggestions">
+          </div>
+          <div class="setup-table-cell">
+            <input class="mini-input" type="text" value="${escapeHtml(habit.minimum_version)}" placeholder="5 minutes" data-change="habit-field" data-id="${habit.id}" data-field="minimum_version" list="minimumSuggestions">
+          </div>
+          <div class="setup-table-cell">
+            <input class="mini-input" type="text" value="${escapeHtml(habit.miss_recovery_step)}" placeholder="Recovery rule" data-change="habit-field" data-id="${habit.id}" data-field="miss_recovery_step" list="recoverySuggestions">
+          </div>
+          <div class="setup-table-cell">
+            ${renderSetupStatusBadge(habit)}
+          </div>
+          <div class="setup-table-cell">
+            <div class="setup-actions">
+              <button class="button tiny" data-action="select-setup-habit" data-id="${habit.id}">Details</button>
+              <button class="button tiny" data-action="duplicate-monthly-habit" data-id="${habit.id}">Duplicate</button>
+              <button class="button tiny" data-action="move-monthly-habit" data-id="${habit.id}" data-direction="-1">↑</button>
+              <button class="button tiny" data-action="move-monthly-habit" data-id="${habit.id}" data-direction="1">↓</button>
+              <button class="button tiny danger" data-action="delete-monthly-habit" data-id="${habit.id}">Delete</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSetupMobileCard(habit, monthlyRow) {
+      return `
+        <div class="setup-mobile-card ${state.ui.selectedSetupHabitId === habit.id ? "selected" : ""}">
+          <div class="setup-mobile-head">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0">
+              <div class="setup-color"><input type="color" value="${habit.color}" data-change="monthly-color" data-id="${habit.id}"></div>
+              <div style="min-width:0">
+                <strong>${escapeHtml(habit.habit_name)}</strong>
+                <small>${getHabitArchitectureSummary(habit)}</small>
+              </div>
+            </div>
+            ${renderSetupStatusBadge(habit)}
+          </div>
+          <div class="setup-card-fields">
+            <div>
+              <label class="setup-inline-label">Habit</label>
+              <input class="mini-input" type="text" value="${escapeHtml(habit.habit_name)}" data-change="habit-field" data-id="${habit.id}" data-field="habit_name">
+            </div>
+            <div>
+              <label class="setup-inline-label">Frequency / Days</label>
+              ${renderFrequencyControl(habit)}
+            </div>
+            <div>
+              <label class="setup-inline-label">Time</label>
+              <input class="mini-input" type="text" value="${escapeHtml(habit.time_anchor)}" data-change="habit-field" data-id="${habit.id}" data-field="time_anchor" list="timeAnchorSuggestions">
+            </div>
+            <div>
+              <label class="setup-inline-label">Important cue / trigger</label>
+              <input class="mini-input" type="text" value="${escapeHtml(habit.cue_trigger)}" data-change="habit-field" data-id="${habit.id}" data-field="cue_trigger" list="cueSuggestions">
+            </div>
+            <div>
+              <label class="setup-inline-label">Minimum version</label>
+              <input class="mini-input" type="text" value="${escapeHtml(habit.minimum_version)}" data-change="habit-field" data-id="${habit.id}" data-field="minimum_version" list="minimumSuggestions">
+            </div>
+            <div>
+              <label class="setup-inline-label">If I miss, next step</label>
+              <input class="mini-input" type="text" value="${escapeHtml(habit.miss_recovery_step)}" data-change="habit-field" data-id="${habit.id}" data-field="miss_recovery_step" list="recoverySuggestions">
+            </div>
+          </div>
+          <div class="setup-mobile-footer">
+            <div class="muted">${monthlyRow ? `${monthlyRow.doneCount}/${monthlyRow.goal} completed this month` : "No tracking activity yet"}</div>
+            <div class="setup-actions">
+              <button class="button tiny" data-action="select-setup-habit" data-id="${habit.id}">View details</button>
+              <button class="button tiny" data-action="duplicate-monthly-habit" data-id="${habit.id}">Duplicate</button>
+              <button class="button tiny danger" data-action="delete-monthly-habit" data-id="${habit.id}">Delete</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSuggestionButtons(habitId, field, values) {
+      return `
+        <div class="chip-row">
+          ${values.map((value) => `<button class="chip-button" data-action="apply-setup-value" data-id="${habitId}" data-field="${field}" data-value="${escapeHtml(value)}">${escapeHtml(value)}</button>`).join("")}
+        </div>
+      `;
+    }
+
+    function renderSetupDetailPanel(habit, monthlyRow) {
+      if (!habit) return "";
+      const status = getHabitSetupStatus(habit);
+      const suggestedMonthlyTarget = estimateMonthlyTargetFromFrequency(habit, state.selectedMonth);
+      return `
+        <section class="panel">
+          <div class="panel-body">
+            <div class="panel-header">
+              <div>
+                <span class="eyebrow">Habit Architecture Detail</span>
+                <h3>${escapeHtml(habit.habit_name)}</h3>
+                <div class="muted" style="margin-top:6px">Execution blueprint, implementation intention, minimum viable action, and miss-recovery rule.</div>
+              </div>
+              ${renderSetupStatusBadge(habit)}
+            </div>
+            <div class="setup-detail-grid">
+              <div>
+                <label class="setup-inline-label">Habit</label>
+                <input type="text" value="${escapeHtml(habit.habit_name)}" data-change="habit-field" data-id="${habit.id}" data-field="habit_name">
+              </div>
+              <div>
+                <label class="setup-inline-label">Frequency / Days</label>
+                ${renderFrequencyControl(habit)}
+              </div>
+              <div>
+                <label class="setup-inline-label">Time</label>
+                <input type="text" value="${escapeHtml(habit.time_anchor)}" placeholder="6:30 AM, Morning, Before sleep" data-change="habit-field" data-id="${habit.id}" data-field="time_anchor" list="timeAnchorSuggestions">
+                <div class="detail-actions" style="margin-top:10px">
+                  ${TIME_SUGGESTIONS.map((value) => `<button class="button tiny" data-action="apply-setup-value" data-id="${habit.id}" data-field="time_anchor" data-value="${escapeHtml(value)}">${escapeHtml(value)}</button>`).join("")}
+                </div>
+                <div style="margin-top:10px">
+                  <label class="setup-inline-label">Exact time picker</label>
+                  <input type="time" value="${/^\d{1,2}:\d{2}\s(?:AM|PM)$/.test(habit.time_anchor) ? convertToTimeInput(habit.time_anchor) : ""}" data-change="habit-time-exact" data-id="${habit.id}">
+                </div>
+              </div>
+              <div>
+                <label class="setup-inline-label">Important cue / trigger</label>
+                <input type="text" value="${escapeHtml(habit.cue_trigger)}" placeholder="After brushing teeth" data-change="habit-field" data-id="${habit.id}" data-field="cue_trigger" list="cueSuggestions">
+                ${renderSuggestionButtons(habit.id, "cue_trigger", CUE_SUGGESTIONS)}
+              </div>
+              <div>
+                <label class="setup-inline-label">Minimum version</label>
+                <input type="text" value="${escapeHtml(habit.minimum_version)}" placeholder="5 minutes" data-change="habit-field" data-id="${habit.id}" data-field="minimum_version" list="minimumSuggestions">
+                ${renderSuggestionButtons(habit.id, "minimum_version", MINIMUM_VERSION_SUGGESTIONS)}
+              </div>
+              <div>
+                <label class="setup-inline-label">If I miss, next step</label>
+                <textarea data-change="habit-field" data-id="${habit.id}" data-field="miss_recovery_step">${escapeHtml(habit.miss_recovery_step)}</textarea>
+                ${renderSuggestionButtons(habit.id, "miss_recovery_step", RECOVERY_SUGGESTIONS)}
+              </div>
+            </div>
+
+            <div class="setup-preview-grid">
+              <div class="note-box">
+                <strong style="display:block;color:var(--text);margin-bottom:8px">Implementation intention</strong>
+                ${escapeHtml(habit.habit_name)} • ${escapeHtml(habit.frequency_rule || "Frequency not defined")} • ${escapeHtml(habit.time_anchor || "Time not defined")} • ${escapeHtml(habit.cue_trigger || "Cue not defined")}
+              </div>
+              <div class="note-box">
+                <strong style="display:block;color:var(--text);margin-bottom:8px">Planner integration</strong>
+                Suggested monthly target for ${formatMonthLabel(state.selectedMonth)}: <strong>${suggestedMonthlyTarget}</strong>. This value shapes planner defaults and the month tracker baseline.
+              </div>
+              <div class="note-box">
+                <strong style="display:block;color:var(--text);margin-bottom:8px">Tracking integration</strong>
+                Daily card detail: ${escapeHtml(habit.time_anchor || "No time")} • ${escapeHtml(habit.cue_trigger || "No cue")} • minimum success = ${escapeHtml(habit.minimum_version || "Not set")}.
+              </div>
+              <div class="note-box">
+                <strong style="display:block;color:var(--text);margin-bottom:8px">Recovery guidance</strong>
+                Weekly review and missed-day prompts can use: ${escapeHtml(habit.miss_recovery_step || "No recovery rule yet")}.
+              </div>
+            </div>
+
+            <div class="stats-grid" style="margin-top:16px">
+              <div class="stat-card"><span>Status</span><strong>${status.label}</strong></div>
+              <div class="stat-card"><span>Planner suggestion</span><strong>${suggestedMonthlyTarget}</strong></div>
+              <div class="stat-card"><span>This month done</span><strong>${monthlyRow ? monthlyRow.doneCount : 0}</strong></div>
+              <div class="stat-card"><span>Display order</span><strong>${habit.orderIndex + 1}</strong></div>
+            </div>
+
+            <div class="setup-actions" style="margin-top:16px">
+              <button class="button primary" data-action="save-setup">Save setup</button>
+              <button class="button" data-action="duplicate-monthly-habit" data-id="${habit.id}">Duplicate habit</button>
+              <button class="button" data-action="move-monthly-habit" data-id="${habit.id}" data-direction="-1">Move up</button>
+              <button class="button" data-action="move-monthly-habit" data-id="${habit.id}" data-direction="1">Move down</button>
+              <button class="button danger" data-action="delete-monthly-habit" data-id="${habit.id}">Delete habit</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
     function renderSetupPage(monthly, weekly) {
       const monthData = getMonthData(state.selectedMonth);
+      const setupCounts = getSetupCounts();
+      const filteredHabits = getFilteredSetupHabits();
+      const selectedHabit = getSelectedSetupHabit();
+      const selectedMonthlyRow = selectedHabit ? monthly.habitRows.find((item) => item.id === selectedHabit.id) : null;
       return `
-        <div class="setup-grid">
-          <section class="panel">
-            <div class="panel-body">
-              <div class="panel-header">
-                <div>
-                  <span class="eyebrow">Monthly Habit Setup</span>
-                  <h3>Daily Habits + Month Goals</h3>
-                </div>
-                <button class="button tiny" data-action="add-monthly-habit">Add Habit</button>
-              </div>
-              <div class="note-box" style="margin-bottom:14px">
-                This page edits the master habit definitions and the current month's goal values without splitting the app into separate files.
-              </div>
-              <div class="setup-list">
-                ${state.monthlyHabits.map((habit) => `
-                  <div class="setup-item">
-                    <div class="setup-color"><input type="color" value="${habit.color}" data-change="monthly-color" data-id="${habit.id}"></div>
-                    <div>
-                      <input class="mini-input" type="text" value="${escapeHtml(habit.name)}" data-change="monthly-name" data-id="${habit.id}">
-                    </div>
-                    <div>
-                      <span class="setup-inline-label">Goal</span>
-                      <input class="mini-input" type="number" min="1" max="31" value="${monthData.monthlyGoals[habit.id]}" data-change="monthly-goal" data-id="${habit.id}">
-                    </div>
-                    <div class="row-value">
-                      <strong>${monthly.habitRows.find((item) => item.id === habit.id).doneCount}</strong>
-                      done
-                    </div>
-                    <button class="button tiny danger" data-action="delete-monthly-habit" data-id="${habit.id}">Delete</button>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-          </section>
+        <datalist id="timeAnchorSuggestions">
+          ${TIME_SUGGESTIONS.map((value) => `<option value="${value}"></option>`).join("")}
+        </datalist>
+        <datalist id="cueSuggestions">
+          ${CUE_SUGGESTIONS.map((value) => `<option value="${value}"></option>`).join("")}
+        </datalist>
+        <datalist id="minimumSuggestions">
+          ${MINIMUM_VERSION_SUGGESTIONS.map((value) => `<option value="${value}"></option>`).join("")}
+        </datalist>
+        <datalist id="recoverySuggestions">
+          ${RECOVERY_SUGGESTIONS.map((value) => `<option value="${value}"></option>`).join("")}
+        </datalist>
 
-          <section class="panel">
-            <div class="panel-body">
-              <div class="panel-header">
-                <div>
-                  <span class="eyebrow">Weekly Habit Setup</span>
-                  <h3>Weekly Task Targets By Week Block</h3>
-                </div>
-                <button class="button tiny" data-action="add-weekly-habit">Add Weekly Habit</button>
-              </div>
-              <div class="note-box" style="margin-bottom:14px">
-                Weekly habits are a separate system from daily habits. Each cell below controls planned occurrences for Week 1 through Extra Days in the current month.
-              </div>
-              <div class="setup-list">
-                ${state.weeklyHabits.map((habit) => `
-                  <div class="setup-item weekly">
-                    <div class="setup-color"><input type="color" value="${habit.color}" data-change="weekly-color" data-id="${habit.id}"></div>
-                    <div>
-                      <input class="mini-input" type="text" value="${escapeHtml(habit.name)}" data-change="weekly-name" data-id="${habit.id}">
-                    </div>
-                    ${monthData.weeklyPlans[habit.id].map((target, weekIndex) => `
-                      <input class="mini-input" type="number" min="0" max="6" value="${target}" data-change="weekly-target" data-id="${habit.id}" data-week-index="${weekIndex}" title="${weekIndex < 4 ? `Week ${weekIndex + 1}` : "Extra Days"}">
-                    `).join("")}
-                    <button class="button tiny danger" data-action="delete-weekly-habit" data-id="${habit.id}">Delete</button>
-                  </div>
-                `).join("")}
-              </div>
+        <section class="panel">
+          <div class="panel-body">
+            <div class="annual-hero">
+              <span class="eyebrow">Habit Architecture</span>
+              <h2>Pre-Tracking Execution Design</h2>
+              <p>This module defines how each habit will happen in real life before the Year Planner and tracking dashboards measure it. It turns a habit from a wish into an operating manual with frequency, time, cue, minimum version, and miss recovery logic.</p>
             </div>
-          </section>
+            <div class="setup-summary-grid">
+              <div class="summary-card completed"><span>Total habits</span><strong>${state.monthlyHabits.length}</strong><p>Tracked daily habits with architecture fields attached to the master record.</p></div>
+              <div class="summary-card remaining"><span>Draft</span><strong>${setupCounts.draft}</strong><p>Named habits with little or no execution structure.</p></div>
+              <div class="summary-card completed"><span>Partial</span><strong>${setupCounts.partial}</strong><p>Some setup exists, but the habit still lacks a strong implementation design.</p></div>
+              <div class="summary-card completed"><span>Ready</span><strong>${setupCounts.ready}</strong><p>Fully operationalized habits with cue, time, minimum version, and recovery rule.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="setup-architecture-layout">
+          <div class="column">
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Habit Setup Table</span>
+                    <h3>Execution Blueprint Table</h3>
+                  </div>
+                  <div class="setup-actions">
+                    <button class="button tiny" data-action="add-monthly-habit">Add new habit</button>
+                    <button class="button tiny" data-action="set-setup-filter" data-filter="incomplete">Validate incomplete habits</button>
+                    <button class="button tiny primary" data-action="save-setup">Save setup</button>
+                  </div>
+                </div>
+                <div class="toolbar-row">
+                  <div class="segmented">
+                    <button class="${state.ui.setupFilter === "all" ? "active" : ""}" data-action="set-setup-filter" data-filter="all">All habits</button>
+                    <button class="${state.ui.setupFilter === "incomplete" ? "active" : ""}" data-action="set-setup-filter" data-filter="incomplete">Draft + Partial</button>
+                    <button class="${state.ui.setupFilter === "ready" ? "active" : ""}" data-action="set-setup-filter" data-filter="ready">Ready</button>
+                  </div>
+                  <div class="muted">${filteredHabits.length} habits in current view</div>
+                </div>
+                <div class="note-box" style="margin-bottom:14px">
+                  Required architecture fields: Habit, Frequency / Days, Time, Important cue / trigger, Minimum version, and If I miss, next step. A habit is only <strong style="color:var(--text)">Ready</strong> when all six fields are defined.
+                </div>
+                <div class="setup-table-shell desktop-setup-table">
+                  <div class="setup-table-header">
+                    <div>Habit</div>
+                    <div>Frequency / Days</div>
+                    <div>Time</div>
+                    <div>Important cue / trigger</div>
+                    <div>Minimum version</div>
+                    <div>If I miss, next step</div>
+                    <div>Status</div>
+                    <div>Actions</div>
+                  </div>
+                  ${filteredHabits.map((habit) => renderSetupTableRow(habit, monthly.habitRows.find((item) => item.id === habit.id))).join("")}
+                </div>
+                <div class="mobile-setup-cards">
+                  ${filteredHabits.map((habit) => renderSetupMobileCard(habit, monthly.habitRows.find((item) => item.id === habit.id))).join("")}
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-body">
+                <div class="panel-header">
+                  <div>
+                    <span class="eyebrow">Weekly Subsystem</span>
+                    <h3>Existing Weekly Habit Configuration</h3>
+                  </div>
+                  <button class="button tiny" data-action="add-weekly-habit">Add Weekly Habit</button>
+                </div>
+                <div class="note-box" style="margin-bottom:14px">
+                  The new Habit Setup layer does not remove the existing weekly subsystem. Weekly habits remain configurable here while daily habits now have a stronger pre-tracking architecture layer above the planner.
+                </div>
+                <div class="setup-list">
+                  ${state.weeklyHabits.map((habit) => `
+                    <div class="setup-item weekly">
+                      <div class="setup-color"><input type="color" value="${habit.color}" data-change="weekly-color" data-id="${habit.id}"></div>
+                      <div>
+                        <input class="mini-input" type="text" value="${escapeHtml(habit.name)}" data-change="weekly-name" data-id="${habit.id}">
+                      </div>
+                      ${monthData.weeklyPlans[habit.id].map((target, weekIndex) => `
+                        <input class="mini-input" type="number" min="0" max="6" value="${target}" data-change="weekly-target" data-id="${habit.id}" data-week-index="${weekIndex}" title="${weekIndex < 4 ? `Week ${weekIndex + 1}` : "Extra Days"}">
+                      `).join("")}
+                      <button class="button tiny danger" data-action="delete-weekly-habit" data-id="${habit.id}">Delete</button>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="column">
+            ${renderSetupDetailPanel(selectedHabit, selectedMonthlyRow)}
+          </div>
         </div>
       `;
     }
@@ -4004,6 +5888,78 @@
                 <div class="formula-item"><strong>Offline:</strong> the main dashboard shell and icons are cached for fast repeat loads. Dynamic backup files are still user-managed JSON exports.</div>
                 <div class="formula-item"><strong>Sync-ready structure:</strong> a future Firebase config can be added to state without changing the single-file UI architecture.</div>
               </div>
+              <div class="note-box" style="margin-top:14px">
+                <strong style="display:block;color:var(--text);margin-bottom:8px">Install status</strong>
+                ${escapeHtml(getInstallSupportState().detail)}
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-body">
+              <div class="panel-header">
+                <div>
+                  <span class="eyebrow">Theme</span>
+                  <h3>Appearance</h3>
+                </div>
+              </div>
+              <div class="inline-grid two">
+                <div>
+                  <label class="setup-inline-label" for="themeMode">Theme Mode</label>
+                  <select id="themeMode" data-change="theme-mode">
+                    <option value="dark" ${state.ui.theme === "light" ? "" : "selected"}>Dark</option>
+                    <option value="light" ${state.ui.theme === "light" ? "selected" : ""}>Light</option>
+                  </select>
+                </div>
+                <div class="note-box">
+                  Theme switching uses CSS variables and a single state flag, so it is effectively instant and does not duplicate the UI.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-body">
+              <div class="panel-header">
+                <div>
+                  <span class="eyebrow">Date Settings</span>
+                  <h3>Dual Calendar Localization</h3>
+                </div>
+              </div>
+              <div class="inline-grid two">
+                <div>
+                  <label class="setup-inline-label" for="dateDisplayMode">Date Display</label>
+                  <select id="dateDisplayMode" data-change="date-display-mode">
+                    <option value="en" ${state.ui.dateDisplayMode === "en" ? "selected" : ""}>English only</option>
+                    <option value="dual" ${state.ui.dateDisplayMode !== "en" && state.ui.dateDisplayMode !== "np-primary" ? "selected" : ""}>English + Nepali</option>
+                    <option value="np-primary" ${state.ui.dateDisplayMode === "np-primary" ? "selected" : ""}>Nepali primary + English</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="setup-inline-label" for="dualCalendarEnabled">Dual Calendar</label>
+                  <select id="dualCalendarEnabled" data-change="dual-calendar-enabled">
+                    <option value="yes" ${state.ui.dualCalendarEnabled !== false ? "selected" : ""}>Enabled</option>
+                    <option value="no" ${state.ui.dualCalendarEnabled === false ? "selected" : ""}>Disabled</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="setup-inline-label" for="nepaliScriptEnabled">Nepali Month Script</label>
+                  <select id="nepaliScriptEnabled" data-change="nepali-script-enabled">
+                    <option value="roman" ${state.ui.nepaliScriptEnabled ? "" : "selected"}>Romanized</option>
+                    <option value="script" ${state.ui.nepaliScriptEnabled ? "selected" : ""}>Nepali script</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="setup-inline-label" for="nepaliNumeralsEnabled">Nepali Numerals</label>
+                  <select id="nepaliNumeralsEnabled" data-change="nepali-numerals-enabled">
+                    <option value="off" ${state.ui.nepaliNumeralsEnabled ? "" : "selected"}>Off</option>
+                    <option value="on" ${state.ui.nepaliNumeralsEnabled ? "selected" : ""}>On</option>
+                  </select>
+                </div>
+              </div>
+              <div class="note-box" style="margin-top:14px">
+                Preview: <strong>${formatMonthLabel(state.selectedMonth)}</strong> and <strong>${formatLongDate(`${state.selectedMonth}-15`)}</strong>
+              </div>
             </div>
           </section>
 
@@ -4029,6 +5985,22 @@
     function renderReportsPage(monthly, weekly, annual) {
       return `
         <div class="report-grid">
+          <section class="panel">
+            <div class="panel-body">
+              <div class="panel-header">
+                <div>
+                  <span class="eyebrow">Report Context</span>
+                  <h3>Dual Calendar Scope</h3>
+                </div>
+              </div>
+              <div class="formula-list">
+                <div class="formula-item"><strong>Planner / Annual Year:</strong> ${formatDualYearLabel(state.selectedYear)}</div>
+                <div class="formula-item"><strong>Selected Month:</strong> ${formatMonthLabel(state.selectedMonth)}</div>
+                <div class="formula-item"><strong>Duration Window:</strong> ${formatLongDate(state.durationStart)} → ${formatLongDate(state.durationEnd)}</div>
+              </div>
+            </div>
+          </section>
+
           <section class="panel">
             <div class="panel-body">
               <div class="panel-header">
@@ -4060,10 +6032,12 @@
                 </div>
               </div>
               <div class="check-list">
-                <div class="check-item"><strong>Monthly:</strong> 3-zone layout, month identity, metadata, completed/remaining cards, 4 KPI rings, daily chart, habit goals list, month matrix, weekday/date labels, Week 1-4 plus Extra Days, week color coding, checkbox cells, Top Habits, Active Streaks, compact progress/streak table, variable goals, >100% progress, streak logic.</div>
+                <div class="check-item"><strong>Habit Setup:</strong> dedicated habit architecture page, six required execution-design fields, desktop table editing, mobile card/form editing, draft/partial/ready validation, duplicate/delete/reorder actions, planner integration previews, and realistic seeded examples.</div>
+                <div class="check-item"><strong>Planner:</strong> year identity block, start/end planning window, dynamic days-left count, streak carry-over flag, editable habit master list, month-by-month target matrix, month-capacity row, automatic row/column/grand totals, JSON import/export, and planner-to-tracker target syncing informed by setup frequency rules.</div>
+                <div class="check-item"><strong>Monthly:</strong> 3-zone layout, month identity, metadata, completed/remaining cards, 4 KPI rings, daily chart, habit goals list, month matrix, weekday/date labels, Week 1-4 plus Extra Days, week color coding, checkbox cells, Top Habits, Active Streaks, compact progress/streak table, variable goals, >100% progress, streak logic, and an embedded monthly weekly-subsystem with carry-over daily strip, week-grouped daily analytics, weekly task matrix, notes panel, and weekly KPI ring.</div>
                 <div class="check-item"><strong>Weekly:</strong> left overview modules, weekly summary, week overview bars, daily bars grouped by week, weekly totals and denominators, week percentages, weekly task matrix, named weekly habits, week-level completion percentages, weekly donut, notes panel, Extra Days handling, dual-habit system.</div>
                 <div class="check-item"><strong>Annual:</strong> annual time scope, start/end dates, days-left countdown, total habits, total annual goals, annual completed/remaining, Momentum/Monthly/Quarterly/Total KPIs, annual combo chart, right-side ranked bars, quarter-colored headers, days-left sub-row, month-by-month habit audit matrix with actual/goal plus pass/fail, annual goal column, total progress summary block, and over-100% support.</div>
-                <div class="check-item"><strong>Annual Weekly:</strong> weekly habits section header, total weekly habits/goals/completed/remaining, monthly weekly combo chart, completed-vs-remaining weekly ranking, weekly breakdown donut with labeled lead share, and overall weekly progress ring.</div>
+                <div class="check-item"><strong>Annual Weekly:</strong> weekly habits section header, total weekly habits/goals/completed/remaining, month-by-month weekly combo chart, completed-vs-remaining weekly ranking, weekly breakdown donut with labeled lead share, overall weekly progress ring, Jan-Dec trend labels, and dual-frequency annual reporting alongside the daily-habit yearly audit.</div>
               </div>
             </div>
           </section>
@@ -4191,7 +6165,7 @@
             }).join("")}
           <path d="${areaPath}" fill="url(#dailyArea)"></path>
           <path d="${linePath}" fill="none" stroke="var(--cyan)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-          ${points.map((point) => `<circle cx="${point.x}" cy="${point.y}" r="4.5" fill="#04101f" stroke="var(--cyan)" stroke-width="2"></circle>`).join("")}
+          ${points.map((point) => `<circle cx="${point.x}" cy="${point.y}" r="4.5" fill="#04101f" stroke="var(--cyan)" stroke-width="2"><title>${formatDualExactDate(point.date)} • ${point.completed}</title></circle>`).join("")}
           ${points.filter((_, index) => index === 0 || index === points.length - 1 || index % 4 === 0).map((point) => `
             <text x="${point.x}" y="${baseline + 22}" text-anchor="middle" fill="rgba(143,169,201,0.8)" font-size="11">${point.date.getDate()}</text>
           `).join("")}
@@ -4223,7 +6197,7 @@
             const y = baseline - barHeight;
             const color = ["var(--week-1)", "var(--week-2)", "var(--week-3)", "var(--week-4)", "var(--week-5)"][item.weekIndex];
             return `
-              <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="8" fill="${color}" opacity="0.9"></rect>
+              <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="8" fill="${color}" opacity="0.9"><title>${formatDualExactDate(item.date)} • ${item.completed}</title></rect>
               <text x="${x + barWidth / 2}" y="${y - 6}" text-anchor="middle" fill="${color}" font-size="11">${item.completed}</text>
               ${index % 2 === 0 || index === series.length - 1 ? `<text x="${x + barWidth / 2}" y="${baseline + 18}" text-anchor="middle" fill="rgba(143,169,201,0.76)" font-size="11">${item.date.getDate()}</text>` : ""}
             `;
@@ -4274,7 +6248,7 @@
             const barHeight = (month.totalCompleted / maxValue) * chartHeight;
             const y = baseline - barHeight;
             return `
-              <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="8" fill="var(--green)" opacity="0.95"></rect>
+              <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="8" fill="var(--green)" opacity="0.95"><title>${formatAdMonthLabel(annual.year, month.monthIndex)} • ${month.totalCompleted}/${month.totalGoal}</title></rect>
               <text x="${x + barWidth / 2}" y="${y - 7}" text-anchor="middle" fill="var(--green)" font-size="11">${month.totalCompleted}</text>
               <text x="${padLeft + stepX * index + stepX / 2}" y="${baseline + 18}" text-anchor="middle" fill="rgba(143,169,201,0.76)" font-size="11">${month.label}</text>
             `;
@@ -4288,22 +6262,27 @@
     }
 
     function renderMonthlyCarryoverStrip(monthlyWeekly) {
-      const habit = monthlyWeekly.carryHabit;
+      const habit = monthlyWeekly?.carryHabit;
+      const carryDates = Array.isArray(monthlyWeekly?.carryDates) ? monthlyWeekly.carryDates : [];
+      const carryChecks = Array.isArray(monthlyWeekly?.carryChecks) ? monthlyWeekly.carryChecks : [];
+      if (!habit) return "";
       return `
         <div class="matrix-scroll">
           <div class="carryover-strip-grid">
+            <div class="carryover-header">Daily Habit</div>
+            <div class="carryover-header">Target</div>
+            <div class="carryover-header">Day-By-Day Strip</div>
+            <div class="carryover-header">Progress</div>
+            <div class="carryover-header">%</div>
+            <div class="carryover-header">Streak</div>
             <div class="carryover-cell label"><strong>${escapeHtml(habit.name)}</strong></div>
             <div class="carryover-cell"><strong>${habit.goal}</strong></div>
             <div class="carryover-cell" style="justify-content:flex-start">
               <div class="mini-check-strip">
-                ${(monthlyWeekly.carryChecks
-                  ? monthlyWeekly.carryChecks
-                  : monthlyWeekly.carryDates.map((date) => {
-                      const key = toDateKey(date);
-                      const monthData = getMonthData(state.selectedMonth);
-                      return !!(monthData.dailyLogs[key] && monthData.dailyLogs[key][habit.id]);
-                    })
-                ).map((done) => `<span class="mini-check ${done ? "done" : ""}"></span>`).join("")}
+                ${carryDates.map((date, index) => {
+                  const done = !!carryChecks[index];
+                  return `<span class="mini-check ${done ? "done" : ""}"></span>`;
+                }).join("")}
               </div>
             </div>
             <div class="carryover-cell"><strong>${habit.doneCount}/${habit.goal}</strong></div>
@@ -4315,21 +6294,22 @@
     }
 
     function renderMonthlyWeeklyGroupedChart(monthlyWeekly) {
+      const weekRows = Array.isArray(monthlyWeekly?.displayWeekRows) ? monthlyWeekly.displayWeekRows : [];
+      const globalMax = Math.max(...weekRows.flatMap((week) => week.dailyValues || []), 1);
       return `
         <div class="grouped-week-chart">
-          ${monthlyWeekly.displayWeekRows.map((week) => {
-            const maxDaily = Math.max(...week.dailyValues, 1);
-            const weekColor = ["var(--week-1)", "var(--week-2)", "var(--week-3)", "var(--week-4)", "var(--week-5)"][week.weekIndex] || "var(--cyan)";
+          ${weekRows.map((week) => {
+            const weekColor = week.color || "var(--cyan)";
             return `
               <div class="grouped-week-card">
-                <div class="week-band ${weekBgClass(week.weekIndex)}">${week.label}</div>
+                <div class="week-band" style="background:linear-gradient(90deg, ${weekColor}, rgba(8, 21, 39, 0.15))" title="${week.dateRangeLabel || week.label}">${week.label}</div>
                 <div class="grouped-week-body">
                   <div class="mini-bars">
-                    ${week.dailyValues.map((value, index) => `
+                    ${(week.dailyValues || []).map((value, itemIndex) => `
                       <div class="mini-bar-wrap">
-                        <div class="mini-bar" style="height:${Math.max((value / maxDaily) * 90, 8)}px;background:${weekColor}"></div>
+                        <div class="mini-bar" style="height:${Math.max((value / globalMax) * 90, 8)}px;background:${weekColor}" title="${(week.days && week.days[itemIndex]) ? formatDualExactDate(week.days[itemIndex]) : `${week.label} • ${value}`}"></div>
                         <div class="mini-bar-value">${value}</div>
-                        <div class="mini-bar-day">${index + 1}</div>
+                        <div class="mini-bar-seq">D${itemIndex + 1}</div>
                       </div>
                     `).join("")}
                   </div>
@@ -4346,33 +6326,33 @@
     }
 
     function renderMonthlyWeeklyTaskBoard(monthlyWeekly) {
+      const taskWeeks = Array.isArray(monthlyWeekly?.taskWeeks) ? monthlyWeekly.taskWeeks : [];
       return `
         <div class="task-board">
-          ${monthlyWeekly.taskWeeks.map((week) => {
-            const weekTasks = week.tasks || [];
+          ${taskWeeks.map((week) => {
+            const weekTasks = Array.isArray(week.tasks) ? week.tasks : [];
             return `
               <div class="task-week-card">
-                <div class="week-band ${weekBgClass(week.weekIndex)}">${week.label}</div>
+                <div class="week-band" style="background:linear-gradient(90deg, ${week.color || "var(--cyan)"}, rgba(8, 21, 39, 0.15))" title="${week.dateRangeLabel || week.label}">${week.label}</div>
                 <div class="task-week-body">
                   ${weekTasks.length ? weekTasks.map((entry) => `
                     <div class="task-row">
                       <div>
                         <div class="task-name">${escapeHtml(entry.name)}</div>
-                        <div class="task-row-meta">${entry.completed ?? (entry.done ? 1 : 0)}/${entry.goal ?? 1}</div>
+                        <div class="task-row-meta">${entry.completed || 0}/${entry.goal || 0}</div>
                       </div>
                       <div class="weekly-slot-grid">
-                        ${entry.slots
-                          ? entry.slots.map((done, slotIndex) => `
-                              <button class="weekly-slot ${done ? "done" : ""}" style="color:var(--${["week-1","week-2","week-3","week-4","week-5"][week.weekIndex]})" data-action="toggle-weekly-slot" data-habit-id="${entry.habitId}" data-week-index="${week.weekIndex}" data-slot-index="${slotIndex}"></button>
-                            `).join("")
-                          : `<span class="weekly-slot ${entry.done ? "done" : ""}" style="color:var(--${["week-1","week-2","week-3","week-4","week-5"][week.weekIndex]})"></span>`
-                        }
+                        ${(entry.slots || []).map((done, slotIndex) => (
+                          entry.habitId
+                            ? `<button class="weekly-slot ${done ? "done" : ""}" style="color:${week.color || "var(--cyan)"}" data-action="toggle-weekly-slot" data-habit-id="${entry.habitId}" data-week-index="${week.weekIndex}" data-slot-index="${slotIndex}"></button>`
+                            : `<span class="weekly-slot ${done ? "done" : ""}" style="color:${week.color || "var(--cyan)"}"></span>`
+                        )).join("")}
                       </div>
                     </div>
                   `).join("") : `<div class="task-empty">No weekly tasks planned.</div>`}
                   ${Array.from({ length: Math.max(0, 5 - weekTasks.length) }, () => `<div class="task-empty"></div>`).join("")}
-                  <div class="track"><div class="fill" style="width:${Math.min(week.percentage, 100)}%;background:linear-gradient(90deg, var(--${["week-1","week-2","week-3","week-4","week-5"][week.weekIndex]}), rgba(255,255,255,0.72))"></div></div>
-                  <div class="week-metric-line"><span>Completion</span><strong>${week.percentage}%</strong></div>
+                  <div class="track"><div class="fill" style="width:${Math.min(week.percentage || 0, 100)}%;background:linear-gradient(90deg, ${week.color || "var(--cyan)"}, rgba(255,255,255,0.72))"></div></div>
+                  <div class="week-metric-line"><span>Completion</span><strong>${week.percentage || 0}%</strong></div>
                 </div>
               </div>
             `;
@@ -4423,7 +6403,7 @@
             const barHeight = (month.weeklyCompleted / maxValue) * chartHeight;
             const y = baseline - barHeight;
             return `
-              <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="8" fill="var(--green)" opacity="0.95"></rect>
+              <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="8" fill="var(--green)" opacity="0.95"><title>${formatAdMonthLabel(state.selectedYear, month.monthIndex)} • ${month.weeklyCompleted}/${month.weeklyGoal}</title></rect>
               <text x="${x + barWidth / 2}" y="${y - 7}" text-anchor="middle" fill="var(--green)" font-size="11">${month.weeklyCompleted}</text>
               <text x="${padLeft + stepX * index + stepX / 2}" y="${baseline + 18}" text-anchor="middle" fill="rgba(143,169,201,0.76)" font-size="11">${month.label}</text>
             `;
@@ -4480,12 +6460,16 @@
           <div class="matrix-group sticky-col">Habit / Day</div>
           ${weekGroups.map((group) => `<div class="matrix-group ${weekBgClass(group.weekIndex)}" style="grid-column: span ${group.days.length}">${group.label}</div>`).join("")}
           <div class="matrix-head sticky-col" style="justify-content:flex-start;padding-left:14px"><strong>Rows</strong><span>Daily habits</span></div>
-          ${dates.map((date) => `
-            <div class="matrix-head ${weekClass(getWeekBucket(date.getDate()))}">
+          ${dates.map((date) => {
+            const bs = convertAdToBs(date);
+            return `
+            <div class="matrix-head ${weekClass(getWeekBucket(date.getDate()))}" title="${formatDualExactDate(date)}">
               <span>${DAY_NAMES[date.getDay()]}</span>
               <strong>${date.getDate()}</strong>
+              <small>${bs ? formatMaybeNepaliNumerals(bs.day) : ""}</small>
             </div>
-          `).join("")}
+          `;
+          }).join("")}
           ${monthly.displayRows.map((habit) => `
             <div class="matrix-habit sticky-col" style="--habit-color:${habit.color}">
               <div>
@@ -4549,11 +6533,11 @@
         <div class="annual-audit-grid">
           <div class="annual-group sticky-col">Habit</div>
           <div class="annual-group sticky-col-2">Annual Goal</div>
-          ${annual.months.map((month) => `<div class="annual-group ${quarterBgClass(month.monthIndex)}">${month.label}</div>`).join("")}
+          ${annual.months.map((month) => `<div class="annual-group ${quarterBgClass(month.monthIndex)}" title="${formatAdMonthLabel(annual.year, month.monthIndex)}">${month.label}</div>`).join("")}
           <div class="annual-group">Overall</div>
           <div class="annual-head sticky-col" style="justify-content:flex-start;padding-left:14px"><strong>Rows</strong><span>Daily habits</span></div>
           <div class="annual-head sticky-col-2"><strong>Goal</strong><span>Year</span></div>
-          ${annual.months.map((month) => `<div class="annual-head ${quarterBgClass(month.monthIndex)}"><strong>${month.label}</strong><span>${MONTH_NAMES[month.monthIndex]}</span></div>`).join("")}
+          ${annual.months.map((month) => `<div class="annual-head ${quarterBgClass(month.monthIndex)}" title="${formatAdMonthLabel(annual.year, month.monthIndex)}"><strong>${month.label}</strong><span>${month.bsSpan}</span></div>`).join("")}
           <div class="annual-head"><strong>Overall</strong><span>% / Count</span></div>
           <div class="annual-days sticky-col" style="justify-content:flex-start;padding-left:14px"><strong>Days Left</strong><span>By month</span></div>
           <div class="annual-days sticky-col-2"><strong>${annual.annualDaysLeft}</strong><span>Year</span></div>
@@ -4605,10 +6589,10 @@
           <div class="matrix-group sticky-col">Habit / Day</div>
           <div class="matrix-group" style="grid-column: span ${duration.dates.length}">Duration Window</div>
           <div class="matrix-head sticky-col" style="justify-content:flex-start;padding-left:14px"><strong>Rows</strong><span>Daily habits</span></div>
-          ${duration.dates.map((date) => `
-            <div class="matrix-head ${weekClass(getWeekBucket(date.getDate()))}">
-              <span>${DAY_NAMES[date.getDay()]}</span>
-              <strong>${date.getDate()}</strong>
+          ${duration.dateEntries.map((entry) => `
+            <div class="matrix-head ${weekClass(getWeekBucket(entry.date.getDate()))}">
+              <span>${DAY_NAMES[entry.date.getDay()]}</span>
+              <strong>${entry.date.getDate()}</strong>
             </div>
           `).join("")}
           ${duration.habitRows.map((habit) => `
@@ -4618,12 +6602,11 @@
                 <small>${habit.completed}/${habit.goal} • ${habit.percentage.toFixed(0)}%</small>
               </div>
             </div>
-            ${duration.dates.map((date) => {
-              const key = toDateKey(date);
-              const done = !!getDailyLogForDateKey(key)[habit.id];
+            ${duration.dateEntries.map((entry) => {
+              const done = !!entry.log[habit.id];
               return `
-                <div class="matrix-cell ${weekClass(getWeekBucket(date.getDate()))} ${done ? "done" : ""}" style="--habit-color:${habit.color}">
-                  <button data-action="toggle-monthly-cell" data-habit-id="${habit.id}" data-date-key="${key}">
+                <div class="matrix-cell ${weekClass(getWeekBucket(entry.date.getDate()))} ${done ? "done" : ""}" style="--habit-color:${habit.color}">
+                  <button data-action="toggle-monthly-cell" data-habit-id="${habit.id}" data-date-key="${entry.dateKey}">
                     <span class="matrix-box"></span>
                   </button>
                 </div>
@@ -4648,12 +6631,12 @@
                 <small>${habit.completed}/${habit.goal} • ${habit.percentage.toFixed(0)}%</small>
               </div>
             </div>
-            ${duration.chunks.map((chunk, index) => {
-              const done = chunk.reduce((sum, date) => sum + (getDailyLogForDateKey(toDateKey(date))[habit.id] ? 1 : 0), 0);
+            ${duration.chunkSummaries.map((summary, index) => {
+              const done = summary.perHabit[habit.id] || 0;
               return `
                 <div class="weekly-cell ${weekClass(index % 5)}" style="color:${habit.color}">
-                  <div class="annual-cell-value">${done}/${chunk.length}</div>
-                  <div class="weekly-cell-meta">${((done / chunk.length) * 100).toFixed(0)}% in chunk</div>
+                  <div class="annual-cell-value">${done}/${summary.chunk.length}</div>
+                  <div class="weekly-cell-meta">${((done / summary.chunk.length) * 100).toFixed(0)}% in chunk</div>
                 </div>
               `;
             }).join("")}
@@ -4702,6 +6685,11 @@
       const year = clampInteger(yearValue, 2000, 2100);
       state.selectedYear = year;
       ensureYearData(state, year);
+      const planner = getPlannerData(year);
+      planner.startDate = rebasePlannerDateToYear(planner.startDate, year, "01-01");
+      planner.endDate = rebasePlannerDateToYear(planner.endDate, year, "12-31");
+      if (planner.endDate < planner.startDate) planner.endDate = planner.startDate;
+      syncPlannerTargetsToYear(state, year);
 
       const currentMonthPart = state.selectedMonth.slice(5, 7);
       const nextMonthKey = `${year}-${currentMonthPart}`;
@@ -4725,6 +6713,42 @@
       render();
     }
 
+    function setPlannerRange(startValue, endValue) {
+      const planner = getPlannerData(state.selectedYear);
+      planner.startDate = rebasePlannerDateToYear(startValue || planner.startDate, state.selectedYear, "01-01");
+      planner.endDate = rebasePlannerDateToYear(endValue || planner.endDate, state.selectedYear, "12-31");
+      if (planner.endDate < planner.startDate) {
+        if (startValue) planner.endDate = planner.startDate;
+        else planner.startDate = planner.endDate;
+      }
+      ensurePlannerData(state, state.selectedYear);
+      syncPlannerTargetsToYear(state, state.selectedYear);
+      saveState();
+      render();
+    }
+
+    function setPlannerStreakCarryOver(value) {
+      const planner = getPlannerData(state.selectedYear);
+      planner.streakCarryOver = value === true || value === "yes";
+      saveState();
+      render();
+    }
+
+    function setPlannerTarget(habitId, monthIndex, value) {
+      const planner = getPlannerData(state.selectedYear);
+      const capacities = getPlannerMonthCapacities(planner.startDate, planner.endDate);
+      planner.monthlyTargets[habitId][monthIndex] = clampInteger(value, 0, capacities[monthIndex].daysAvailable);
+      syncPlannerTargetsToYear(state, state.selectedYear);
+      saveState();
+      render();
+    }
+
+    function copyPlannerTargetsToTracker() {
+      syncPlannerTargetsToYear(state, state.selectedYear);
+      saveState();
+      render();
+    }
+
     function toggleMonthlyCell(habitId, dateKey) {
       const logs = getMonthData(state.selectedMonth).dailyLogs;
       logs[dateKey] = logs[dateKey] || {};
@@ -4742,7 +6766,11 @@
     }
 
     function setMonthlyGoal(habitId, value) {
-      getMonthData(state.selectedMonth).monthlyGoals[habitId] = clampInteger(value, 1, 31);
+      const monthIndex = Number(state.selectedMonth.slice(5, 7)) - 1;
+      const planner = getPlannerData(Number(state.selectedMonth.slice(0, 4)));
+      const capacities = getPlannerMonthCapacities(planner.startDate, planner.endDate);
+      planner.monthlyTargets[habitId][monthIndex] = clampInteger(value, 0, capacities[monthIndex].daysAvailable);
+      syncPlannerTargetsToYear(state, Number(state.selectedMonth.slice(0, 4)));
       saveState();
       render();
     }
@@ -4755,11 +6783,23 @@
       render();
     }
 
+    function refreshHabitPlannerTargets(habitId) {
+      const habit = state.monthlyHabits.find((item) => item.id === habitId);
+      if (!habit) return;
+      Object.keys(state.years).forEach((yearKey) => {
+        const year = Number(yearKey);
+        ensureYearData(state, year);
+        const planner = getPlannerData(year);
+        planner.monthlyTargets[habitId] = MONTH_NAMES.map((_, monthIndex) => {
+          const monthKey = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+          return estimateMonthlyTargetFromFrequency(habit, monthKey);
+        });
+        syncPlannerTargetsToYear(state, year);
+      });
+    }
+
     function addMonthlyHabit() {
-      const name = prompt("New monthly habit name:");
-      if (!name) return;
-      const clean = name.trim().replace(/\s+/g, " ");
-      if (!clean) return;
+      const clean = `New Habit ${state.monthlyHabits.length + 1}`;
       const idBase = clean.toLowerCase().replace(/[^a-z0-9]+/g, "-");
       let id = idBase;
       let suffix = 2;
@@ -4767,20 +6807,22 @@
         id = `${idBase}-${suffix}`;
         suffix += 1;
       }
-      state.monthlyHabits.push({
+      const created = normalizeHabitDefinition(createHabitBlueprint({
         id,
-        name: clean,
+        habit_name: clean,
+        frequency_rule: "",
+        time_anchor: "",
+        cue_trigger: "",
+        minimum_version: "",
+        miss_recovery_step: "",
         color: PALETTE[state.monthlyHabits.length % PALETTE.length],
-        defaultGoal: 20
-      });
-      Object.keys(state.years).forEach((yearKey) => {
-        ensureYearData(state, Number(yearKey));
-        for (let monthIndex = 0; monthIndex < 12; monthIndex += 1) {
-          const monthKey = `${yearKey}-${String(monthIndex + 1).padStart(2, "0")}`;
-          ensureMonthData(state, monthKey);
-          state.years[yearKey].months[monthKey].monthlyGoals[id] = 20;
-        }
-      });
+        display_order: state.monthlyHabits.length,
+        orderIndex: state.monthlyHabits.length
+      }), state.monthlyHabits.length);
+      state.monthlyHabits.push(created);
+      state.ui.selectedSetupHabitId = created.id;
+      Object.keys(state.years).forEach((yearKey) => ensureYearData(state, Number(yearKey)));
+      refreshHabitPlannerTargets(id);
       saveState();
       render();
     }
@@ -4814,8 +6856,12 @@
       if (!habit) return;
       if (!confirm(`Delete monthly habit "${habit.name}"?`)) return;
       state.monthlyHabits = state.monthlyHabits.filter((item) => item.id !== habitId);
+      if (state.ui.selectedSetupHabitId === habitId) {
+        state.ui.selectedSetupHabitId = state.monthlyHabits[0] ? state.monthlyHabits[0].id : "";
+      }
       Object.keys(state.years).forEach((yearKey) => {
         const yearData = getYearData(Number(yearKey));
+        if (yearData.planner && yearData.planner.monthlyTargets) delete yearData.planner.monthlyTargets[habitId];
         Object.keys(yearData.months).forEach((monthKey) => {
           const monthData = yearData.months[monthKey];
           delete monthData.monthlyGoals[habitId];
@@ -4824,6 +6870,7 @@
           });
         });
       });
+      normalizeHabitOrder();
       saveState();
       render();
     }
@@ -4851,6 +6898,102 @@
       const clean = String(value || "").trim().replace(/\s+/g, " ");
       if (!clean) return;
       habit.name = clean;
+      habit.habit_name = clean;
+      touchHabit(habit);
+      saveState();
+      render();
+    }
+
+    function updateHabitArchitectureField(habitId, field, value) {
+      const habit = state.monthlyHabits.find((item) => item.id === habitId);
+      if (!habit) return;
+      if (field === "habit_name") {
+        const clean = cleanInlineText(value);
+        if (!clean) return;
+        habit.name = clean;
+        habit.habit_name = clean;
+      } else if (field === "frequency_rule_preset") {
+        habit.frequency_rule_mode = value;
+        if (value === "custom") {
+          habit.custom_frequency_rule = cleanInlineText(habit.custom_frequency_rule || habit.frequency_rule || "");
+          habit.frequency_rule = habit.custom_frequency_rule;
+        } else {
+          habit.custom_frequency_rule = "";
+          habit.frequency_rule = cleanInlineText(value);
+        }
+      } else if (field === "frequency_rule_custom") {
+        habit.frequency_rule_mode = "custom";
+        habit.custom_frequency_rule = cleanInlineText(value);
+        habit.frequency_rule = habit.custom_frequency_rule;
+      } else {
+        habit[field] = cleanInlineText(value);
+      }
+      touchHabit(habit);
+      if (field === "frequency_rule_preset" || field === "frequency_rule_custom") {
+        refreshHabitPlannerTargets(habitId);
+      }
+      saveState();
+      render();
+    }
+
+    function setHabitExactTime(habitId, value) {
+      const habit = state.monthlyHabits.find((item) => item.id === habitId);
+      if (!habit || !value) return;
+      habit.time_anchor = formatTimeValue(value);
+      touchHabit(habit);
+      saveState();
+      render();
+    }
+
+    function selectSetupHabit(habitId) {
+      if (!state.monthlyHabits.some((habit) => habit.id === habitId)) return;
+      state.ui.selectedSetupHabitId = habitId;
+      saveState();
+      render();
+    }
+
+    function duplicateMonthlyHabit(habitId) {
+      const source = state.monthlyHabits.find((habit) => habit.id === habitId);
+      if (!source) return;
+      const idBase = `${source.id}-copy`;
+      let id = idBase;
+      let suffix = 2;
+      while (state.monthlyHabits.some((habit) => habit.id === id)) {
+        id = `${idBase}-${suffix}`;
+        suffix += 1;
+      }
+      const clone = normalizeHabitDefinition({
+        ...source,
+        id,
+        habit_id: id,
+        name: `${source.habit_name} Copy`,
+        habit_name: `${source.habit_name} Copy`,
+        created_at: nowIso(),
+        updated_at: nowIso(),
+        display_order: source.orderIndex + 1,
+        orderIndex: source.orderIndex + 1
+      }, source.orderIndex + 1);
+      state.monthlyHabits.splice(source.orderIndex + 1, 0, clone);
+      normalizeHabitOrder();
+      state.ui.selectedSetupHabitId = clone.id;
+      Object.keys(state.years).forEach((yearKey) => {
+        const year = Number(yearKey);
+        ensureYearData(state, year);
+        const planner = getPlannerData(year);
+        planner.monthlyTargets[id] = (planner.monthlyTargets[source.id] || MONTH_NAMES.map(() => 0)).slice();
+        syncPlannerTargetsToYear(state, year);
+      });
+      saveState();
+      render();
+    }
+
+    function moveMonthlyHabit(habitId, direction) {
+      const index = state.monthlyHabits.findIndex((habit) => habit.id === habitId);
+      const nextIndex = index + Number(direction);
+      if (index < 0 || nextIndex < 0 || nextIndex >= state.monthlyHabits.length) return;
+      const [habit] = state.monthlyHabits.splice(index, 1);
+      state.monthlyHabits.splice(nextIndex, 0, habit);
+      normalizeHabitOrder();
       saveState();
       render();
     }
@@ -4869,6 +7012,7 @@
       const habit = state[collection].find((item) => item.id === habitId);
       if (!habit) return;
       habit.color = value;
+      if (collection === "monthlyHabits") touchHabit(habit);
       saveState();
       render();
     }
@@ -4878,8 +7022,32 @@
       saveState();
     }
 
+    function updateDateSetting(key, value) {
+      state.ui[key] = value;
+      saveState();
+      render();
+    }
+
+    function setTheme(value) {
+      state.ui.theme = value === "light" ? "light" : "dark";
+      saveState();
+      render();
+    }
+
+    function toggleTheme() {
+      setTheme(state.ui.theme === "light" ? "dark" : "light");
+    }
+
     function exportJson() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const exportPayload = Object.assign({}, state, {
+        _exportMeta: {
+          exportedAtAd: new Date().toISOString(),
+          exportedAtDual: formatLongDate(new Date()),
+          selectedMonthLabel: formatMonthLabel(state.selectedMonth),
+          selectedYearLabel: formatDualYearLabel(state.selectedYear)
+        }
+      });
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -4942,6 +7110,19 @@
         saveState();
         render();
       }
+      if (action === "select-setup-habit") selectSetupHabit(target.dataset.id);
+      if (action === "duplicate-monthly-habit") duplicateMonthlyHabit(target.dataset.id);
+      if (action === "move-monthly-habit") moveMonthlyHabit(target.dataset.id, Number(target.dataset.direction));
+      if (action === "apply-setup-value") updateHabitArchitectureField(target.dataset.id, target.dataset.field, target.dataset.value);
+      if (action === "set-setup-filter") {
+        state.ui.setupFilter = target.dataset.filter;
+        saveState();
+        render();
+      }
+      if (action === "save-setup") {
+        saveState();
+        render();
+      }
       if (action === "add-monthly-habit") addMonthlyHabit();
       if (action === "add-weekly-habit") addWeeklyHabit();
       if (action === "delete-monthly-habit") deleteMonthlyHabit(target.dataset.id);
@@ -4950,6 +7131,8 @@
       if (action === "reset-demo") resetDemo();
       if (action === "jump-default-month") setSelectedMonth(DEFAULT_MONTH);
       if (action === "install-pwa") installPwa();
+      if (action === "copy-planner-targets") copyPlannerTargetsToTracker();
+      if (action === "toggle-theme") toggleTheme();
     });
 
     app.addEventListener("change", (event) => {
@@ -4958,9 +7141,20 @@
       if (target.dataset.input === "year-picker") setSelectedYear(target.value);
       if (target.dataset.input === "duration-start") setDurationRange(target.value, state.durationEnd);
       if (target.dataset.input === "duration-end") setDurationRange(state.durationStart, target.value);
+      if (target.dataset.input === "planner-start") setPlannerRange(target.value, getPlannerData(state.selectedYear).endDate);
+      if (target.dataset.input === "planner-end") setPlannerRange(getPlannerData(state.selectedYear).startDate, target.value);
       if (target.dataset.change === "monthly-goal") setMonthlyGoal(target.dataset.id, target.value);
       if (target.dataset.change === "weekly-target") setWeeklyTarget(target.dataset.id, Number(target.dataset.weekIndex), target.value);
+      if (target.dataset.change === "planner-target") setPlannerTarget(target.dataset.id, Number(target.dataset.monthIndex), target.value);
+      if (target.dataset.change === "planner-streak") setPlannerStreakCarryOver(target.value);
+      if (target.dataset.change === "date-display-mode") updateDateSetting("dateDisplayMode", target.value);
+      if (target.dataset.change === "theme-mode") setTheme(target.value);
+      if (target.dataset.change === "dual-calendar-enabled") updateDateSetting("dualCalendarEnabled", target.value === "yes");
+      if (target.dataset.change === "nepali-script-enabled") updateDateSetting("nepaliScriptEnabled", target.value === "script");
+      if (target.dataset.change === "nepali-numerals-enabled") updateDateSetting("nepaliNumeralsEnabled", target.value === "on");
       if (target.dataset.change === "monthly-name") updateMonthlyHabitName(target.dataset.id, target.value);
+      if (target.dataset.change === "habit-field") updateHabitArchitectureField(target.dataset.id, target.dataset.field, target.value);
+      if (target.dataset.change === "habit-time-exact") setHabitExactTime(target.dataset.id, target.value);
       if (target.dataset.change === "weekly-name") updateWeeklyHabitName(target.dataset.id, target.value);
       if (target.dataset.change === "monthly-color") updateHabitColor("monthlyHabits", target.dataset.id, target.value);
       if (target.dataset.change === "weekly-color") updateHabitColor("weeklyHabits", target.dataset.id, target.value);
@@ -4984,7 +7178,10 @@
     });
 
     function installPwa() {
-      if (!deferredInstallPrompt) return;
+      if (!deferredInstallPrompt) {
+        alert(getInstallSupportState().detail);
+        return;
+      }
       deferredInstallPrompt.prompt();
       deferredInstallPrompt.userChoice.finally(() => {
         deferredInstallPrompt = null;
@@ -4995,6 +7192,11 @@
     window.addEventListener("beforeinstallprompt", (event) => {
       event.preventDefault();
       deferredInstallPrompt = event;
+      render();
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredInstallPrompt = null;
       render();
     });
 
